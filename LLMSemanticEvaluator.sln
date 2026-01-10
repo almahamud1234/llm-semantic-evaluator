@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LLMSemanticEvaluator", "LLMSemanticEvaluator\LLMSemanticEvaluator.csproj", "{C216D8EE-4D8E-4FCF-9EDF-26BAA348B113}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LLMSemanticEvaluatorTests", "LLMSemanticEvaluatorTests\LLMSemanticEvaluatorTests.csproj", "{010449DE-904E-4BDF-B7D4-E35A5F2EBD90}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C216D8EE-4D8E-4FCF-9EDF-26BAA348B113}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C216D8EE-4D8E-4FCF-9EDF-26BAA348B113}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C216D8EE-4D8E-4FCF-9EDF-26BAA348B113}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C216D8EE-4D8E-4FCF-9EDF-26BAA348B113}.Release|Any CPU.Build.0 = Release|Any CPU
+		{010449DE-904E-4BDF-B7D4-E35A5F2EBD90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{010449DE-904E-4BDF-B7D4-E35A5F2EBD90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{010449DE-904E-4BDF-B7D4-E35A5F2EBD90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{010449DE-904E-4BDF-B7D4-E35A5F2EBD90}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,60 @@
+# ===================================================================
+# LLM Prompt Testing Framework - Complete Setup Script
+# ===================================================================
+# Copy and paste these commands one by one in your command prompt
+# Make sure you have .NET 8.0 SDK installed first
+# ===================================================================
+
+# Step 1: Verify .NET installation
+dotnet --version
+
+# Step 2: Clone project repository
+git clone <repository_link>
+cd llm-semantic-evaluator
+
+# Step 3: Create solution file
+dotnet new sln -n LLMSemanticEvaluator
+
+# Step 4: Create main console application
+dotnet new console -n LLMSemanticEvaluator
+
+# Step 5: Create test project
+dotnet new xunit -n LLMSemanticEvaluatorTests
+
+# Step 6: Add projects to solution
+dotnet sln add LLMSemanticEvaluator
+dotnet sln add LLMSemanticEvaluatorTests
+
+# Step 8: Add project references
+dotnet add LLMSemanticEvaluatorTests reference LLMSemanticEvaluator
+
+# Step 9: Add required NuGet packages to App project
+cd LLMSemanticEvaluator
+dotnet add package Microsoft.Extensions.Hosting
+dotnet add package Microsoft.Extensions.Configuration.Json
+dotnet add package Microsoft.Extensions.Configuration.EnvironmentVariables
+dotnet add package System.CommandLine
+cd ..
+
+# Step 10: Add testing packages to Test project
+cd LLMSemanticEvaluatorTests
+dotnet add package Microsoft.NET.Test.Sdk
+dotnet add package xunit
+dotnet add package xunit.runner.visualstudio
+dotnet add package Moq
+dotnet add package FluentAssertions
+cd ..
+
+# Step 11: Build the solution to verify everything works
+dotnet build
+
+# Step 12: Run console app
+dotnet run --project LLMSemanticEvaluator
+
+# Step 13: Run tests to verify test project works
+dotnet test
+
+# ===================================================================
+# Project structure created! 
+# Next steps are in the follow-up script
+# ===================================================================
