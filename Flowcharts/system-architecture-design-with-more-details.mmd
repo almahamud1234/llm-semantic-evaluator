@@ -1,0 +1,100 @@
+graph TB
+    subgraph Presentation["🖥️ PRESENTATION LAYER"]
+        Console[Console Application<br/>Program.cs<br/>CommandLineParser]
+    end
+
+    subgraph Application["⚙️ APPLICATION LAYER"]
+        TestRunner[Test Runner<br/>Orchestrates execution<br/>Handles 3-5 retries]
+        ConfigMgr[Configuration Manager<br/>Settings & Thresholds]
+        ReportGen[Report Generator<br/>Statistics & Output]
+        TestLoader[Test Loader<br/>JSON Deserializer]
+    end
+
+    subgraph Domain["📋 DOMAIN LAYER - Interfaces"]
+        ILLMClient[ILLMClient<br/>SendPrompt<br/>GetEmbedding]
+        IValidator[ITestValidator<br/>ValidateAsync]
+        ILoader[ITestLoader<br/>LoadTestsAsync]
+        IReport[IReportGenerator<br/>GenerateReport]
+        IEmbed[IEmbeddingProvider<br/>GetEmbeddingAsync]
+    end
+
+    subgraph Services["🔧 SERVICE LAYER - Business Logic"]
+        direction TB
+        
+        subgraph LLM["LLM Clients"]
+            OpenAI[OpenAI Client<br/>GPT-4 Integration]
+            Ollama[Ollama Client<br/>Local Models]
+        end
+        
+        subgraph Validation["Validation Services"]
+            EmbedVal[Embedding Validator<br/>Cosine Similarity ≥ 0.85]
+            JudgeVal[LLM Judge Validator<br/>Score ≥ 8/10]
+        end
+        
+        subgraph Support["Support Services"]
+            EmbedSvc[Embedding Service<br/>Vector Generation]
+            SimCalc[Similarity Calculator<br/>Cosine Distance]
+            Analyzer[Result Analyzer<br/>Statistics]
+            FileIO[File System<br/>JSON I/O]
+        end
+        
+        subgraph Models["Core Models"]
+            DataModels["TestCase<br/>TestRun<br/>TestResult<br/>TestReport<br/>ValidationResult"]
+        end
+    end
+
+    subgraph External["🌐 EXTERNAL SERVICES"]
+        OpenAIAPI[(OpenAI API<br/>GPT-4<br/>Embeddings)]
+        OllamaAPI[(Ollama API<br/>Local LLMs)]
+        TestData[(Test Data JSON<br/>100+ Test Cases)]
+    end
+
+    %% Presentation to Application
+    Console --> TestRunner
+    Console --> ConfigMgr
+    Console --> TestLoader
+
+    %% Application to Domain
+    TestRunner --> ILLMClient
+    TestRunner --> IValidator
+    TestLoader --> ILoader
+    ReportGen --> IReport
+
+    %% Domain to Services
+    ILLMClient -.implements.-> OpenAI
+    ILLMClient -.implements.-> Ollama
+    IValidator -.implements.-> EmbedVal
+    IValidator -.implements.-> JudgeVal
+    ILoader -.implements.-> FileIO
+    IReport -.implements.-> Analyzer
+
+    %% Service interactions
+    OpenAI --> OpenAIAPI
+    Ollama --> OllamaAPI
+    EmbedVal --> EmbedSvc
+    EmbedVal --> SimCalc
+    JudgeVal --> OpenAI
+    FileIO --> TestData
+    
+    %% Data flow
+    TestLoader --> DataModels
+    TestRunner --> DataModels
+    EmbedVal --> DataModels
+    JudgeVal --> DataModels
+    Analyzer --> DataModels
+    ReportGen --> DataModels
+
+    %% Styling
+    classDef presentationStyle fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000
+    classDef applicationStyle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+    classDef domainStyle fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    classDef serviceStyle fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+    classDef externalStyle fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
+    classDef modelStyle fill:#fff9c4,stroke:#f9a825,stroke-width:2px,color:#000
+
+    class Console presentationStyle
+    class TestRunner,ConfigMgr,ReportGen,TestLoader applicationStyle
+    class ILLMClient,IValidator,ILoader,IReport,IEmbed domainStyle
+    class OpenAI,Ollama,EmbedVal,JudgeVal,EmbedSvc,SimCalc,Analyzer,FileIO serviceStyle
+    class OpenAIAPI,OllamaAPI,TestData externalStyle
+    class DataModels modelStyle
