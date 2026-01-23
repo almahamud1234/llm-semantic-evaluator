@@ -1,7 +1,7 @@
 // File: Core/Interfaces/ITestLoader.cs
-namespace LLMPromptTesting.Console.Core.Interfaces;
+namespace LLMSemanticEvaluator.Interfaces;
 
-// using LLMPromptTesting.Console.Core.Models;
+// using LLMSemanticEvaluator.Models;
 
 /// <summary>
 /// Interface for loading test cases
