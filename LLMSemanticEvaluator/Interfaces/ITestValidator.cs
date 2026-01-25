@@ -1,7 +1,7 @@
 // File: Core/Interfaces/ITestValidator.cs
 namespace LLMSemanticEvaluator.Interfaces;
 
-// using LLMSemanticEvaluator.Models;
+using LLMSemanticEvaluator.Models;
 
 /// <summary>
 /// Interface for test validation strategies
@@ -15,12 +15,10 @@ public interface ITestValidator
     /// <param name="actualOutput">The actual LLM output</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Validation result with score and pass/fail status</returns>
-    // Task<ValidationResult> ValidateAsync(
-    Task ValidateAsync(
+    Task<ValidationResult> ValidateAsync(
         string expectedOutput, 
         string actualOutput, 
-        CancellationToken cancellationToken = default
-    );
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Name of the validator (e.g., "Embedding", "LLMJudge")
