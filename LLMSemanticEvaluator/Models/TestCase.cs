@@ -1,5 +1,5 @@
 // File: Core/Models/TestCase.cs
-namespace LLMPromptTesting.Console.Core.Models;
+namespace LLMSemanticEvaluator.Models;
 
 /// <summary>
 /// Represents a single test case

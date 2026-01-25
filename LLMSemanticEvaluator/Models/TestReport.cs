@@ -1,5 +1,5 @@
 // File: Core/Models/TestReport.cs
-namespace LLMPromptTesting.Console.Core.Models;
+namespace LLMSemanticEvaluator.Models;
 
 /// <summary>
 /// Complete test execution report

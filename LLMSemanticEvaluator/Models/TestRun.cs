@@ -1,5 +1,5 @@
 // File: Core/Models/TestRun.cs
-namespace LLMPromptTesting.Console.Core.Models;
+namespace LLMSemanticEvaluator.Models;
 
 /// <summary>
 /// Represents a single execution of a test

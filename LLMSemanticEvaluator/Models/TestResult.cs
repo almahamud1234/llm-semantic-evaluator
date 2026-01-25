@@ -1,5 +1,5 @@
 // File: Core/Models/TestResult.cs
-namespace LLMPromptTesting.Console.Core.Models;
+namespace LLMSemanticEvaluator.Models;
 
 /// <summary>
 /// Represents the aggregated result of multiple test runs
