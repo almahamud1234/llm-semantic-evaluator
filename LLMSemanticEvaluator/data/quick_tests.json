@@ -1,0 +1,16 @@
+[
+  {
+    "id": "quick_test_001",
+    "category": "factual",
+    "prompt": "What is 5 times 5?",
+    "expected_output": "25",
+    "evaluation_criteria": "Must provide correct multiplication result"
+  },
+  {
+    "id": "quick_test_002",
+    "category": "factual",
+    "prompt": "Name the first president of the USA",
+    "expected_output": "George Washington",
+    "evaluation_criteria": "Must identify George Washington"
+  }
+]
