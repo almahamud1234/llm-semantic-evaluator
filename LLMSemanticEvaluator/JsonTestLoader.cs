@@ -96,7 +96,60 @@ public class JsonTestLoader : ITestLoader
     /// </summary>
     private void ValidateTestCases(List<TestCase> testCases)
     {
-        return;
+        if (testCases == null || testCases.Count == 0)
+        {
+            throw new InvalidOperationException("No test cases found in file");
+        }
+
+        for (int i = 0; i < testCases.Count; i++)
+        {
+            var test = testCases[i];
+            var errors = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(test.Id))
+            {
+                errors.Add($"Test at index {i} is missing 'Id'");
+            }
+
+            if (string.IsNullOrWhiteSpace(test.Prompt))
+            {
+                errors.Add($"Test '{test.Id}' is missing 'Prompt'");
+            }
+
+            if (string.IsNullOrWhiteSpace(test.ExpectedOutput))
+            {
+                errors.Add($"Test '{test.Id}' is missing 'ExpectedOutput'");
+            }
+
+            // Category is optional but should be set to "general" if missing
+            if (string.IsNullOrWhiteSpace(test.Category))
+            {
+                test.Category = "general";
+            }
+
+            // EvaluationCriteria is optional but helpful
+            if (string.IsNullOrWhiteSpace(test.EvaluationCriteria))
+            {
+                test.EvaluationCriteria = "The response should match the expected output semantically";
+            }
+
+            if (errors.Count > 0)
+            {
+                throw new InvalidOperationException($"Validation errors: {string.Join(", ", errors)}");
+            }
+        }
+
+        // Check for duplicate IDs
+        var duplicateIds = testCases
+            .GroupBy(t => t.Id)
+            .Where(g => g.Count() > 1)
+            .Select(g => g.Key)
+            .ToList();
+
+        if (duplicateIds.Count > 0)
+        {
+            throw new InvalidOperationException($"Duplicate test IDs found: {string.Join(", ", duplicateIds)}");
+        }
     }
 
     /// <summary>
