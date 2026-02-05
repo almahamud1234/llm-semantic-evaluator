@@ -12,4 +12,13 @@
     <PackageReference Include="System.Text.Json" Version="10.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="data\sample_test_cases.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="data\quick_tests.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

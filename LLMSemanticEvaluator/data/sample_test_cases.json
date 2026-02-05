@@ -1,5 +1,4 @@
-{
-  "tests": [
+[
     {
       "id": "factual_001",
       "category": "factual",
@@ -70,5 +69,4 @@
       "expected_output": "Computer systems that can perform tasks requiring human intelligence",
       "evaluation_criteria": "The response must capture the essence of AI"
     }
-  ]
-}
+]

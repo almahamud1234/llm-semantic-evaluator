@@ -15,7 +15,6 @@ public class JsonTestLoader : ITestLoader
     {
         _jsonOptions = new JsonSerializerOptions
         {
-            PropertyNameCaseInsensitive = true,
             ReadCommentHandling = JsonCommentHandling.Skip,
             AllowTrailingCommas = true
         };
