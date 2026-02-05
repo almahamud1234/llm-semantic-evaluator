@@ -1,0 +1,74 @@
+{
+  "tests": [
+    {
+      "id": "factual_001",
+      "category": "factual",
+      "prompt": "What is the capital of France?",
+      "expected_output": "Paris",
+      "evaluation_criteria": "The response must correctly identify Paris as the capital"
+    },
+    {
+      "id": "factual_002",
+      "category": "factual",
+      "prompt": "Who wrote Romeo and Juliet?",
+      "expected_output": "William Shakespeare",
+      "evaluation_criteria": "The response must identify Shakespeare as the author"
+    },
+    {
+      "id": "factual_003",
+      "category": "factual",
+      "prompt": "What is the chemical symbol for gold?",
+      "expected_output": "Au",
+      "evaluation_criteria": "The response must provide the correct chemical symbol Au"
+    },
+    {
+      "id": "math_001",
+      "category": "math",
+      "prompt": "What is 2+2?",
+      "expected_output": "4",
+      "evaluation_criteria": "The response must contain the correct numerical answer"
+    },
+    {
+      "id": "math_002",
+      "category": "math",
+      "prompt": "Calculate 15% of 200",
+      "expected_output": "30",
+      "evaluation_criteria": "The response must calculate the correct percentage"
+    },
+    {
+      "id": "math_003",
+      "category": "math",
+      "prompt": "What is the square root of 144?",
+      "expected_output": "12",
+      "evaluation_criteria": "The response must provide the correct square root"
+    },
+    {
+      "id": "reasoning_001",
+      "category": "reasoning",
+      "prompt": "If all dogs are animals, and Max is a dog, what is Max?",
+      "expected_output": "An animal",
+      "evaluation_criteria": "The response must demonstrate logical deduction"
+    },
+    {
+      "id": "reasoning_002",
+      "category": "reasoning",
+      "prompt": "A farmer has 17 sheep. All but 9 die. How many are left?",
+      "expected_output": "9",
+      "evaluation_criteria": "The response must correctly interpret 'all but 9'"
+    },
+    {
+      "id": "definition_001",
+      "category": "definition",
+      "prompt": "Define photosynthesis",
+      "expected_output": "The process where plants convert light energy into chemical energy",
+      "evaluation_criteria": "The response must explain the basic concept of photosynthesis"
+    },
+    {
+      "id": "definition_002",
+      "category": "definition",
+      "prompt": "What is artificial intelligence?",
+      "expected_output": "Computer systems that can perform tasks requiring human intelligence",
+      "evaluation_criteria": "The response must capture the essence of AI"
+    }
+  ]
+}
