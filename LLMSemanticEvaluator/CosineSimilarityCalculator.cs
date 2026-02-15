@@ -1,6 +1,6 @@
 using LLMSemanticEvaluator.Interfaces;
 
-namespace LLMPromptTesting.Console.Infrastructure.Math;
+namespace LLMSemanticEvaluator;
 
 /// <summary>
 /// Calculates cosine similarity between embedding vectors
