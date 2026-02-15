@@ -5,7 +5,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <StartupObject>LLMSemanticEvaluator.TestLoaderDemo</StartupObject>
+    <StartupObject>LLMSemanticEvaluator.SimilarityCalculatorDemo</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
