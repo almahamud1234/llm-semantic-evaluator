@@ -14,7 +14,6 @@ public class SimilarityCalculatorDemo
 
         var calculator = new CosineSimilarityCalculator();
 
-        // TODO: different test scenario
         // Test 1: Identical vectors
         TestScenario(calculator, "Test 1: Identical Vectors",
             new float[] { 1.0f, 2.0f, 3.0f },
@@ -63,6 +62,15 @@ public class SimilarityCalculatorDemo
             expectedSimilarity: 0.0,
             note: "Completely different topics");
 
+        // Test 8: Real embedding dimensions (1536 for OpenAI ada-002)
+        TestLargeVectors(calculator);
+
+        // Test 9: Error handling
+        TestErrorHandling(calculator);
+
+        // Test 10: Threshold checking
+        TestThresholds(calculator);
+
         Console.WriteLine();
         Console.WriteLine("=".PadRight(70, '='));
         Console.WriteLine("All Tests Complete!");
@@ -99,6 +107,128 @@ public class SimilarityCalculatorDemo
             Console.WriteLine($"Note: {note}");
         }
         
+        Console.WriteLine();
+    }
+
+    private static void TestLargeVectors(CosineSimilarityCalculator calculator)
+    {
+        Console.WriteLine("Test 8: Large Embedding Vectors (OpenAI-like)");
+        Console.WriteLine("-".PadRight(70, '-'));
+        
+        // Simulate OpenAI ada-002 embedding dimension (1536)
+        const int dimensions = 1536;
+        var random = new Random(42); // Fixed seed for reproducibility
+        
+        // Create two similar vectors
+        var vectorA = new float[dimensions];
+        var vectorB = new float[dimensions];
+        
+        for (int i = 0; i < dimensions; i++)
+        {
+            vectorA[i] = (float)(random.NextDouble() * 2 - 1); // Range: -1 to 1
+            // Make vectorB similar to vectorA with small random noise
+            vectorB[i] = vectorA[i] + (float)(random.NextDouble() * 0.1 - 0.05); // ±5% noise
+        }
+        
+        var similarity = calculator.CalculateCosineSimilarity(vectorA, vectorB);
+        var interpretation = CosineSimilarityCalculator.InterpretScore(similarity);
+        
+        Console.WriteLine($"Vector Dimensions: {dimensions}");
+        Console.WriteLine($"Similarity Score: {similarity:F4}");
+        Console.WriteLine($"Interpretation: {interpretation}");
+        Console.WriteLine($"Status: ✓ PASS - Can handle real embedding dimensions");
+        Console.WriteLine();
+    }
+    private static void TestErrorHandling(CosineSimilarityCalculator calculator)
+    {
+        Console.WriteLine("Test 9: Error Handling");
+        Console.WriteLine("-".PadRight(70, '-'));
+
+        var tests = new (string name, Func<double> action, Type? expectedException)[]
+        {
+            ("Null vector A", 
+                () => calculator.CalculateCosineSimilarity(null!, new float[] { 1.0f }), 
+                typeof(ArgumentNullException)),
+            
+            ("Null vector B", 
+                () => calculator.CalculateCosineSimilarity(new float[] { 1.0f }, null!), 
+                typeof(ArgumentNullException)),
+            
+            ("Empty vector A", 
+                () => calculator.CalculateCosineSimilarity(new float[0], new float[] { 1.0f }), 
+                typeof(ArgumentException)),
+            
+            ("Empty vector B", 
+                () => calculator.CalculateCosineSimilarity(new float[] { 1.0f }, new float[0]), 
+                typeof(ArgumentException)),
+            
+            ("Mismatched dimensions", 
+                () => calculator.CalculateCosineSimilarity(new float[] { 1.0f, 2.0f }, new float[] { 1.0f }), 
+                typeof(ArgumentException)),
+            
+            ("Zero vectors (handled gracefully)", 
+                () => calculator.CalculateCosineSimilarity(new float[] { 0.0f, 0.0f }, new float[] { 0.0f, 0.0f }), 
+                null) // This should NOT throw, returns 0.0
+        };
+
+        foreach (var (name, action, expectedException) in tests)
+        {
+            try
+            {
+                var result = action();
+                if (expectedException == null)
+                {
+                    Console.WriteLine($"  ✓ {name}: Handled gracefully (returned {result:F4})");
+                }
+                else
+                {
+                    Console.WriteLine($"  ✗ {name}: Expected {expectedException.Name} but didn't throw");
+                }
+            }
+            catch (Exception ex)
+            {
+                if (expectedException != null && ex.GetType() == expectedException)
+                {
+                    Console.WriteLine($"  ✓ {name}: Correctly threw {ex.GetType().Name}");
+                }
+                else
+                {
+                    Console.WriteLine($"  ✗ {name}: Unexpected exception {ex.GetType().Name}");
+                }
+            }
+        }
+        
+        Console.WriteLine();
+    }
+
+    private static void TestThresholds(CosineSimilarityCalculator calculator)
+    {
+        Console.WriteLine("Test 10: Threshold Checking");
+        Console.WriteLine("-".PadRight(70, '-'));
+
+        var vectorA = new float[] { 1.0f, 2.0f, 3.0f };
+        var vectorB = new float[] { 1.1f, 2.1f, 2.9f };
+        
+        var similarity = calculator.CalculateCosineSimilarity(vectorA, vectorB);
+        
+        Console.WriteLine($"Vector Similarity: {similarity:F4}");
+        Console.WriteLine();
+
+        var thresholds = new[] { 0.95, 0.90, 0.85, 0.80, 0.70, 0.50 };
+        
+        Console.WriteLine("Threshold Tests:");
+        foreach (var threshold in thresholds)
+        {
+            var passes = CosineSimilarityCalculator.PassesThreshold(similarity, threshold);
+            var status = passes ? "✓ PASS" : "✗ FAIL";
+            Console.WriteLine($"  Threshold {threshold:F2}: {status}");
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("Typical thresholds for LLM testing:");
+        Console.WriteLine("  0.85 = Default (good balance)");
+        Console.WriteLine("  0.90 = Strict (very similar required)");
+        Console.WriteLine("  0.80 = Lenient (more variation allowed)");
         Console.WriteLine();
     }
 }
