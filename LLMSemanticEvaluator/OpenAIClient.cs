@@ -13,9 +13,8 @@ namespace LLMSemanticEvaluator;
 /// </summary>
 public sealed class OpenAIClient : ILLMClient, IEmbeddingProvider, IDisposable
 {
-    private const string BaseUrl           = "https://api.openai.com/v1";
-    private const string ChatEndpoint      = "/chat/completions";
-    private const string EmbeddingEndpoint = "/embeddings";
+    private const string ChatEndpoint      = "https://api.openai.com/v1/chat/completions";
+    private const string EmbeddingEndpoint = "https://api.openai.com/v1/embeddings";
 
     private readonly HttpClient            _httpClient;
     private readonly TestConfiguration    _config;
@@ -28,8 +27,7 @@ public sealed class OpenAIClient : ILLMClient, IEmbeddingProvider, IDisposable
 
         _httpClient = new HttpClient
         {
-            BaseAddress = new Uri(BaseUrl + "/"),
-            Timeout     = TimeSpan.FromSeconds(config.TimeoutSeconds)
+            Timeout = TimeSpan.FromSeconds(config.TimeoutSeconds)
         };
         _httpClient.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", config.OpenAIApiKey);
