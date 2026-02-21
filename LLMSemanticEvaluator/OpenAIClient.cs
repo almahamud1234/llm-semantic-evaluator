@@ -28,7 +28,7 @@ public sealed class OpenAIClient : ILLMClient, IEmbeddingProvider, IDisposable
 
         _httpClient = new HttpClient
         {
-            BaseAddress = new Uri(BaseUrl),
+            BaseAddress = new Uri(BaseUrl + "/"),
             Timeout     = TimeSpan.FromSeconds(config.TimeoutSeconds)
         };
         _httpClient.DefaultRequestHeaders.Authorization =
