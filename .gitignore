@@ -399,6 +399,9 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
+# remove appsettings.json 
+appsettings.json
+
 # JetBrains Rider
 *.sln.iml
 /src/SkSamples/semantickernelsample/Properties/launchSettings.json
@@ -408,4 +411,3 @@ FodyWeavers.xsd
 /src/SKTrainingSolution/semantickernelsample/Properties/launchSettings -Empty.json
 /src/SKTrainingSolution/semantickernelsample/Properties/launchSettings - Prod.json
 /src/OpenAI.Samples/Properties/launchSettings.empty.json
-/src/OpenAI.Samples/Properties/launchSettings.prod.json
