@@ -1,55 +1,55 @@
 [
     {
-      "id": "factual_001",
+      "id": "factual_021",
       "category": "factual",
       "prompt": "What is the capital of France?",
       "expected_output": "Paris",
       "evaluation_criteria": "The response must correctly identify Paris as the capital"
     },
     {
-      "id": "factual_002",
+      "id": "factual_022",
       "category": "factual",
       "prompt": "Who wrote Romeo and Juliet?",
       "expected_output": "William Shakespeare",
       "evaluation_criteria": "The response must identify Shakespeare as the author"
     },
     {
-      "id": "factual_003",
+      "id": "factual_023",
       "category": "factual",
       "prompt": "What is the chemical symbol for gold?",
       "expected_output": "Au",
       "evaluation_criteria": "The response must provide the correct chemical symbol Au"
     },
     {
-      "id": "math_001",
+      "id": "math_021",
       "category": "math",
       "prompt": "What is 2+2?",
       "expected_output": "4",
       "evaluation_criteria": "The response must contain the correct numerical answer"
     },
     {
-      "id": "math_002",
+      "id": "math_022",
       "category": "math",
       "prompt": "Calculate 15% of 200",
       "expected_output": "30",
       "evaluation_criteria": "The response must calculate the correct percentage"
     },
     {
-      "id": "math_003",
+      "id": "math_023",
       "category": "math",
       "prompt": "What is the square root of 144?",
       "expected_output": "12",
       "evaluation_criteria": "The response must provide the correct square root"
     },
     {
-      "id": "reasoning_001",
+      "id": "reasoning_021",
       "category": "reasoning",
       "prompt": "If all dogs are animals, and Max is a dog, what is Max?",
       "expected_output": "An animal",
       "evaluation_criteria": "The response must demonstrate logical deduction"
     },
     {
-      "id": "reasoning_002",
+      "id": "reasoning_022",
       "category": "reasoning",
       "prompt": "A farmer has 17 sheep. All but 9 die. How many are left?",
       "expected_output": "9",
@@ -68,5 +68,844 @@
       "prompt": "What is artificial intelligence?",
       "expected_output": "Computer systems that can perform tasks requiring human intelligence",
       "evaluation_criteria": "The response must capture the essence of AI"
-    }
+    },
+    { 
+      "id": "history_001", 
+      "category": "history", 
+      "prompt": "In which year did World War II end?", 
+      "expected_output": "1945", 
+      "evaluation_criteria": "Response must state 1945" 
+    },
+    { 
+      "id": "history_002", 
+      "category": "history", 
+      "prompt": "Who was the first President of the United States?", 
+      "expected_output": "George Washington", 
+      "evaluation_criteria": "Response must identify George Washington" 
+    },
+    { 
+      "id": "history_003", 
+      "category": "history", 
+      "prompt": "In which year did the French Revolution begin?", 
+      "expected_output": "1789", 
+      "evaluation_criteria": "Response must state 1789" 
+    },
+    { 
+      "id": "history_004", 
+      "category": "history", 
+      "prompt": "Who wrote the theory of evolution by natural selection?", 
+      "expected_output": "Charles Darwin", 
+      "evaluation_criteria": "Response must identify Charles Darwin" 
+    },
+    { 
+      "id": "history_005", 
+      "category": "history", 
+      "prompt": "In which year did humans first land on the Moon?", 
+      "expected_output": "1969", 
+      "evaluation_criteria": "Response must state 1969" 
+    },
+    { 
+      "id": "history_006", 
+      "category": "history", 
+      "prompt": "Which empire was Julius Caesar a part of?", 
+      "expected_output": "The Roman Empire", 
+      "evaluation_criteria": "Response must identify the Roman Empire" 
+    },
+    { 
+      "id": "history_007", 
+      "category": "history", 
+      "prompt": "In which year did World War I begin?", 
+      "expected_output": "1914", 
+      "evaluation_criteria": "Response must state 1914" 
+    },
+    { 
+      "id": "history_008", 
+      "category": "history", 
+      "prompt": "Who was the first woman to win a Nobel Prize?", 
+      "expected_output": "Marie Curie", 
+      "evaluation_criteria": "Response must identify Marie Curie" 
+    },
+    { 
+      "id": "history_009", 
+      "category": "history", 
+      "prompt": "Which country was the first to grant women the right to vote?", 
+      "expected_output": "New Zealand", 
+      "evaluation_criteria": "Response must identify New Zealand in 1893" 
+    },
+    { 
+      "id": "history_010", 
+      "category": "history", 
+      "prompt": "In which year did the Berlin Wall fall?", 
+      "expected_output": "1989", 
+      "evaluation_criteria": "Response must state 1989" 
+    },
+    { 
+      "id": "history_011", 
+      "category": "history", 
+      "prompt": "Who was the leader of Nazi Germany during World War II?", 
+      "expected_output": "Adolf Hitler", 
+      "evaluation_criteria": "Response must identify Adolf Hitler" 
+    },
+    { 
+      "id": "history_012", 
+      "category": "history", 
+      "prompt": "Which ancient wonder was located in Alexandria, Egypt?", 
+      "expected_output": "The Lighthouse of Alexandria", 
+      "evaluation_criteria": "Response must identify the Lighthouse of Alexandria" 
+    },
+    { 
+      "id": "history_013", 
+      "category": "history", 
+      "prompt": "In which year did the Titanic sink?", 
+      "expected_output": "1912", 
+      "evaluation_criteria": "Response must state 1912" 
+    },
+    { 
+      "id": "history_014", 
+      "category": "history", 
+      "prompt": "Who gave the 'I Have a Dream' speech?", 
+      "expected_output": "Martin Luther King Jr.", 
+      "evaluation_criteria": "Response must identify Martin Luther King Jr." 
+    },
+    { 
+      "id": "history_015", 
+      "category": "history", 
+      "prompt": "Which country did Christopher Columbus sail for when he reached the Americas?", 
+      "expected_output": "Spain", 
+      "evaluation_criteria": "Response must identify Spain" 
+    },
+    { 
+      "id": "history_016", 
+      "category": "history", 
+      "prompt": "In which year did the Soviet Union collapse?", 
+      "expected_output": "1991", 
+      "evaluation_criteria": "Response must state 1991" 
+    },
+    { 
+      "id": "history_017", 
+      "category": "history", 
+      "prompt": "Who invented the telephone?", 
+      "expected_output": "Alexander Graham Bell", 
+      "evaluation_criteria": "Response must identify Alexander Graham Bell" 
+    },
+    { 
+      "id": "history_018", 
+      "category": "history", 
+      "prompt": "Which city was the capital of the Byzantine Empire?", 
+      "expected_output": "Constantinople", 
+      "evaluation_criteria": "Response must identify Constantinople, also known as Istanbul" 
+    },
+    { 
+      "id": "history_019", 
+      "category": "history", 
+      "prompt": "In which year did India gain independence from Britain?", 
+      "expected_output": "1947", 
+      "evaluation_criteria": "Response must state 1947" 
+    },
+    { 
+      "id": "history_020", 
+      "category": "history", 
+      "prompt": "Who was the first person to circumnavigate the globe?", 
+      "expected_output": "Ferdinand Magellan", 
+      "evaluation_criteria": "Response must identify Ferdinand Magellan" 
+    },
+    { 
+      "id": "definition_021", 
+      "category": "definitions", 
+      "prompt": "Define photosynthesis", 
+      "expected_output": "The process by which plants use sunlight, water, and carbon dioxide to produce oxygen and energy in the form of sugar", 
+      "evaluation_criteria": "Response must mention sunlight, plants, and energy/sugar production" 
+    },
+    { 
+      "id": "definition_022", 
+      "category": "definitions", 
+      "prompt": "What is democracy?", 
+      "expected_output": "A system of government in which power is vested in the people, who rule either directly or through elected representatives", 
+      "evaluation_criteria": "Response must mention people, voting or elected representatives" 
+    },
+    { 
+      "id": "definition_003", 
+      "category": "definitions", 
+      "prompt": "What is an algorithm?", 
+      "expected_output": "A set of step-by-step instructions or rules designed to solve a problem or complete a task", 
+      "evaluation_criteria": "Response must mention steps, instructions, and problem solving" 
+    },
+    { 
+      "id": "definition_004", 
+      "category": "definitions", 
+      "prompt": "Define gravity", 
+      "expected_output": "A natural force that attracts objects with mass toward one another, pulling them together", 
+      "evaluation_criteria": "Response must mention force and attraction between objects" 
+    },
+    { 
+      "id": "definition_005", 
+      "category": "definitions", 
+      "prompt": "What is inflation in economics?", 
+      "expected_output": "The rate at which the general level of prices for goods and services rises over time, reducing purchasing power", 
+      "evaluation_criteria": "Response must mention rising prices and reduced purchasing power" 
+    },
+    { 
+      "id": "definition_006", 
+      "category": "definitions", 
+      "prompt": "What is a hypothesis?", 
+      "expected_output": "A proposed explanation for an observation that can be tested through further investigation or experimentation", 
+      "evaluation_criteria": "Response must mention a testable explanation or prediction" 
+    },
+    { 
+      "id": "definition_007", 
+      "category": "definitions", 
+      "prompt": "Define osmosis", 
+      "expected_output": "The movement of water molecules through a semipermeable membrane from an area of lower solute concentration to higher solute concentration", 
+      "evaluation_criteria": "Response must mention water, membrane, and concentration" 
+    },
+    { 
+      "id": "definition_008", 
+      "category": "definitions", 
+      "prompt": "What is artificial intelligence?", 
+      "expected_output": "The simulation of human intelligence processes by computer systems, including learning, reasoning, and problem-solving", 
+      "evaluation_criteria": "Response must mention computers simulating human intelligence" 
+    },
+    { 
+      "id": "definition_009", 
+      "category": "definitions", 
+      "prompt": "What is a synonym?", 
+      "expected_output": "A word that has the same or nearly the same meaning as another word", 
+      "evaluation_criteria": "Response must mention same meaning as another word" 
+    },
+    { 
+      "id": "definition_010", 
+      "category": "definitions", 
+      "prompt": "Define metabolism", 
+      "expected_output": "The set of chemical processes that occur in living organisms to maintain life, including converting food to energy", 
+      "evaluation_criteria": "Response must mention chemical processes and energy in living organisms" 
+    },
+    { 
+      "id": "definition_011", 
+      "category": "definitions", 
+      "prompt": "What is a variable in programming?", 
+      "expected_output": "A named storage location in memory that holds a value which can be changed during program execution", 
+      "evaluation_criteria": "Response must mention storage, name, and value" 
+    },
+    { 
+      "id": "definition_012", 
+      "category": "definitions", 
+      "prompt": "What is climate change?", 
+      "expected_output": "Long-term shifts in global temperatures and weather patterns, largely driven by human activities releasing greenhouse gases", 
+      "evaluation_criteria": "Response must mention temperature shifts and human activity" 
+    },
+    { 
+      "id": "definition_013", 
+      "category": "definitions", 
+      "prompt": "Define empathy", 
+      "expected_output": "The ability to understand and share the feelings or experiences of another person", 
+      "evaluation_criteria": "Response must mention understanding another person's feelings" 
+    },
+    { 
+      "id": "definition_014", 
+      "category": "definitions", 
+      "prompt": "What is DNA?", 
+      "expected_output": "Deoxyribonucleic acid, a molecule that carries the genetic instructions for the development and functioning of living organisms", 
+      "evaluation_criteria": "Response must mention genetic information and living organisms" 
+    },
+    { 
+      "id": "definition_015", 
+      "category": "definitions", 
+      "prompt": "What is supply and demand?", 
+      "expected_output": "An economic model where the price and quantity of a good are determined by the balance between how much is available and how much consumers want", 
+      "evaluation_criteria": "Response must mention price, availability, and consumer desire" 
+    },
+    { 
+      "id": "definition_016", 
+      "category": "definitions", 
+      "prompt": "Define biodiversity", 
+      "expected_output": "The variety of life on Earth, including the different species of plants, animals, and microorganisms in an ecosystem", 
+      "evaluation_criteria": "Response must mention variety of species and ecosystems" 
+    },
+    { 
+      "id": "definition_017", 
+      "category": "definitions", 
+      "prompt": "What is recursion in programming?", 
+      "expected_output": "A technique where a function calls itself in order to solve a problem by breaking it into smaller instances of the same problem", 
+      "evaluation_criteria": "Response must mention a function calling itself" 
+    },
+    { 
+      "id": "definition_018", 
+      "category": "definitions", 
+      "prompt": "What is the placebo effect?", 
+      "expected_output": "A phenomenon where a patient experiences a real improvement in their condition after receiving an inactive treatment, due to belief in its effectiveness", 
+      "evaluation_criteria": "Response must mention inactive treatment and belief causing improvement" 
+    },
+    { 
+      "id": "definition_019", 
+      "category": "definitions", 
+      "prompt": "Define Renaissance", 
+      "expected_output": "A cultural and intellectual movement in Europe from the 14th to 17th centuries, marking a revival of interest in classical art, literature, and learning", 
+      "evaluation_criteria": "Response must mention European cultural revival and classical arts" 
+    },
+    { 
+      "id": "definition_020", 
+      "category": "definitions", 
+      "prompt": "What is a neural network?", 
+      "expected_output": "A computational model inspired by the human brain, consisting of layers of interconnected nodes that learn patterns from data", 
+      "evaluation_criteria": "Response must mention brain-inspired layers and learning from data" 
+    },
+    { 
+      "id": "factual_001", 
+      "category": "factual", 
+      "prompt": "What is the capital of France?", 
+      "expected_output": "Paris", 
+      "evaluation_criteria": "Response must identify Paris as the capital of France" 
+    },
+    { 
+      "id": "factual_002", 
+      "category": "factual", 
+      "prompt": "What is the capital of Japan?", 
+      "expected_output": "Tokyo", 
+      "evaluation_criteria": "Response must identify Tokyo as the capital of Japan" 
+    },
+    { 
+      "id": "factual_003", 
+      "category": "factual", 
+      "prompt": "What is the capital of Australia?", 
+      "expected_output": "Canberra", 
+      "evaluation_criteria": "Response must identify Canberra, not Sydney" 
+    },
+    { 
+      "id": "factual_004", 
+      "category": "factual", 
+      "prompt": "What is the largest ocean on Earth?", 
+      "expected_output": "The Pacific Ocean", 
+      "evaluation_criteria": "Response must identify the Pacific Ocean" 
+    },
+    { 
+      "id": "factual_005", 
+      "category": "factual", 
+      "prompt": "How many continents are there on Earth?", 
+      "expected_output": "7", 
+      "evaluation_criteria": "Response must state 7 continents" 
+    },
+    { 
+      "id": "factual_006", 
+      "category": "factual", 
+      "prompt": "What is the longest river in the world?", 
+      "expected_output": "The Nile River", 
+      "evaluation_criteria": "Response must identify the Nile" 
+    },
+    { 
+      "id": "factual_007", 
+      "category": "factual", 
+      "prompt": "What is the tallest mountain in the world?", 
+      "expected_output": "Mount Everest", 
+      "evaluation_criteria": "Response must identify Mount Everest" 
+    },
+    { 
+      "id": "factual_008", 
+      "category": "factual", 
+      "prompt": "How many planets are in our solar system?", 
+      "expected_output": "8", 
+      "evaluation_criteria": "Response must state 8 planets" 
+    },
+    { 
+      "id": "factual_009", 
+      "category": "factual", 
+      "prompt": "What is the smallest country in the world?", 
+      "expected_output": "Vatican City", 
+      "evaluation_criteria": "Response must identify Vatican City" 
+    },
+    { 
+      "id": "factual_010", 
+      "category": "factual", 
+      "prompt": "What is the largest country by land area?", 
+      "expected_output": "Russia", 
+      "evaluation_criteria": "Response must identify Russia" 
+    },
+    { 
+      "id": "factual_011", 
+      "category": "factual", 
+      "prompt": "What is the capital of Brazil?", 
+      "expected_output": "Brasilia", 
+      "evaluation_criteria": "Response must identify Brasilia, not Rio de Janeiro" 
+    },
+    { 
+      "id": "factual_012", 
+      "category": "factual", 
+      "prompt": "Which planet is closest to the Sun?", 
+      "expected_output": "Mercury", 
+      "evaluation_criteria": "Response must identify Mercury" 
+    },
+    { 
+      "id": "factual_013", 
+      "category": "factual", 
+      "prompt": "What is the most spoken language in the world?", 
+      "expected_output": "Mandarin Chinese", 
+      "evaluation_criteria": "Response must identify Mandarin Chinese" 
+    },
+    { 
+      "id": "factual_014", 
+      "category": "factual", 
+      "prompt": "What is the largest desert in the world?", 
+      "expected_output": "The Sahara Desert", 
+      "evaluation_criteria": "Response must identify the Sahara" 
+    },
+    { 
+      "id": "factual_015", 
+      "category": "factual", 
+      "prompt": "How many sides does a hexagon have?", 
+      "expected_output": "6", 
+      "evaluation_criteria": "Response must state 6 sides" 
+    },
+    { 
+      "id": "factual_016", 
+      "category": "factual", 
+      "prompt": "What is the chemical symbol for gold?", 
+      "expected_output": "Au", 
+      "evaluation_criteria": "Response must identify Au" 
+    },
+    { 
+      "id": "factual_017", 
+      "category": "factual", 
+      "prompt": "What is the chemical symbol for water?", 
+      "expected_output": "H2O", 
+      "evaluation_criteria": "Response must identify H2O" 
+    },
+    { 
+      "id": "factual_018", 
+      "category": "factual", 
+      "prompt": "What is the capital of Canada?", 
+      "expected_output": "Ottawa", 
+      "evaluation_criteria": "Response must identify Ottawa, not Toronto" 
+    },
+    { 
+      "id": "factual_019", 
+      "category": "factual", 
+      "prompt": "Which is the largest planet in our solar system?", 
+      "expected_output": "Jupiter", 
+      "evaluation_criteria": "Response must identify Jupiter" 
+    },
+    { 
+      "id": "factual_020", 
+      "category": "factual", 
+      "prompt": "How many hours are in a day?", 
+      "expected_output": "24", 
+      "evaluation_criteria": "Response must state 24 hours" 
+    },
+    { 
+      "id": "math_001", 
+      "category": "math", 
+      "prompt": "What is 2 + 2?", 
+      "expected_output": "4", 
+      "evaluation_criteria": "Response must state the answer is 4" 
+    },
+    { 
+      "id": "math_002", 
+      "category": "math", 
+      "prompt": "What is 15% of 200?", 
+      "expected_output": "30", 
+      "evaluation_criteria": "Response must state the answer is 30" 
+    },
+    { 
+      "id": "math_003", 
+      "category": "math", 
+      "prompt": "What is the square root of 144?", 
+      "expected_output": "12", 
+      "evaluation_criteria": "Response must state the answer is 12" 
+    },
+    { 
+      "id": "math_004", 
+      "category": "math", 
+      "prompt": "What is 7 multiplied by 8?", 
+      "expected_output": "56", 
+      "evaluation_criteria": "Response must state the answer is 56" 
+    },
+    { 
+      "id": "math_005", 
+      "category": "math", 
+      "prompt": "What is 100 divided by 4?", 
+      "expected_output": "25", 
+      "evaluation_criteria": "Response must state the answer is 25" 
+    },
+    { 
+      "id": "math_006", 
+      "category": "math", 
+      "prompt": "What is 2 to the power of 10?", 
+      "expected_output": "1024", 
+      "evaluation_criteria": "Response must state the answer is 1024" 
+    },
+    { 
+      "id": "math_007", 
+      "category": "math", 
+      "prompt": "What is the value of pi rounded to 2 decimal places?", 
+      "expected_output": "3.14", 
+      "evaluation_criteria": "Response must state 3.14" 
+    },
+    { 
+      "id": "math_008", 
+      "category": "math", 
+      "prompt": "What is 50% of 80?", 
+      "expected_output": "40", 
+      "evaluation_criteria": "Response must state the answer is 40" 
+    },
+    { 
+      "id": "math_009", 
+      "category": "math", 
+      "prompt": "What is 9 squared?", 
+      "expected_output": "81", 
+      "evaluation_criteria": "Response must state the answer is 81" 
+    },
+    { 
+      "id": "math_010", 
+      "category": "math", 
+      "prompt": "How many degrees are in a right angle?", 
+      "expected_output": "90", 
+      "evaluation_criteria": "Response must state 90 degrees" 
+    },
+    { 
+      "id": "math_011", 
+      "category": "math", 
+      "prompt": "What is 1000 minus 357?", 
+      "expected_output": "643", 
+      "evaluation_criteria": "Response must state the answer is 643" 
+    },
+    { 
+      "id": "math_012", 
+      "category": "math", 
+      "prompt": "What is 12 factorial divided by 10 factorial?", 
+      "expected_output": "132", 
+      "evaluation_criteria": "Response must state the answer is 132" 
+    },
+    { 
+      "id": "math_013", 
+      "category": "math", 
+      "prompt": "What is the area of a circle with radius 5? Use pi = 3.14", 
+      "expected_output": "78.5", 
+      "evaluation_criteria": "Response must state approximately 78.5" 
+    },
+    { 
+      "id": "math_014", 
+      "category": "math", 
+      "prompt": "What is 3/4 as a decimal?", 
+      "expected_output": "0.75", 
+      "evaluation_criteria": "Response must state 0.75" 
+    },
+    { 
+      "id": "math_015", 
+      "category": "math", 
+      "prompt": "How many degrees are in a triangle?", 
+      "expected_output": "180", 
+      "evaluation_criteria": "Response must state 180 degrees" 
+    },
+    { 
+      "id": "math_016", 
+      "category": "math", 
+      "prompt": "What is the next prime number after 7?", 
+      "expected_output": "11", 
+      "evaluation_criteria": "Response must identify 11" 
+    },
+    { 
+      "id": "math_017", 
+      "category": "math", 
+      "prompt": "What is 25% of 400?", 
+      "expected_output": "100", 
+      "evaluation_criteria": "Response must state the answer is 100" 
+    },
+    { 
+      "id": "math_018", 
+      "category": "math", 
+      "prompt": "What is the square root of 256?", 
+      "expected_output": "16", 
+      "evaluation_criteria": "Response must state the answer is 16" 
+    },
+    { 
+      "id": "math_019", 
+      "category": "math", 
+      "prompt": "What is 6 times 7 minus 10?", 
+      "expected_output": "32", 
+      "evaluation_criteria": "Response must state the answer is 32" 
+    },
+    { 
+      "id": "math_020", 
+      "category": "math", 
+      "prompt": "How many seconds are in one hour?", 
+      "expected_output": "3600", 
+      "evaluation_criteria": "Response must state 3600 seconds" 
+    },
+    { 
+      "id": "reasoning_001", 
+      "category": "reasoning", 
+      "prompt": "If all dogs are animals, and Max is a dog, what is Max?", 
+      "expected_output": "An animal", 
+      "evaluation_criteria": "Response must conclude Max is an animal" 
+    },
+    { 
+      "id": "reasoning_002", 
+      "category": "reasoning", 
+      "prompt": "A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?", 
+      "expected_output": "5 cents", 
+      "evaluation_criteria": "Response must state 5 cents, not 10 cents" 
+    },
+    { 
+      "id": "reasoning_003", 
+      "category": "reasoning", 
+      "prompt": "If it takes 5 machines 5 minutes to make 5 widgets, how long does it take 100 machines to make 100 widgets?", 
+      "expected_output": "5 minutes", 
+      "evaluation_criteria": "Response must state 5 minutes" 
+    },
+    { 
+      "id": "reasoning_004", 
+      "category": "reasoning", 
+      "prompt": "All roses are flowers. Some flowers fade quickly. Can we conclude that some roses fade quickly?", 
+      "expected_output": "No, we cannot conclude that", 
+      "evaluation_criteria": "Response must say no, this cannot be concluded logically" 
+    },
+    { 
+      "id": "reasoning_005", 
+      "category": "reasoning", 
+      "prompt": "A farmer has 17 sheep. All but 9 die. How many sheep are left?", 
+      "expected_output": "9", 
+      "evaluation_criteria": "Response must state 9 sheep remain" 
+    },
+    { 
+      "id": "reasoning_006", 
+      "category": "reasoning", 
+      "prompt": "If you have a 3-litre jug and a 5-litre jug, how can you measure exactly 4 litres?", 
+      "expected_output": "Fill the 5-litre jug, pour into the 3-litre jug until full, leaving 2 litres in the 5-litre jug. Empty the 3-litre jug. Pour the 2 litres into the 3-litre jug. Fill the 5-litre jug again and pour 1 litre into the 3-litre jug, leaving exactly 4 litres.", 
+      "evaluation_criteria": "Response must describe a valid sequence of steps to measure 4 litres" 
+    },
+    { 
+      "id": "reasoning_007", 
+      "category": "reasoning", 
+      "prompt": "What comes next in the sequence: 2, 4, 8, 16, ?", 
+      "expected_output": "32", 
+      "evaluation_criteria": "Response must state 32" 
+    },
+    { 
+      "id": "reasoning_008", 
+      "category": "reasoning", 
+      "prompt": "What comes next in the sequence: 1, 1, 2, 3, 5, 8, ?", 
+      "expected_output": "13", 
+      "evaluation_criteria": "Response must state 13 (Fibonacci)" 
+    },
+    { 
+      "id": "reasoning_009", 
+      "category": "reasoning", 
+      "prompt": "If today is Wednesday, what day will it be in 10 days?", 
+      "expected_output": "Saturday", 
+      "evaluation_criteria": "Response must state Saturday" 
+    },
+    { 
+      "id": "reasoning_010", 
+      "category": "reasoning", 
+      "prompt": "You have two coins that add up to 30 cents. One is not a nickel. What are the two coins?", 
+      "expected_output": "A quarter and a nickel", 
+      "evaluation_criteria": "Response must identify a quarter and a nickel — the quarter is the one that is not a nickel" 
+    },
+    { 
+      "id": "reasoning_011", 
+      "category": "reasoning", 
+      "prompt": "If you overtake the person in second place in a race, what position are you in?", 
+      "expected_output": "Second place", 
+      "evaluation_criteria": "Response must state second place" 
+    },
+    { 
+      "id": "reasoning_012", 
+      "category": "reasoning", 
+      "prompt": "A rooster lays an egg on the peak of a roof. Which way does it roll?", 
+      "expected_output": "Roosters do not lay eggs", 
+      "evaluation_criteria": "Response must point out roosters do not lay eggs" 
+    },
+    { 
+      "id": "reasoning_013", 
+      "category": "reasoning", 
+      "prompt": "What comes next in the sequence: 3, 6, 9, 12, ?", 
+      "expected_output": "15", 
+      "evaluation_criteria": "Response must state 15" 
+    },
+    { 
+      "id": "reasoning_014", 
+      "category": "reasoning", 
+      "prompt": "Some cats are black. All black things absorb heat. Do some cats absorb heat?", 
+      "expected_output": "Yes, some cats absorb heat", 
+      "evaluation_criteria": "Response must conclude yes, some cats absorb heat" 
+    },
+    { 
+      "id": "reasoning_015", 
+      "category": "reasoning", 
+      "prompt": "If all bloops are razzles, and all razzles are lazzles, are all bloops lazzles?", 
+      "expected_output": "Yes, all bloops are lazzles", 
+      "evaluation_criteria": "Response must conclude yes by transitive logic" 
+    },
+    { 
+      "id": "reasoning_016", 
+      "category": "reasoning", 
+      "prompt": "A man walks into a bar and asks for a glass of water. The bartender pulls out a gun and points it at him. The man says thank you and leaves. Why?", 
+      "expected_output": "The man had hiccups and the scare from the gun cured them, so he no longer needed the water", 
+      "evaluation_criteria": "Response must mention hiccups being cured by fright" 
+    },
+    { 
+      "id": "reasoning_017", 
+      "category": "reasoning", 
+      "prompt": "What comes next in the sequence: 1, 4, 9, 16, 25, ?", 
+      "expected_output": "36", 
+      "evaluation_criteria": "Response must state 36 (perfect squares)" 
+    },
+    { 
+      "id": "reasoning_018", 
+      "category": "reasoning", 
+      "prompt": "If you have a box with 6 apples and you take away 4, how many apples do you have?", 
+      "expected_output": "4", 
+      "evaluation_criteria": "Response must state 4 — the ones you took" 
+    },
+    { 
+      "id": "reasoning_019", 
+      "category": "reasoning", 
+      "prompt": "No fish are mammals. All salmon are fish. Are any salmon mammals?", 
+      "expected_output": "No, no salmon are mammals", 
+      "evaluation_criteria": "Response must conclude no salmon are mammals" 
+    },
+    { 
+      "id": "reasoning_020", 
+      "category": "reasoning", 
+      "prompt": "What is always coming but never arrives?", 
+      "expected_output": "Tomorrow", 
+      "evaluation_criteria": "Response must answer tomorrow" 
+    },
+    { 
+      "id": "science_001", 
+      "category": "science", 
+      "prompt": "What is the speed of light in a vacuum?", 
+      "expected_output": "approximately 299,792,458 metres per second", 
+      "evaluation_criteria": "Response must state approximately 300,000 km/s or 299,792,458 m/s" 
+    },
+    { 
+      "id": "science_002", 
+      "category": "science", 
+      "prompt": "What is Newton's first law of motion?", 
+      "expected_output": "An object at rest stays at rest, and an object in motion stays in motion, unless acted upon by an external force", 
+      "evaluation_criteria": "Response must mention objects continuing their state unless a force acts on them" 
+    },
+    { 
+      "id": "science_003", 
+      "category": "science", 
+      "prompt": "What is the atomic number of carbon?", 
+      "expected_output": "6", 
+      "evaluation_criteria": "Response must state 6" 
+    },
+    { 
+      "id": "science_004", 
+      "category": "science", 
+      "prompt": "What gas do plants absorb during photosynthesis?", 
+      "expected_output": "Carbon dioxide", 
+      "evaluation_criteria": "Response must identify carbon dioxide or CO2" 
+    },
+    { 
+      "id": "science_005", 
+      "category": "science", 
+      "prompt": "What is the powerhouse of the cell?", 
+      "expected_output": "The mitochondria", 
+      "evaluation_criteria": "Response must identify the mitochondria" 
+    },
+    { 
+      "id": "science_006", 
+      "category": "science", 
+      "prompt": "What is the chemical formula for table salt?", 
+      "expected_output": "NaCl", 
+      "evaluation_criteria": "Response must state NaCl or sodium chloride" 
+    },
+    { 
+      "id": "science_007", 
+      "category": "science", 
+      "prompt": "How many bones are in the adult human body?", 
+      "expected_output": "206", 
+      "evaluation_criteria": "Response must state 206 bones" 
+    },
+    { 
+      "id": "science_008", 
+      "category": "science", 
+      "prompt": "What planet is known as the Red Planet?", 
+      "expected_output": "Mars", 
+      "evaluation_criteria": "Response must identify Mars" 
+    },
+    { 
+      "id": "science_009", 
+      "category": "science", 
+      "prompt": "What is the most abundant gas in Earth's atmosphere?", 
+      "expected_output": "Nitrogen", 
+      "evaluation_criteria": "Response must identify nitrogen at about 78%" 
+    },
+    { 
+      "id": "science_010", 
+      "category": "science", 
+      "prompt": "What force keeps planets in orbit around the Sun?", 
+      "expected_output": "Gravity", 
+      "evaluation_criteria": "Response must identify gravity" 
+    },
+    { 
+      "id": "science_011", 
+      "category": "science", 
+      "prompt": "What is the pH of pure water?", 
+      "expected_output": "7", 
+      "evaluation_criteria": "Response must state pH 7 (neutral)" 
+    },
+    { 
+      "id": "science_012", 
+      "category": "science", 
+      "prompt": "What type of energy does the Sun primarily produce?", 
+      "expected_output": "Nuclear energy through fusion", 
+      "evaluation_criteria": "Response must mention nuclear fusion" 
+    },
+    { 
+      "id": "science_013", 
+      "category": "science", 
+      "prompt": "What is the smallest unit of matter?", 
+      "expected_output": "An atom", 
+      "evaluation_criteria": "Response must identify the atom" 
+    },
+    { 
+      "id": "science_014", 
+      "category": "science", 
+      "prompt": "What organ pumps blood through the human body?", 
+      "expected_output": "The heart", 
+      "evaluation_criteria": "Response must identify the heart" 
+    },
+    { 
+      "id": "science_015", 
+      "category": "science", 
+      "prompt": "What is the process by which liquid water turns into water vapour?", 
+      "expected_output": "Evaporation", 
+      "evaluation_criteria": "Response must identify evaporation" 
+    },
+    { 
+      "id": "science_016", 
+      "category": "science", 
+      "prompt": "What are the three states of matter?", 
+      "expected_output": "Solid, liquid, and gas", 
+      "evaluation_criteria": "Response must list solid, liquid, and gas" 
+    },
+    { 
+      "id": "science_017", 
+      "category": "science", 
+      "prompt": "What is the name of the layer of gases surrounding the Earth?", 
+      "expected_output": "The atmosphere", 
+      "evaluation_criteria": "Response must identify the atmosphere" 
+    },
+    { 
+      "id": "science_018", 
+      "category": "science", 
+      "prompt": "Which vitamin is produced when human skin is exposed to sunlight?", 
+      "expected_output": "Vitamin D", 
+      "evaluation_criteria": "Response must identify Vitamin D" 
+    },
+    { 
+      "id": "science_019", 
+      "category": "science", 
+      "prompt": "What is the name of the force that opposes motion between two surfaces in contact?", 
+      "expected_output": "Friction", 
+      "evaluation_criteria": "Response must identify friction" 
+    },
+    { 
+      "id": "science_020", 
+      "category": "science", 
+      "prompt": "How many chromosomes do humans normally have?", 
+      "expected_output": "46", 
+      "evaluation_criteria": "Response must state 46 chromosomes or 23 pairs" }
 ]
