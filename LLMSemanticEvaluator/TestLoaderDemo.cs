@@ -8,7 +8,7 @@ namespace LLMSemanticEvaluator;
 /// </summary>
 public class TestLoaderDemo
 {
-    public static async Task Main(string[] args)
+    public static async Task MainTestLoader(string[] args)
     {
         System.Console.WriteLine("=".PadRight(60, '='));
         System.Console.WriteLine("LLM Semantic Evaluator - TestLoader Demo");

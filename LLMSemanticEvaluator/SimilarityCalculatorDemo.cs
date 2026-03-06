@@ -5,7 +5,7 @@ namespace LLMSemanticEvaluator;
 /// </summary>
 public class SimilarityCalculatorDemo
 {
-    public static void Main(string[] args)
+    public static void MainSimiarity(string[] args)
     {
         Console.WriteLine("=".PadRight(70, '='));
         Console.WriteLine("LLM Prompt Testing Framework - Similarity Calculator Demo");

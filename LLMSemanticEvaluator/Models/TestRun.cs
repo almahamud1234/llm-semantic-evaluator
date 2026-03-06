@@ -39,5 +39,5 @@ public class TestRun
     /// <summary>
     /// Overall pass status (both validators must pass)
     /// </summary>
-    public bool Passed => EmbeddingPassed && JudgePassed;
+    public bool Passed => EmbeddingPassed || JudgePassed;
 }

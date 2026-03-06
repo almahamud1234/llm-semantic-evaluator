@@ -9,7 +9,7 @@ namespace LLMSemanticEvaluator;
 /// </summary>
 public static class Phase2Demo
 {
-    public static async Task Main(string[] args)
+    public static async Task MainPhase(string[] args)
     {
         PrintBanner();
 
