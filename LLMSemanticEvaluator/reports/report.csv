@@ -1,0 +1,11 @@
+TestId,Category,Passed,PassedRuns,TotalRuns,AvgEmbeddingScore,AvgJudgeScore,Prompt,ExpectedOutput
+"factual_001","factual",True,3,3,0.45,10.0,"What is the capital of France?","Paris"
+"factual_002","factual",True,3,3,0.53,9.7,"Who wrote Romeo and Juliet?","William Shakespeare"
+"factual_003","factual",True,3,3,0.30,10.0,"What is the chemical symbol for gold?","Au"
+"math_001","math",True,3,3,0.38,10.0,"What is 2+2?","4"
+"math_002","math",True,3,3,0.23,10.0,"Calculate 15% of 200","30"
+"math_003","math",True,3,3,0.37,10.0,"What is the square root of 144?","12"
+"reasoning_001","reasoning",True,3,3,0.46,9.0,"If all dogs are animals, and Max is a dog, what is Max?","An animal"
+"reasoning_002","reasoning",True,3,3,0.28,10.0,"A farmer has 17 sheep. All but 9 die. How many are left?","9"
+"definition_001","definition",True,3,3,0.65,10.0,"Define photosynthesis","The process where plants convert light energy into chemical energy"
+"definition_002","definition",True,3,3,0.51,9.0,"What is artificial intelligence?","Computer systems that can perform tasks requiring human intelligence"

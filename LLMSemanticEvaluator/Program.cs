@@ -7,7 +7,6 @@ namespace LLMSemanticEvaluator
     {
         
         static async Task Main(string[] args)
-        // async static void Main(string[] args)
         {
             // ─── Setup ───────────────────────────────────────────────────────────────────
             var config = TestConfiguration.Load();
@@ -17,6 +16,7 @@ namespace LLMSemanticEvaluator
             var judgeValidator     = new LLMJudgeValidator(client, threshold: 8);
             var runner             = new TestRunner(client, embeddingValidator, judgeValidator, runsPerTest: 3);
             var loader             = new JsonTestLoader();
+            var reportGenerator    = new ReportGenerator("reports");
 
             // ─── Load Test Cases ──────────────────────────────────────────────────────────
             List<TestCase> testCases;
@@ -44,6 +44,9 @@ namespace LLMSemanticEvaluator
                 Console.WriteLine($"[Error] Test run failed: {ex.Message}");
                 return;
             }
+
+            // ─── Generate Report ──────────────────────────────────────────────────────────
+            await reportGenerator.GenerateAsync(results);
 
             // ─── Quick Summary ────────────────────────────────────────────────────────────
             int passed = results.Count(r => r.Passed);
