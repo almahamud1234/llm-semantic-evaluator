@@ -59,11 +59,36 @@ public class EmbeddingValidator
     /// </returns>
     public async Task<ValidationResult> ValidateAsync(string expected, string actual)
     {
+        // Treat empty/null LLM response as an automatic fail
+        if (string.IsNullOrWhiteSpace(actual))
+        {
+            return new ValidationResult
+            {
+                ValidatorName = "Embedding",
+                Score         = 0,
+                Passed        = false,
+                Reasoning     = "LLM returned an empty response"
+            };
+        }
+
         try
         {
             // Step 1: Convert both texts to embedding vectors via OpenAI API
             var embExpected = await _embeddings.GenerateEmbeddingAsync(expected);
             var embActual   = await _embeddings.GenerateEmbeddingAsync(actual);
+
+            // Check embeddings came back with data
+            if (embExpected == null || embExpected.Length == 0 ||
+                embActual   == null || embActual.Length   == 0)
+            {
+                return new ValidationResult
+                {
+                    ValidatorName = "Embedding",
+                    Score         = 0,
+                    Passed        = false,
+                    Reasoning     = "Embedding API returned empty vectors"
+                };
+            }
 
             // Step 2: Calculate how similar the two vectors are (0.0 to 1.0)
             double similarity = _calculator.CalculateCosineSimilarity(embExpected, embActual);

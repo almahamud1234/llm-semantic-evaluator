@@ -8,8 +8,27 @@ namespace LLMSemanticEvaluator
         
         static async Task Main(string[] args)
         {
+            // ─── Startup API key che──────────────────────────────────────────────────────
+            TestConfiguration config;
+            try
+            {
+                config = TestConfiguration.Load();
+
+                // Fail fast — don't waste time loading 120 tests if key is missing
+                if (string.IsNullOrWhiteSpace(config.OpenAIApiKey) || config.OpenAIApiKey == "your-api-key-here")
+                {
+                    Console.WriteLine("[Error] OpenAI API key is missing or is still the placeholder.");
+                    Console.WriteLine("Set your key in appsettings.json before running.");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Error] Failed to load configuration: {ex.Message}");
+                return;
+            }
+
             // ─── Setup ───────────────────────────────────────────────────────────────────
-            var config = TestConfiguration.Load();
             using var client = new OpenAIClient(config);
 
             var embeddingValidator = new EmbeddingValidator(client, new CosineSimilarityCalculator(), threshold: 0.75);
@@ -23,7 +42,13 @@ namespace LLMSemanticEvaluator
 
             try
             {
+                Console.WriteLine("Loading test cases...");
                 testCases = await loader.LoadTestsAsync("data/sample_test_cases.json");
+                if (testCases.Count == 0)
+                {
+                    Console.WriteLine("[Error] No test cases were loaded. Check your data/sample_test_cases file.");
+                    return;
+                }
                 Console.WriteLine($"Loaded {testCases.Count} test cases.\n");
             }
             catch (Exception ex)
@@ -41,7 +66,7 @@ namespace LLMSemanticEvaluator
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[Error] Test run failed: {ex.Message}");
+                Console.WriteLine($"[Error] Test run failed unexpectedly: {ex.Message}");
                 return;
             }
 

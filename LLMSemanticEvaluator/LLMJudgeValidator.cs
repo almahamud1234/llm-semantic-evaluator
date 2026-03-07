@@ -32,11 +32,48 @@ public class LLMJudgeValidator
     public async Task<ValidationResult> ValidateAsync(
         string prompt, string expected, string actual)
     {
+        // Treat empty/null LLM response as an automatic fail
+        if (string.IsNullOrWhiteSpace(actual))
+        {
+            return new ValidationResult
+            {
+                ValidatorName = "LLMJudge",
+                Score         = 0,
+                Passed        = false,
+                Reasoning     = "LLM returned an empty response"
+            };
+        }
+
         try
         {
             string judgePrompt = BuildJudgePrompt(prompt, expected, actual);
             string response    = await _llmClient.SendPromptAsync(judgePrompt);
+
+            // Judge itself returned empty
+            if (string.IsNullOrWhiteSpace(response))
+            {
+                return new ValidationResult
+                {
+                    ValidatorName = "LLMJudge",
+                    Score         = 0,
+                    Passed        = false,
+                    Reasoning     = "Judge returned an empty response"
+                };
+            }
+
             int score          = ParseScore(response);
+
+            // If we couldn't parse a valid score, fail safely
+            if (score == 0)
+            {
+                return new ValidationResult
+                {
+                    ValidatorName = "LLMJudge",
+                    Score         = 0,
+                    Passed        = false,
+                    Reasoning     = $"Could not parse a score from judge response: '{response.Trim()}'"
+                };
+            }
 
             return new ValidationResult
             {
