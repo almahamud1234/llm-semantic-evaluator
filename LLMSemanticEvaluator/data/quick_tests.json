@@ -12,5 +12,19 @@
     "prompt": "Name the first president of the USA",
     "expected_output": "George Washington",
     "evaluation_criteria": "Must identify George Washington"
+  },
+  {
+    "id": "definition_002",
+    "category": "definition",
+    "prompt": "What is artificial intelligence?",
+    "expected_output": "Computer systems that can perform tasks requiring human intelligence",
+    "evaluation_criteria": "The response must capture the essence of AI"
+  },
+  {
+    "id": "reasoning_021",
+    "category": "reasoning",
+    "prompt": "If all dogs are animals, and Max is a dog, what is Max?",
+    "expected_output": "An animal",
+    "evaluation_criteria": "The response must demonstrate logical deduction"
   }
 ]

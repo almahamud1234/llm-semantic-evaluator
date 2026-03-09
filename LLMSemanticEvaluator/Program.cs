@@ -43,7 +43,7 @@ namespace LLMSemanticEvaluator
             try
             {
                 Console.WriteLine("Loading test cases...");
-                testCases = await loader.LoadTestsAsync("data/sample_test_cases.json");
+                testCases = await loader.LoadTestsAsync("data/quick_tests.json");
                 if (testCases.Count == 0)
                 {
                     Console.WriteLine("[Error] No test cases were loaded. Check your data/sample_test_cases file.");
@@ -72,16 +72,6 @@ namespace LLMSemanticEvaluator
 
             // ─── Generate Report ──────────────────────────────────────────────────────────
             await reportGenerator.GenerateAsync(results);
-
-            // ─── Quick Summary ────────────────────────────────────────────────────────────
-            int passed = results.Count(r => r.Passed);
-            int failed = results.Count - passed;
-
-            Console.WriteLine("\n=== Summary ===");
-            Console.WriteLine($"Total:  {results.Count}");
-            Console.WriteLine($"Passed: {passed}");
-            Console.WriteLine($"Failed: {failed}");
-            Console.WriteLine($"Pass Rate: {(double)passed / results.Count * 100:F1}%");
         }
     }
 }

@@ -4,184 +4,312 @@ A semantic evaluation framework for testing Large Language Model (LLM) prompts u
 
 Developed by **LLM QA Lab**, this project provides an automated, reproducible approach to validating LLM responses by combining embedding-based similarity checks and LLM-as-a-judge evaluation techniques.
 
+---
 
-## Project Overview
+## The Problem
 
-When testing LLM outputs, traditional assertion methods fail because the same prompt can generate semantically equivalent but lexically different responses. This framework implements intelligent validation using:
+When testing LLM outputs, traditional assertion methods fail because the same prompt can generate semantically equivalent but lexically different responses:
 
-- **Embedding-based Semantic Similarity**: Converts outputs to vector embeddings and compares using cosine similarity
-- **LLM-as-a-Judge**: Uses a secondary LLM to evaluate response correctness based on custom criteria
+- *"The capital of France is Paris."*
+- *"Paris is France's capital city."*
+- *"Paris."*
 
+Traditional testing (`assert output == "Paris"`) fails all three. This framework uses **semantic understanding** to correctly identify all three as passing.
+
+---
+
+## How It Works
+
+Each test case runs through a two-stage validation pipeline:
+
+```
+Prompt → OpenAI → LLM Response
+                       ↓
+          ┌────────────────────────┐
+          │   EmbeddingValidator   │  cosine similarity ≥ threshold e.g. 0.75
+          │   LLMJudgeValidator    │  judge score ≥ threshold e.g. 8/10
+          └────────────────────────┘
+                       ↓
+            Pass if either validator passes
+                       ↓
+              Repeat 3 times per test
+                       ↓
+          Pass if 2/3 runs pass (majority vote)
+```
+
+---
 
 ## Key Features
 
-- Console-based evaluation framework built with **.NET / C#**
+- Console-based evaluation framework built with **.NET 8 / C#**
 - Automated execution of prompt test cases loaded from JSON
-- Execute prompts against multiple LLM providers (OpenAI, Ollama)
-- **Embedding-based semantic similarity assertions** using cosine similarity
+- **Embedding-based semantic similarity** using cosine similarity
 - **LLM-as-a-judge** evaluation for nuanced correctness checks
-- Support for **multiple test runs** to handle LLM non-determinism
-- Comprehensive reporting with pass/fail statistics
+- **Multiple test runs** with majority vote to handle LLM non-determinism
+- Comprehensive reporting in **TXT, JSON, and CSV** formats
 - Configurable similarity thresholds and pass criteria
-- Human-readable evaluation summaries and machine-friendly output
-- Support for 100+ test cases
+- Graceful error handling for API failures, rate limits, and malformed input
+- Support for 100+ test cases across multiple categories
 
+---
+
+## Project Structure
+
+```
+LLMSemanticEvaluator/
+├── Configuration/
+│   └── CommandLineOptions.cs
+│   └── TestConfiguration.cs      # Loads appsettings.json
+├── data/
+│   └── sample_test_cases.json
+├── Interfaces/
+│   ├── IEmbeddingProvider.cs
+│   ├── ILLMClient.cs
+│   ├── IReportGenerator.cs
+│   ├── ISimilarityCalculator.cs
+│   └── ITestLoader.cs
+│   └── ITestRunner.cs
+│   └── ITestValidator.cs
+├── Models/
+│   ├── CategoryStats.cs
+│   ├── TestCase.cs               # Input: prompt + expected output
+│   ├── TestProgressEventArgs.cs
+│   ├── TestReport.cs
+│   ├── TestResult.cs             # Output: aggregated pass/fail
+│   ├── TestRun.cs                # Single run scores
+│   └── ValidationResult.cs      # Per-validator outcome
+├── reports/                      # Auto-generated on each run
+│   ├── report.txt
+│   ├── report.json
+│   └── report.csv
+├── appsettings.json
+├── CosineSimilarityCalculator.cs
+├── EmbeddingValidator.cs         # Validates via embedding similarity
+├── JsonTestLoader.cs             # Loads test cases from JSON
+├── LLMJudgeValidator.cs          # Validates via LLM-as-judge
+├── LLMSemanticEvaluator.csproj
+├── OpenAIClient.cs               # Handles all OpenAI API calls
+├── Program.cs                    # Entry point
+├── ReportGenerator.cs            # Generates txt/json/csv reports
+└── TestRunner.cs                 # Orchestrates test execution
+```
+
+---
 
 ## Requirements
 
 - .NET 8.0 SDK or higher
-- OpenAI API key (or compatible LLM service)
+- OpenAI API key
 - C# 12.0
 
+---
 
 ## Installation
 
-1. Clone the repository:
+**1. Clone the repository**
 ```bash
 git clone https://github.com/almahamud1234/llm-semantic-evaluator.git
 cd llm-semantic-evaluator
 ```
 
-2. Restore dependencies:
+**2. Restore dependencies**
 ```bash
 dotnet restore
 ```
 
-3. Configure API keys:
+**3. Configure your API key**
+
+Copy the example config and add your key:
 ```bash
-# Create appsettings.json or use environment variables
-export OPENAI_API_KEY="your-api-key-here"
+cp appsettings.example.json appsettings.json
 ```
 
-4. Build the project:
+Open `appsettings.json` and replace the placeholder:
+```json
+{
+  "ApiKey": "sk-your-actual-key-here",
+  "Model": "gpt-4o-mini",
+  "EmbeddingModel": "text-embedding-ada-002"
+}
+```
+
+> Note: `appsettings.json` is listed in `.gitignore` — your key will never be committed.
+
+**4. Build the project**
 ```bash
 dotnet build
 ```
 
+---
+
 ## Usage
 
-### Basic Usage
 ```bash
-dotnet run -- --test-file tests.json
+dotnet run
 ```
 
-### Command Line Options
-```bash
-dotnet run -- [options]
+Console output during a run:
+```
+Loading test cases...
+  Loaded 120 test cases from sample_test_cases.json
 
-Options:
-  --test-file            Path to test cases JSON file (required)
-  --embedding-threshold   Cosine similarity threshold (default: 0.85)
-  --judge-threshold       LLM judge score threshold (default: 8)
-  --runs                  Number of runs per test (default: 3)
-  --output               Output report path (default: report.txt)
+Starting test run: 120 tests, 3 runs each
+
+[1/120]  factual_001 ... ✅ PASS (3/3 runs passed)
+[2/120]  factual_002 ... ✅ PASS (2/3 runs passed)
+[3/120]  math_001    ... ✅ PASS (3/3 runs passed)
+...
+
+=== Report Summary ===
+Total  : 120
+Passed : 108
+Failed : 12
+Rate   : 90.0%
+
+Reports saved to: /path/to/reports/
+  report.txt  — human-readable summary
+  report.json — full data for visualization
+  report.csv  — flat data for Excel/charts
 ```
 
-### Example
-```bash
-dotnet run -- --test-file data/tests.json --embedding-threshold 0.90 --runs 5 --output results/report.txt
-```
-
-## Project Structure
-
+---
 
 ## Test Case Format
 
-Create test cases in JSON format:
+Test cases are stored in `data/sample_tests.json` as a JSON array:
+
 ```json
-{
-  "tests": [
-    {
-      "id": "test_001",
-      "category": "factual",
-      "prompt": "What is the capital of France?",
-      "expected_output": "Paris",
-      "evaluation_criteria": "Response must correctly identify Paris as the capital of France"
-    },
-    {
-      "id": "test_002",
-      "category": "math",
-      "prompt": "What is 15% of 200?",
-      "expected_output": "30",
-      "evaluation_criteria": "Response must contain the correct numerical answer"
-    }
-  ]
-}
+[
+  {
+    "id": "factual_001",
+    "category": "factual",
+    "prompt": "What is the capital of France?",
+    "expected_output": "Paris",
+    "evaluation_criteria": "Response must identify Paris as the capital of France"
+  }
+]
 ```
 
-## Sample Output
-```
-=======================================
-TEST EXECUTION REPORT
-=======================================
-Total Tests: 150
-Passed: 142 (94.7%)
-Failed: 8 (5.3%)
+| Field | Required | Description |
+|-------|----------|-------------|
+| `id` | ✅ | Unique identifier for the test |
+| `prompt` | ✅ | The question sent to the LLM |
+| `expected_output` | ✅ | The expected correct answer |
+| `category` | ❌ | Groups tests in reports (defaults to `general`) |
+| `evaluation_criteria` | ❌ | Human-readable grading hint |
 
-By Category:
-- Factual Questions: 50/50 (100%)
-- Math Problems: 45/48 (93.8%)
-- Reasoning Tasks: 47/52 (90.4%)
+---
 
-Average Embedding Score: 0.89
-Average Judge Score: 8.7/10
+## Test Categories
 
-Validation Method Performance:
-- Embedding Validator: 94.0% accuracy
-- LLM Judge: 95.3% accuracy
-- Combined: 94.7% accuracy
+The 120 included test cases cover six categories:
 
-Failed Tests:
-1. test_073 - Category: Math - Judge: 6/10 - Embedding: 0.72
-2. test_089 - Category: Reasoning - Judge: 7/10 - Embedding: 0.68
-...
+| Category | Count | Examples |
+|----------|-------|---------|
+| Factual | 20 | Capitals, geography, basic facts |
+| Math | 20 | Arithmetic, percentages, sequences |
+| Definitions | 20 | Scientific, economic, technical terms |
+| Reasoning | 20 | Logic puzzles, syllogisms, sequences |
+| Science | 20 | Physics, biology, chemistry |
+| History | 20 | Dates, people, events |
 
-Execution Time: 8m 34s
-```
+---
 
 ## Evaluation Strategies
 
 ### 1. Embedding-Based Semantic Similarity
 
-- Converts text to high-dimensional vectors and computes cosine similarity:
+Converts text to high-dimensional vectors and computes cosine similarity:
+
 ```
 similarity = (A · B) / (||A|| × ||B||)
 ```
+
 - Score range: 0.0 to 1.0
-- Threshold: 0.85 (configurable)
+- Default threshold: 0.75 (configurable)
 - Pass condition: `similarity ≥ threshold`
 
 ### 2. LLM-as-Judge Validation
 
-Uses a secondary LLM to evaluate responses based on:
-- Factual correctness
-- Semantic equivalence
-- Criteria compliance
+Uses a secondary LLM to evaluate responses based on factual correctness, semantic equivalence, and criteria compliance:
 
-- Score range: 1-10
-- Threshold: 8 (configurable)
+- Score range: 1–10
+- Default threshold: 8 (configurable)
 - Pass condition: `score ≥ threshold`
 
-### 3. Combined Validation
+### 3. Combined Validation (Majority Vote)
 
-A test passes if:
-- At least 2 out of 3 runs pass embedding validation, **AND**
-- At least 2 out of 3 runs pass judge validation
+A single **run** passes if **either** validator passes.
+A **test** passes overall if **2 out of 3 runs** pass.
 
+This approach handles LLM non-determinism — a single unlucky response won't fail an otherwise reliable test.
+
+---
+
+## Configuration
+
+All thresholds are adjustable in `Program.cs`:
+
+```csharp
+// Lower = more lenient embedding matching
+var embeddingValidator = new EmbeddingValidator(client, new CosineSimilarityCalculator(), threshold: 0.75);
+
+// Lower = more lenient judge scoring
+var judgeValidator = new LLMJudgeValidator(client, threshold: 8);
+
+// Fewer runs = faster and cheaper (minimum recommended: 3)
+var runner = new TestRunner(client, embeddingValidator, judgeValidator, runsPerTest: 3);
+```
+
+---
+
+## Reports
+
+Three report files are auto-generated in the `reports/` folder after each run:
+
+**report.txt** — human-readable with overall summary, category breakdown, and per-test details including individual run scores.
+
+**report.json** — full structured data including all runs and scores, useful for custom visualizations or further analysis.
+
+**report.csv** — one row per test case for Excel or Google Sheets. Columns:
+`TestId, Category, Passed, PassedRuns, TotalRuns, AvgEmbeddingScore, AvgJudgeScore, Prompt, ExpectedOutput`
+
+### Quick Visualization
+1. Open `reports/report.csv` in Excel or Google Sheets
+2. Select the `Category` and `Passed` columns
+3. Insert → Chart → Bar chart
+
+---
+
+## Error Handling
+
+The framework handles the following gracefully without crashing:
+
+| Scenario | Behaviour |
+|----------|-----------|
+| Missing or placeholder API key | Detected at startup, exits with a clear message |
+| Malformed JSON in test file | Specific error message, file skipped |
+| Individual test missing required fields | Test skipped with a warning, rest continue |
+| Empty LLM response | Counted as a failed run automatically |
+| Request timeout | Counted as a failed run, execution continues |
+
+---
 
 ## License
 
-This project is licensed under the MIT License - see the .... file for details.
+This project is licensed under the MIT License.
 
+---
 
 ## Team
 
 **LLM QA Lab**
 - [Md Abdulla AL Mahamud Rosi](https://github.com/almahamud1234)
 
+---
 
 ## References
 
 - [OpenAI API Documentation](https://platform.openai.com/docs)
-- [Semantic Similarity in NLP](https://arxiv.org/abs/example)
-
+- [Cosine Similarity — Wikipedia](https://en.wikipedia.org/wiki/Cosine_similarity)
+- [LLM-as-a-Judge Paper](https://arxiv.org/abs/2306.05685)
