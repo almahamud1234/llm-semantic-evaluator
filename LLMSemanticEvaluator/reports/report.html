@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LLM Evaluation Report</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f5f4;
+    color: #1c1c1a;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .page { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  h1 { font-size: 22px; font-weight: 500; }
+  h2 { font-size: 13px; font-weight: 500; color: #888780;
+       text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+  .subtitle { font-size: 12px; color: #888780; margin-top: 4px; }
+  .header { display: flex; align-items: flex-start;
+            justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 8px; }
+  .badge { display: inline-block; font-size: 12px; font-weight: 500;
+           padding: 4px 12px; border-radius: 6px; }
+  .badge-pass { background: #EAF3DE; color: #3B6D11; }
+  .badge-fail { background: #FCEBEB; color: #A32D2D; }
+  .badge-warn { background: #FAEEDA; color: #854F0B; }
+
+  .metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr));
+             gap: 12px; margin-bottom: 1.5rem; }
+  .metric-card { background: #ebebea; border-radius: 8px; padding: 1rem; }
+  .metric-val { font-size: 28px; font-weight: 500; line-height: 1.2; }
+  .metric-lbl { font-size: 12px; color: #5f5e5a; margin-bottom: 6px; }
+  .metric-sub { font-size: 11px; margin-top: 4px; }
+
+  .card { background: #fff; border: 0.5px solid rgba(0,0,0,0.1);
+          border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { text-align: left; padding: 6px 8px; font-weight: 500; color: #5f5e5a; }
+  td { padding: 7px 6px; border-top: 0.5px solid rgba(0,0,0,0.07); }
+  td.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; white-space: nowrap; }
+  .score-chip { display: inline-block; min-width: 46px; text-align: center;
+                padding: 3px 6px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+  .cat-chip { display: inline-block; font-size: 11px; padding: 2px 7px;
+              border-radius: 20px; font-weight: 500; }
+
+  .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 1.5rem; }
+  .chart-wrap { position: relative; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px;
+            font-size: 12px; color: #5f5e5a; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .legend-item { display: flex; align-items: center; gap: 4px; }
+
+  .scale-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .chip { display: inline-block; font-size: 11px; padding: 3px 8px;
+          border-radius: 20px; font-weight: 500; }
+
+  @media (max-width: 680px) {
+    .metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .charts-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h1>LLM evaluation report</h1>
+      <div class="subtitle">4 tests &middot; 12 total runs &middot; definition, factual, reasoning &middot; 15 Mar 2026 10:11</div>
+    </div>
+    <span class="badge badge-pass">100.0% pass rate</span>
+  </div>
+
+  <!-- Section 1: Metric cards -->
+  <div class="metrics">
+    <div class="metric-card">
+      <div class="metric-lbl">Total tests</div>
+      <div class="metric-val">4</div>
+      <div class="metric-sub" style="color:#5f5e5a;">3 categories</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-lbl">Pass rate</div>
+      <div class="metric-val" style="color:#3B6D11;">100.0%</div>
+      <div class="metric-sub" style="color:#5f5e5a;">4 / 4 passed</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-lbl">Avg embedding score</div>
+      <div class="metric-val">0.50</div>
+      <div class="metric-sub" style="color:#BA7517;">Below 0.85 threshold</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-lbl">Avg judge score</div>
+      <div class="metric-val">9.4<span style="font-size:14px;color:#888780;">/10</span></div>
+      <div class="metric-sub" style="color:#3B6D11;">Above threshold (>=8)</div>
+    </div>
+  </div>
+
+  <!-- Section 2: Heatmap table -->
+  <div class="card">
+    <h2>Test results &mdash; embedding score &middot; judge score &middot; per run</h2>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Test ID</th>
+            <th>Category</th>
+            <th colspan="3" style="text-align:center;">Embedding score / run</th>
+            <th colspan="3" style="text-align:center;">Judge score / run</th>
+            <th style="text-align:center;">Runs passed</th>
+            <th style="text-align:center;">Status</th>
+          </tr>
+          <tr style="font-size:11px;color:#888780;">
+            <td colspan="2"></td>
+            <td style="text-align:center;padding:2px 6px;">R1</td>
+            <td style="text-align:center;padding:2px 6px;">R2</td>
+            <td style="text-align:center;padding:2px 6px;">R3</td>
+            <td style="text-align:center;padding:2px 6px;">R1</td>
+            <td style="text-align:center;padding:2px 6px;">R2</td>
+            <td style="text-align:center;padding:2px 6px;">R3</td>
+            <td></td><td></td>
+          </tr>
+        </thead>
+        <tbody id="heatBody"></tbody>
+      </table>
+    </div>
+    <div class="scale-legend">
+      <span style="font-size:11px;color:#5f5e5a;align-self:center;">Embedding:</span>
+      <span class="chip" style="background:#EAF3DE;color:#3B6D11;">&ge; 0.85 &nbsp;pass</span>
+      <span class="chip" style="background:#FAEEDA;color:#854F0B;">0.70&ndash;0.84 &nbsp;borderline</span>
+      <span class="chip" style="background:#FAC775;color:#633806;">0.50&ndash;0.69 &nbsp;low</span>
+      <span class="chip" style="background:#FCEBEB;color:#A32D2D;">&lt; 0.50 &nbsp;fail</span>
+      <span style="font-size:11px;color:#5f5e5a;align-self:center;margin-left:8px;">Judge:</span>
+      <span class="chip" style="background:#EAF3DE;color:#3B6D11;">&ge; 8 &nbsp;pass</span>
+      <span class="chip" style="background:#FAEEDA;color:#854F0B;">6&ndash;7 &nbsp;borderline</span>
+      <span class="chip" style="background:#FCEBEB;color:#A32D2D;">&lt; 6 &nbsp;fail</span>
+    </div>
+  </div>
+
+  <!-- Section 3: Charts row -->
+  <div class="charts-row">
+    <div class="card" style="margin-bottom:0;">
+      <h2>Embedding score distribution</h2>
+      <div style="font-size:11px;color:#888780;margin-bottom:8px;">
+        Bars show how many runs fell in each score band
+      </div>
+      <div class="chart-wrap" style="height:200px;">
+        <canvas id="chartDist"></canvas>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <h2>Pass rate by category</h2>
+      <div class="chart-wrap" style="height:220px;">
+        <canvas id="chartCat"></canvas>
+      </div>
+    </div>
+  </div>
+  <div style="margin-bottom:1.5rem;"></div>
+
+  <!-- Section 4: Run-level scatter -->
+  <div class="card">
+    <h2>Judge score per individual run</h2>
+    <div style="font-size:11px;color:#888780;margin-bottom:8px;">
+      Each dot = one run. Dashed line = pass threshold (8/10). Hover for test ID.
+    </div>
+    <div class="chart-wrap" style="height:220px;">
+      <canvas id="chartScatter"></canvas>
+    </div>
+    <div class="legend">
+      <span style="font-size:11px;color:#888780;">Category:</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#7F77DD;"></span>factual</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#1D9E75;"></span>definition</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#D85A30;"></span>reasoning</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#888780;"></span>math</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#534AB7;"></span>science</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#993556;"></span>history</span>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ── Data injected by ReportGenerator.cs ─────────────────────────────────────
+const tests = [{"id":"quick_test_001","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.5,"avgJudge":10,"embRuns":[0.5,0.5,0.5],"judgeRuns":[10,10,10]},{"id":"quick_test_002","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.53,"avgJudge":10,"embRuns":[0.53,0.53,0.53],"judgeRuns":[10,10,10]},{"id":"definition_002","cat":"definition","passed":true,"runs":3,"total":3,"avgEmb":0.52,"avgJudge":8.7,"embRuns":[0.51,0.51,0.54],"judgeRuns":[9,8,9]},{"id":"reasoning_021","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.46,"avgJudge":9,"embRuns":[0.46,0.46,0.46],"judgeRuns":[9,9,9]}];
+
+// ── Category colour map ──────────────────────────────────────────────────────
+const CAT_COLORS = {
+  factual:    '#7F77DD',
+  definition: '#1D9E75',
+  reasoning:  '#D85A30',
+  math:       '#888780',
+  science:    '#534AB7',
+  history:    '#993556'
+};
+function catColor(cat) {
+  return CAT_COLORS[cat] || '#378ADD';
+}
+
+// ── Heatmap cell colour helpers ──────────────────────────────────────────────
+function embStyle(v) {
+  if (v >= 0.85) return { bg: '#EAF3DE', color: '#3B6D11' };
+  if (v >= 0.70) return { bg: '#FAEEDA', color: '#854F0B' };
+  if (v >= 0.50) return { bg: '#FAC775', color: '#633806' };
+  return { bg: '#FCEBEB', color: '#A32D2D' };
+}
+function judgeStyle(v) {
+  if (v >= 8) return { bg: '#EAF3DE', color: '#3B6D11' };
+  if (v >= 6) return { bg: '#FAEEDA', color: '#854F0B' };
+  return { bg: '#FCEBEB', color: '#A32D2D' };
+}
+
+// ── Build heatmap table ──────────────────────────────────────────────────────
+const tbody = document.getElementById('heatBody');
+tests.forEach(t => {
+  const tr = document.createElement('tr');
+  let html = `<td class="mono">${t.id}</td>`;
+  html += `<td><span class="cat-chip" style="background:${catColor(t.cat)}22;color:${catColor(t.cat)};">${t.cat}</span></td>`;
+
+  const embR   = [...t.embRuns,   ...Array(3).fill(null)].slice(0, 3);
+  const judgeR = [...t.judgeRuns, ...Array(3).fill(null)].slice(0, 3);
+
+  embR.forEach(v => {
+    if (v === null) { html += `<td></td>`; return; }
+    const s = embStyle(v);
+    html += `<td style="text-align:center;"><span class="score-chip" style="background:${s.bg};color:${s.color};">${Number(v).toFixed(2)}</span></td>`;
+  });
+  judgeR.forEach(v => {
+    if (v === null) { html += `<td></td>`; return; }
+    const s = judgeStyle(v);
+    html += `<td style="text-align:center;"><span class="score-chip" style="background:${s.bg};color:${s.color};">${v}/10</span></td>`;
+  });
+  html += `<td style="text-align:center;">${t.runs}/${t.total}</td>`;
+  html += `<td style="text-align:center;"><span class="badge ${t.passed ? 'badge-pass' : 'badge-fail'}">${t.passed ? 'pass' : 'fail'}</span></td>`;
+  tr.innerHTML = html;
+  tbody.appendChild(tr);
+});
+
+// ── Embedding distribution histogram ────────────────────────────────────────
+const allEmb = tests.flatMap(t => t.embRuns);
+const bins      = ['< 0.50', '0.50–0.69', '0.70–0.84', '≥ 0.85'];
+const binColors = ['#F09595', '#FAC775', '#FAEEDA', '#97C459'];
+const counts    = [
+  allEmb.filter(v => v <  0.50).length,
+  allEmb.filter(v => v >= 0.50 && v < 0.70).length,
+  allEmb.filter(v => v >= 0.70 && v < 0.85).length,
+  allEmb.filter(v => v >= 0.85).length
+];
+
+new Chart(document.getElementById('chartDist'), {
+  type: 'bar',
+  data: { labels: bins, datasets: [{ data: counts, backgroundColor: binColors, borderRadius: 4 }] },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { font: { size: 11 } }, grid: { display: false } },
+      y: { min: 0, ticks: { stepSize: 1, font: { size: 11 } }, grid: { color: '#e5e5e5' } }
+    }
+  }
+});
+
+// ── Pass rate by category ────────────────────────────────────────────────────
+const allCats   = [...new Set(tests.map(t => t.cat))].sort();
+const catPassed = allCats.map(c => tests.filter(t => t.cat === c && t.passed).length);
+const catTotal  = allCats.map(c => tests.filter(t => t.cat === c).length);
+
+new Chart(document.getElementById('chartCat'), {
+  type: 'bar',
+  data: {
+    labels: allCats,
+    datasets: [
+      { label: 'Passed', data: catPassed, backgroundColor: '#1D9E75', borderRadius: 4, stack: 'a' },
+      { label: 'Failed', data: catTotal.map((t, i) => t - catPassed[i]), backgroundColor: '#F09595', borderRadius: 4, stack: 'a' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => {
+            const i = ctx.dataIndex;
+            const rate = catTotal[i] > 0 ? Math.round(catPassed[i] / catTotal[i] * 100) : 0;
+            return ` ${catPassed[i]}/${catTotal[i]} passed (${rate}%)`;
+          }
+        }
+      }
+    },
+    scales: {
+      x: { stacked: true, min: 0, ticks: { stepSize: 1, font: { size: 11 } }, grid: { display: false } },
+      y: { stacked: true, ticks: { font: { size: 11 } }, grid: { display: false } }
+    }
+  }
+});
+
+// ── Run-level judge score scatter ────────────────────────────────────────────
+const scatterDatasets = tests.map(t => ({
+  label: t.id,
+  data: t.judgeRuns.map((j, i) => ({ x: i + 1, y: j })),
+  backgroundColor: catColor(t.cat),
+  pointRadius: 8,
+  pointHoverRadius: 10
+}));
+
+scatterDatasets.push({
+  label: '_threshold',
+  data: [{ x: 0.5, y: 8 }, { x: 3.5, y: 8 }],
+  type: 'line',
+  borderColor: '#E24B4A',
+  borderDash: [5, 4],
+  borderWidth: 1.5,
+  pointRadius: 0,
+  fill: false
+});
+
+new Chart(document.getElementById('chartScatter'), {
+  type: 'scatter',
+  data: { datasets: scatterDatasets },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        filter: item => !item.dataset.label.startsWith('_'),
+        callbacks: { title: items => items[0].dataset.label }
+      }
+    },
+    scales: {
+      x: {
+        min: 0.5, max: 3.5,
+        ticks: { stepSize: 1, callback: v => `Run ${v}`, font: { size: 11 } },
+        grid: { display: false }
+      },
+      y: {
+        min: 0, max: 10,
+        ticks: { font: { size: 11 } },
+        grid: { color: '#e5e5e5' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

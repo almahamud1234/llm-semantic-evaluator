@@ -5,19 +5,51 @@ using LLMSemanticEvaluator.Models;
 namespace LLMSemanticEvaluator;
 
 /// <summary>
-/// Generates three report formats from a list of TestResults:
+/// Generates four report formats from a list of TestResults:
 ///   1. reports/report.txt  — human-readable formatted text
-///   2. reports/report.json — full data for programmatic use
-///   3. reports/report.csv  — flat data for charts/Excel/visualization
+///   2. reports/report.json — full structured data
+///   3. reports/report.csv  — flat data for Excel/charts
+///   4. reports/report.html — interactive visual dashboard
 ///
-/// Report sections:
-///   - Overall summary  (total, passed, failed, pass rate, avg scores)
-///   - Category breakdown  (pass rate per category)
-///   - Per-test details  (each test's scores across all runs)
+/// The HTML dashboard is built from ReportTemplate.html (located next to this
+/// file in the project). ReportGenerator reads the template, replaces all
+/// %%PLACEHOLDER%% tokens with real values, and writes the final HTML file.
+/// This avoids putting HTML inside a C# interpolated string, which causes
+/// "{variable}" JS syntax to be misread as C# expressions.
+///
+/// To add ReportTemplate.html as an embedded resource, add to your .csproj:
+///   &lt;ItemGroup&gt;
+///     &lt;EmbeddedResource Include="ReportTemplate.html" /&gt;
+///   &lt;/ItemGroup&gt;
+///
+/// Or to copy it to the output directory instead, add to your .csproj:
+///   &lt;ItemGroup&gt;
+///     &lt;Content Include="ReportTemplate.html"&gt;
+///       &lt;CopyToOutputDirectory&gt;PreserveNewest&lt;/CopyToOutputDirectory&gt;
+///     &lt;/Content&gt;
+///   &lt;/ItemGroup&gt;
 /// </summary>
 public class ReportGenerator
 {
     private readonly string _reportFolder;
+
+    // ── Token names matching %%PLACEHOLDER%% markers in ReportTemplate.html ──
+    // Using constants avoids typos when calling Replace().
+    private const string T_Total       = "%%TOTAL%%";
+    private const string T_TotalRuns   = "%%TOTAL_RUNS%%";
+    private const string T_Categories  = "%%CATEGORIES%%";
+    private const string T_GeneratedAt = "%%GENERATED_AT%%";
+    private const string T_PassBadge   = "%%PASS_BADGE_CLASS%%";
+    private const string T_PassRate    = "%%PASS_RATE%%";
+    private const string T_CatCount    = "%%CAT_COUNT%%";
+    private const string T_Passed      = "%%PASSED%%";
+    private const string T_AvgEmb      = "%%AVG_EMB%%";
+    private const string T_EmbColor    = "%%EMB_COLOR%%";
+    private const string T_EmbNote     = "%%EMB_NOTE%%";
+    private const string T_AvgJudge    = "%%AVG_JUDGE%%";
+    private const string T_JudgeColor  = "%%JUDGE_COLOR%%";
+    private const string T_JudgeNote   = "%%JUDGE_NOTE%%";
+    private const string T_JsonData    = "%%JSON_DATA%%";
 
     /// <param name="reportFolder">Folder where all report files will be saved (default: reports).</param>
     public ReportGenerator(string reportFolder = "reports")
@@ -25,8 +57,12 @@ public class ReportGenerator
         _reportFolder = reportFolder;
     }
 
+    // =========================================================================
+    // Public entry point
+    // =========================================================================
+
     /// <summary>
-    /// Generates all three report formats and prints a summary to console.
+    /// Generates all four report formats and prints a summary to console.
     /// </summary>
     public async Task GenerateAsync(List<TestResult> results)
     {
@@ -38,12 +74,12 @@ public class ReportGenerator
 
         try
         {
-            // Auto-create the reports/ folder if it doesn't exist
             Directory.CreateDirectory(_reportFolder);
 
             await WriteTextReportAsync(results);
             await WriteJsonReportAsync(results);
             await WriteCsvReportAsync(results);
+            await WriteHtmlReportAsync(results);
 
             PrintConsoleSummary(results);
 
@@ -51,6 +87,9 @@ public class ReportGenerator
             Console.WriteLine("  report.txt  — human-readable summary");
             Console.WriteLine("  report.json — full data for visualization");
             Console.WriteLine("  report.csv  — flat data for Excel/charts");
+            Console.WriteLine("  report.html — interactive visual dashboard");
+
+            OpenInBrowser(Path.Combine(_reportFolder, "report.html"));
         }
         catch (Exception ex)
         {
@@ -58,11 +97,10 @@ public class ReportGenerator
         }
     }
 
-    // ── Text Report ───────────────────────────────────────────────────────────
+    // =========================================================================
+    // Text report
+    // =========================================================================
 
-    /// <summary>
-    /// Writes a formatted, human-readable .txt report.
-    /// </summary>
     private async Task WriteTextReportAsync(List<TestResult> results)
     {
         string path    = Path.Combine(_reportFolder, "report.txt");
@@ -72,18 +110,16 @@ public class ReportGenerator
 
     private static string BuildTextReport(List<TestResult> results)
     {
-        var sb           = new StringBuilder();
+        var    sb        = new StringBuilder();
         string separator = new string('=', 60);
         string thin      = new string('-', 60);
 
-        // Header
         sb.AppendLine(separator);
         sb.AppendLine("  LLM SEMANTIC EVALUATOR — TEST REPORT");
         sb.AppendLine($"  Generated: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
         sb.AppendLine(separator);
         sb.AppendLine();
 
-        // Section 1: Overall Summary
         int    total    = results.Count;
         int    passed   = results.Count(r => r.Passed);
         double passRate = (double)passed / total * 100;
@@ -98,10 +134,8 @@ public class ReportGenerator
         sb.AppendLine($"Avg Judge Score     : {results.Average(r => r.AverageJudgeScore):F1}/10");
         sb.AppendLine();
 
-        // Section 2: Category Breakdown
         sb.AppendLine("CATEGORY BREAKDOWN");
         sb.AppendLine(thin);
-
         foreach (var group in results.GroupBy(r => r.Category).OrderBy(g => g.Key))
         {
             int    catTotal  = group.Count();
@@ -111,10 +145,8 @@ public class ReportGenerator
         }
         sb.AppendLine();
 
-        // Section 3: Per-Test Details
         sb.AppendLine("PER-TEST DETAILS");
         sb.AppendLine(thin);
-
         foreach (var result in results)
         {
             sb.AppendLine($"[{(result.Passed ? "PASS" : "FAIL")}] {result.TestId}  (Category: {result.Category})");
@@ -140,33 +172,28 @@ public class ReportGenerator
         return sb.ToString();
     }
 
-    // ── JSON Report ───────────────────────────────────────────────────────────
+    // =========================================================================
+    // JSON report
+    // =========================================================================
 
-    /// <summary>
-    /// Writes a structured .json file containing full results plus summary stats.
-    /// Useful for building charts or feeding into other tools.
-    /// </summary>
     private async Task WriteJsonReportAsync(List<TestResult> results)
     {
-        string path = Path.Combine(_reportFolder, "report.json");
+        string path   = Path.Combine(_reportFolder, "report.json");
+        int    total  = results.Count;
+        int    passed = results.Count(r => r.Passed);
 
-        int    total    = results.Count;
-        int    passed   = results.Count(r => r.Passed);
-
-        // Build a summary + full results object
         var report = new
         {
-            generatedAt  = DateTime.Now,
+            generatedAt = DateTime.Now,
             summary = new
             {
-                totalTests          = total,
-                passed              = passed,
-                failed              = total - passed,
-                passRatePercent     = Math.Round((double)passed / total * 100, 1),
-                avgEmbeddingScore   = Math.Round(results.Average(r => r.AverageEmbeddingScore), 2),
-                avgJudgeScore       = Math.Round(results.Average(r => r.AverageJudgeScore), 1)
+                totalTests        = total,
+                passed            = passed,
+                failed            = total - passed,
+                passRatePercent   = Math.Round((double)passed / total * 100, 1),
+                avgEmbeddingScore = Math.Round(results.Average(r => r.AverageEmbeddingScore), 2),
+                avgJudgeScore     = Math.Round(results.Average(r => r.AverageJudgeScore), 1)
             },
-            // One entry per category
             categoryBreakdown = results
                 .GroupBy(r => r.Category)
                 .OrderBy(g => g.Key)
@@ -177,18 +204,17 @@ public class ReportGenerator
                     passed          = g.Count(r => r.Passed),
                     passRatePercent = Math.Round((double)g.Count(r => r.Passed) / g.Count() * 100, 1)
                 }),
-            // Full per-test results including individual runs
             testResults = results.Select(r => new
             {
-                testId              = r.TestId,
-                category            = r.Category,
-                prompt              = r.Prompt,
-                expectedOutput      = r.ExpectedOutput,
-                passed              = r.Passed,
-                passedRuns          = r.PassedRunsCount,
-                totalRuns           = r.TotalRunsCount,
-                avgEmbeddingScore   = Math.Round(r.AverageEmbeddingScore, 2),
-                avgJudgeScore       = Math.Round(r.AverageJudgeScore, 1),
+                testId            = r.TestId,
+                category          = r.Category,
+                prompt            = r.Prompt,
+                expectedOutput    = r.ExpectedOutput,
+                passed            = r.Passed,
+                passedRuns        = r.PassedRunsCount,
+                totalRuns         = r.TotalRunsCount,
+                avgEmbeddingScore = Math.Round(r.AverageEmbeddingScore, 2),
+                avgJudgeScore     = Math.Round(r.AverageJudgeScore, 1),
                 runs = r.Runs.Select((run, i) => new
                 {
                     runNumber      = i + 1,
@@ -202,27 +228,20 @@ public class ReportGenerator
         };
 
         var options = new JsonSerializerOptions { WriteIndented = true };
-        string json = JsonSerializer.Serialize(report, options);
-        await File.WriteAllTextAsync(path, json);
+        await File.WriteAllTextAsync(path, JsonSerializer.Serialize(report, options));
     }
 
-    // ── CSV Report ────────────────────────────────────────────────────────────
+    // =========================================================================
+    // CSV report
+    // =========================================================================
 
-    /// <summary>
-    /// Writes a flat .csv file — one row per test case.
-    /// Easy to open in Excel or use with charting libraries.
-    /// Columns: TestId, Category, Passed, PassedRuns, TotalRuns,
-    ///          AvgEmbeddingScore, AvgJudgeScore, Prompt, ExpectedOutput
-    /// </summary>
     private async Task WriteCsvReportAsync(List<TestResult> results)
     {
         string path = Path.Combine(_reportFolder, "report.csv");
         var    sb   = new StringBuilder();
 
-        // Header row
         sb.AppendLine("TestId,Category,Passed,PassedRuns,TotalRuns,AvgEmbeddingScore,AvgJudgeScore,Prompt,ExpectedOutput");
 
-        // One row per test
         foreach (var r in results)
         {
             sb.AppendLine(string.Join(",",
@@ -241,11 +260,135 @@ public class ReportGenerator
         await File.WriteAllTextAsync(path, sb.ToString());
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
+    // =========================================================================
+    // HTML dashboard report
+    // =========================================================================
 
     /// <summary>
-    /// Prints a short pass/fail summary to the console.
+    /// Reads ReportTemplate.html, replaces all %%PLACEHOLDER%% tokens with
+    /// real computed values, and writes report.html to the reports folder.
     /// </summary>
+    private async Task WriteHtmlReportAsync(List<TestResult> results)
+    {
+        string template = LoadHtmlTemplate();
+
+        // ── Compute all substitution values ───────────────────────────────────
+        int    total      = results.Count;
+        int    passed     = results.Count(r => r.Passed);
+        double passRate   = Math.Round((double)passed / total * 100, 1);
+        double avgEmb     = Math.Round(results.Average(r => r.AverageEmbeddingScore), 2);
+        double avgJudge   = Math.Round(results.Average(r => r.AverageJudgeScore),     1);
+        int    totalRuns  = results.Sum(r => r.TotalRunsCount);
+        int    catCount   = results.Select(r => r.Category).Distinct().Count();
+        string categories = string.Join(", ", results.Select(r => r.Category)
+                                                     .Distinct()
+                                                     .OrderBy(c => c));
+
+        string passBadge  = passRate >= 100 ? "badge-pass" : passRate >= 80 ? "badge-warn" : "badge-fail";
+        string embColor   = avgEmb   >= 0.85 ? "#3B6D11" : "#BA7517";
+        string embNote    = avgEmb   >= 0.85 ? "Above 0.85 threshold" : "Below 0.85 threshold";
+        string judgeColor = avgJudge >= 8    ? "#3B6D11" : "#BA7517";
+        string judgeNote  = avgJudge >= 8    ? "Above threshold (>=8)" : "Below threshold (>=8)";
+
+        // ── Serialize results into compact JSON for the dashboard JS ──────────
+        string jsonData = JsonSerializer.Serialize(results.Select(r => new
+        {
+            id        = r.TestId,
+            cat       = r.Category,
+            passed    = r.Passed,
+            runs      = r.PassedRunsCount,
+            total     = r.TotalRunsCount,
+            avgEmb    = Math.Round(r.AverageEmbeddingScore, 2),
+            avgJudge  = Math.Round(r.AverageJudgeScore,     1),
+            embRuns   = r.Runs.Select(x => Math.Round(x.EmbeddingScore, 2)).ToList(),
+            judgeRuns = r.Runs.Select(x => (int)x.JudgeScore).ToList()
+        }));
+
+        // ── Replace every %%PLACEHOLDER%% token with the real value ───────────
+        string html = template
+            .Replace(T_Total,       total.ToString())
+            .Replace(T_TotalRuns,   totalRuns.ToString())
+            .Replace(T_Categories,  categories)
+            .Replace(T_GeneratedAt, DateTime.Now.ToString("dd MMM yyyy HH:mm"))
+            .Replace(T_PassBadge,   passBadge)
+            .Replace(T_PassRate,    passRate.ToString("F1"))
+            .Replace(T_CatCount,    catCount.ToString())
+            .Replace(T_Passed,      passed.ToString())
+            .Replace(T_AvgEmb,      avgEmb.ToString("F2"))
+            .Replace(T_EmbColor,    embColor)
+            .Replace(T_EmbNote,     embNote)
+            .Replace(T_AvgJudge,    avgJudge.ToString("F1"))
+            .Replace(T_JudgeColor,  judgeColor)
+            .Replace(T_JudgeNote,   judgeNote)
+            .Replace(T_JsonData,    jsonData);
+
+        await File.WriteAllTextAsync(Path.Combine(_reportFolder, "report.html"), html);
+    }
+
+    /// <summary>
+    /// Loads the HTML template string from either an embedded resource or a
+    /// file next to the executable. See the class-level XML comment for the
+    /// .csproj snippets needed for each option.
+    /// </summary>
+    private static string LoadHtmlTemplate()
+    {
+        // Strategy 1: embedded resource (recommended for production builds)
+        var    assembly = System.Reflection.Assembly.GetExecutingAssembly();
+        string resName  = assembly.GetManifestResourceNames()
+                                  .FirstOrDefault(n => n.EndsWith("ReportTemplate.html"))
+                          ?? string.Empty;
+
+        if (!string.IsNullOrEmpty(resName))
+        {
+            using var stream = assembly.GetManifestResourceStream(resName)!;
+            using var reader = new StreamReader(stream);
+            return reader.ReadToEnd();
+        }
+
+        // Strategy 2: file next to the executable (easiest during development)
+        string templatePath = Path.Combine(AppContext.BaseDirectory, "ReportTemplate.html");
+
+        if (File.Exists(templatePath))
+            return File.ReadAllText(templatePath);
+
+        // Neither found — give a clear, actionable error message
+        throw new FileNotFoundException(
+            "ReportTemplate.html not found. " +
+            "Either add it as an EmbeddedResource in your .csproj, " +
+            "or set CopyToOutputDirectory to PreserveNewest. " +
+            "See the XML comment on ReportGenerator for the exact .csproj snippets.",
+            templatePath);
+    }
+
+    // =========================================================================
+    // Auto-open browser
+    // =========================================================================
+
+    /// <summary>
+    /// Opens the HTML report in the system default browser.
+    /// Works on Windows, macOS, and Linux.
+    /// Silently skips if the browser cannot be launched (e.g. headless CI).
+    /// </summary>
+    private static void OpenInBrowser(string filePath)
+    {
+        try
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName        = Path.GetFullPath(filePath),
+                UseShellExecute = true
+            });
+        }
+        catch
+        {
+            Console.WriteLine("  (Could not auto-open browser — open report.html manually)");
+        }
+    }
+
+    // =========================================================================
+    // Shared helpers
+    // =========================================================================
+
     private static void PrintConsoleSummary(List<TestResult> results)
     {
         int    total  = results.Count;
@@ -259,10 +402,6 @@ public class ReportGenerator
         Console.WriteLine($"Rate   : {rate:F1}%");
     }
 
-    /// <summary>
-    /// Truncates a string to maxLength and appends "..." if cut.
-    /// Prevents long prompts from breaking report formatting.
-    /// </summary>
     private static string Truncate(string text, int maxLength)
     {
         if (string.IsNullOrEmpty(text) || text.Length <= maxLength)
@@ -270,10 +409,6 @@ public class ReportGenerator
         return text[..maxLength] + "...";
     }
 
-    /// <summary>
-    /// Wraps a CSV field in quotes and escapes any internal quotes.
-    /// Prevents commas or newlines in prompts from breaking the CSV.
-    /// </summary>
     private static string CsvEscape(string value)
     {
         if (string.IsNullOrEmpty(value)) return "\"\"";

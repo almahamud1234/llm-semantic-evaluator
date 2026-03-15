@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-03-07T12:25:50.8963625+01:00",
+  "generatedAt": "2026-03-15T10:11:40.1441876+01:00",
   "summary": {
     "totalTests": 4,
     "passed": 4,
     "failed": 0,
     "passRatePercent": 100,
     "avgEmbeddingScore": 0.5,
-    "avgJudgeScore": 9.5
+    "avgJudgeScore": 9.4
   },
   "categoryBreakdown": [
     {
@@ -46,7 +46,7 @@
           "embeddingScore": 0.5,
           "judgeScore": 10,
           "response": "5 times 5 is 25.",
-          "executedAt": "2026-03-07T11:25:05.4927798Z"
+          "executedAt": "2026-03-15T09:10:47.4910589Z"
         },
         {
           "runNumber": 2,
@@ -54,7 +54,7 @@
           "embeddingScore": 0.5,
           "judgeScore": 10,
           "response": "5 times 5 is 25.",
-          "executedAt": "2026-03-07T11:25:10.3701269Z"
+          "executedAt": "2026-03-15T09:10:52.7191658Z"
         },
         {
           "runNumber": 3,
@@ -62,7 +62,7 @@
           "embeddingScore": 0.5,
           "judgeScore": 10,
           "response": "5 times 5 is 25.",
-          "executedAt": "2026-03-07T11:25:13.7492065Z"
+          "executedAt": "2026-03-15T09:10:57.3189429Z"
         }
       ]
     },
@@ -83,7 +83,7 @@
           "embeddingScore": 0.53,
           "judgeScore": 10,
           "response": "The first president of the United States was George Washington. He served from April 30, 1789, to March 4, 1797.",
-          "executedAt": "2026-03-07T11:25:16.0344473Z"
+          "executedAt": "2026-03-15T09:11:00.7962956Z"
         },
         {
           "runNumber": 2,
@@ -91,7 +91,7 @@
           "embeddingScore": 0.53,
           "judgeScore": 10,
           "response": "The first president of the United States was George Washington. He served from April 30, 1789, to March 4, 1797.",
-          "executedAt": "2026-03-07T11:25:19.8011872Z"
+          "executedAt": "2026-03-15T09:11:05.7124978Z"
         },
         {
           "runNumber": 3,
@@ -99,7 +99,7 @@
           "embeddingScore": 0.53,
           "judgeScore": 10,
           "response": "The first president of the United States was George Washington. He served from April 30, 1789, to March 4, 1797.",
-          "executedAt": "2026-03-07T11:25:23.5300858Z"
+          "executedAt": "2026-03-15T09:11:09.8409688Z"
         }
       ]
     },
@@ -112,31 +112,31 @@
       "passedRuns": 3,
       "totalRuns": 3,
       "avgEmbeddingScore": 0.52,
-      "avgJudgeScore": 9,
+      "avgJudgeScore": 8.7,
       "runs": [
         {
           "runNumber": 1,
           "passed": true,
-          "embeddingScore": 0.52,
+          "embeddingScore": 0.51,
           "judgeScore": 9,
-          "response": "Artificial intelligence (AI) refers to the simulation of human intelligence processes by computer systems. These processes include learning (the acquisition of information and rules for using it), reasoning (the ability to draw conclusions or make decisions based on that information), and self-correction. AI can be categorized into two main types:\n\n1. **Narrow AI (Weak AI)**: This type of AI is designed and trained for a specific task. Examples include virtual assistants like Siri and Alexa, recommendation systems on streaming services, and image recognition software.\n\n2. **General AI (Strong AI)**: This form of AI would possess the ability to understand, learn, and apply intelligence across a broad range of tasks, similar to a human. As of now, General AI remains theoretical and has not been achieved.\n\nAI technologies can incorporate various methods, including machine learning (where algorithms improve through experience), natural language processing (enabling machines to understand and respond to human language), and robotics. AI is used across various fields, including healthcare, finance, transportation, entertainment, and more, to enhance efficiency, automate processes, and enable new capabilities.",
-          "executedAt": "2026-03-07T11:25:28.699822Z"
+          "response": "Artificial intelligence (AI) refers to the simulation of human intelligence processes by machines, particularly computer systems. These processes include learning (the acquisition of information and rules for using it), reasoning (the ability to solve problems and make decisions), and self-correction. AI can be categorized into two main types:\n\n1. **Narrow AI (Weak AI)**: This type of AI is designed and trained for a specific task. Examples include virtual assistants like Siri and Alexa, recommendation systems used by Netflix and Amazon, and image recognition software. Narrow AI operates under a limited set of constraints and is not capable of generalizing knowledge outside its specific domain.\n\n2. **General AI (Strong AI)**: This type of AI would have the ability to understand, learn, and apply knowledge in a way that is indistinguishable from human intelligence. General AI remains largely theoretical and has not yet been achieved.\n\nAI technologies utilize various techniques, including machine learning (where algorithms improve through experience), deep learning (a subset of machine learning that uses neural networks with many layers), natural language processing (enabling machines to understand and respond to human language), and computer vision (allowing machines to interpret and process visual information).\n\nAI has applications across numerous fields, including healthcare, finance, transportation, entertainment, and more, with the potential to revolutionize industries and improve efficiency and decision-making. However, it also raises ethical and societal considerations, such as job displacement, privacy concerns, and the need for responsible AI development and deployment.",
+          "executedAt": "2026-03-15T09:11:16.3613901Z"
         },
         {
           "runNumber": 2,
           "passed": true,
-          "embeddingScore": 0.53,
-          "judgeScore": 9,
-          "response": "Artificial intelligence (AI) refers to the simulation of human intelligence in machines that are programmed to think, learn, and perform tasks that typically require human cognitive functions. These tasks include problem-solving, understanding natural language, recognizing patterns, and making decisions. AI can be categorized into two main types:\n\n1. **Narrow AI (Weak AI)**: This type of AI is designed to perform a specific task or a narrow range of tasks. Examples include voice assistants like Siri or Alexa, recommendation systems used by streaming services, and image recognition software. Narrow AI operates under a limited set of constraints and does not possess general intelligence.\n\n2. **General AI (Strong AI)**: This is a theoretical form of AI that would possess the ability to understand, learn, and apply intelligence across a wide range of tasks, much like a human. General AI remains largely a concept and has not yet been realized.\n\nAI technologies can include machine learning (where systems learn from data), natural language processing (which enables machines to understand and respond to human language), robotics, computer vision, and more. The applications of AI are vast, spanning industries such as healthcare, finance, transportation, entertainment, and many others.",
-          "executedAt": "2026-03-07T11:25:35.3097084Z"
+          "embeddingScore": 0.51,
+          "judgeScore": 8,
+          "response": "Artificial intelligence (AI) refers to the simulation of human intelligence processes by machines, especially computer systems. These processes include learning (the acquisition of information and rules for using it), reasoning (the ability to solve problems through logical deduction), and self-correction. AI can be categorized into two main types:\n\n1. **Narrow AI (Weak AI)**: This type of AI is designed and trained for a specific task. Examples include virtual personal assistants like Siri or Alexa, recommendation systems, and image recognition software. Narrow AI excels in its designated task but lacks general intelligence or understanding beyond its specific function.\n\n2. **General AI (Strong AI)**: This form of AI would possess the ability to understand, learn, and apply intelligence across a wide range of tasks, similar to human cognitive abilities. General AI remains largely theoretical and has not yet been realized.\n\nAI technologies encompass a variety of fields, including machine learning (where algorithms improve through experience), natural language processing (enabling machines to understand and respond to human language), robotics, and computer vision. AI is being applied in numerous domains, including healthcare, finance, autonomous vehicles, and customer service, making it a transformative force in many industries.",
+          "executedAt": "2026-03-15T09:11:23.5313834Z"
         },
         {
           "runNumber": 3,
           "passed": true,
-          "embeddingScore": 0.52,
+          "embeddingScore": 0.54,
           "judgeScore": 9,
-          "response": "Artificial intelligence (AI) refers to the simulation of human intelligence processes by machines, particularly computer systems. These processes include learning (the acquisition of information and rules for using it), reasoning (the use of rules to reach approximate or definite conclusions), and self-correction. \n\nAI can be classified into two main categories:\n\n1. **Narrow AI (Weak AI)**: This type of AI is designed to perform a narrow task, such as facial recognition or internet searches. It operates under a limited set of constraints and is not capable of general cognitive functions.\n\n2. **General AI (Strong AI)**: This type of AI would have the ability to understand, learn, and apply intelligence to solve any problem, much like a human. General AI remains largely theoretical and has not yet been achieved.\n\nAI technologies include machine learning (where algorithms improve through experience), natural language processing (which enables machines to understand and respond to human language), robotics, computer vision, and more. Applications of AI are widespread, impacting various sectors such as healthcare, finance, transportation, and entertainment.",
-          "executedAt": "2026-03-07T11:25:42.7465038Z"
+          "response": "Artificial intelligence (AI) refers to the simulation of human intelligence processes by computer systems. These processes include learning (the acquisition of information and rules for using it), reasoning (the ability to solve problems through logical deduction), and self-correction. AI can be categorized into two main types:\n\n1. **Narrow AI (Weak AI)**: This type of AI is designed and trained for a specific task. Examples include voice assistants (like Siri or Alexa), recommendation systems (such as those used by Netflix or Amazon), and image recognition software. Narrow AI performs its specific task effectively but does not possess general intelligence or consciousness.\n\n2. **General AI (Strong AI)**: This is a theoretical form of AI that would possess the ability to understand, learn, and apply intelligence across a wide range of tasks at a level comparable to that of a human being. General AI remains largely a concept and has not yet been achieved.\n\nAI technologies utilize various methods, including machine learning (where systems learn from data), natural language processing (which enables machines to understand and generate human language), and computer vision (which allows machines to interpret and make decisions based on visual input).\n\nAI has applications in numerous fields, including healthcare, finance, transportation, entertainment, and more, contributing to advancements in automation, data analysis, and decision-making processes.",
+          "executedAt": "2026-03-15T09:11:30.4932785Z"
         }
       ]
     },
@@ -157,7 +157,7 @@
           "embeddingScore": 0.46,
           "judgeScore": 9,
           "response": "If all dogs are animals and Max is a dog, then Max is an animal.",
-          "executedAt": "2026-03-07T11:25:45.0605973Z"
+          "executedAt": "2026-03-15T09:11:33.0538904Z"
         },
         {
           "runNumber": 2,
@@ -165,7 +165,7 @@
           "embeddingScore": 0.46,
           "judgeScore": 9,
           "response": "If all dogs are animals and Max is a dog, then Max is an animal.",
-          "executedAt": "2026-03-07T11:25:48.0354275Z"
+          "executedAt": "2026-03-15T09:11:37.2502675Z"
         },
         {
           "runNumber": 3,
@@ -173,7 +173,7 @@
           "embeddingScore": 0.46,
           "judgeScore": 9,
           "response": "If all dogs are animals and Max is a dog, then Max is an animal.",
-          "executedAt": "2026-03-07T11:25:50.864407Z"
+          "executedAt": "2026-03-15T09:11:40.110693Z"
         }
       ]
     }

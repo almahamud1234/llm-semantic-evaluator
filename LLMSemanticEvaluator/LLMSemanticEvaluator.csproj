@@ -18,6 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="ReportTemplate.html" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="data\sample_test_cases.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

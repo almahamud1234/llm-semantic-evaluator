@@ -1,6 +1,6 @@
 ============================================================
   LLM SEMANTIC EVALUATOR — TEST REPORT
-  Generated: 2026-03-07 12:25:50
+  Generated: 2026-03-15 10:11:40
 ============================================================
 
 OVERALL SUMMARY
@@ -10,7 +10,7 @@ Passed              : 4
 Failed              : 0
 Pass Rate           : 100.0%
 Avg Embedding Score : 0.50
-Avg Judge Score     : 9.5/10
+Avg Judge Score     : 9.4/10
 
 CATEGORY BREAKDOWN
 ------------------------------------------------------------
@@ -42,10 +42,10 @@ PER-TEST DETAILS
   Prompt  : What is artificial intelligence?
   Expected: Computer systems that can perform tasks requiring human intelligence
   Runs    : 3/3 passed
-  Avg Embedding: 0.52  Avg Judge: 9.0/10
-    Run 1 [pass] Emb: 0.52  Judge: 9/10  → Artificial intelligence (AI) refers to the simulation of hum...
-    Run 2 [pass] Emb: 0.53  Judge: 9/10  → Artificial intelligence (AI) refers to the simulation of hum...
-    Run 3 [pass] Emb: 0.52  Judge: 9/10  → Artificial intelligence (AI) refers to the simulation of hum...
+  Avg Embedding: 0.52  Avg Judge: 8.7/10
+    Run 1 [pass] Emb: 0.51  Judge: 9/10  → Artificial intelligence (AI) refers to the simulation of hum...
+    Run 2 [pass] Emb: 0.51  Judge: 8/10  → Artificial intelligence (AI) refers to the simulation of hum...
+    Run 3 [pass] Emb: 0.54  Judge: 9/10  → Artificial intelligence (AI) refers to the simulation of hum...
 
 [PASS] reasoning_021  (Category: reasoning)
   Prompt  : If all dogs are animals, and Max is a dog, what is Max?
