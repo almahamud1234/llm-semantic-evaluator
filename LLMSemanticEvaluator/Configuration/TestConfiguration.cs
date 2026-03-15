@@ -14,6 +14,7 @@ public class TestConfiguration
     // ── OpenAI models ───────────────────────────────────────────────────────
     public string ChatModel        { get; set; } = "gpt-4o-mini";
     public string EmbeddingModel   { get; set; } = "text-embedding-3-small";
+    public double Temperature { get; set; } = 0.0;  // default 0 for reproducibility
 
     // ── Thresholds ──────────────────────────────────────────────────────────
     public double EmbeddingThreshold { get; set; } = 0.85;  // 0.0 – 1.0

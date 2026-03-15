@@ -56,7 +56,8 @@ public sealed class OpenAIClient : ILLMClient, IEmbeddingProvider, IDisposable
         var requestBody = new ChatRequest
         {
             Model    = _config.ChatModel,
-            Messages = [new ChatMessage { Role = "user", Content = prompt }]
+            Messages = [new ChatMessage { Role = "user", Content = prompt }],
+            Temperature = _config.Temperature
         };
 
         var responseJson = await PostAsync(ChatEndpoint, requestBody, cancellationToken);
@@ -151,7 +152,7 @@ public sealed class OpenAIClient : ILLMClient, IEmbeddingProvider, IDisposable
         public string            Model       { get; set; } = string.Empty;
         public List<ChatMessage> Messages    { get; set; } = [];
         public int               MaxTokens   { get; set; } = 1000;
-        public double            Temperature { get; set; } = 0.7;
+        public double            Temperature { get; set; }
     }
 
     private sealed class ChatMessage

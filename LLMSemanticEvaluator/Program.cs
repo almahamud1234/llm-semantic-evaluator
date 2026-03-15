@@ -31,9 +31,9 @@ namespace LLMSemanticEvaluator
             // ─── Setup ───────────────────────────────────────────────────────────────────
             using var client = new OpenAIClient(config);
 
-            var embeddingValidator = new EmbeddingValidator(client, new CosineSimilarityCalculator(), threshold: 0.75);
-            var judgeValidator     = new LLMJudgeValidator(client, threshold: 8);
-            var runner             = new TestRunner(client, embeddingValidator, judgeValidator, runsPerTest: 3);
+            var embeddingValidator = new EmbeddingValidator(client, new CosineSimilarityCalculator(), threshold: config.EmbeddingThreshold);
+            var judgeValidator     = new LLMJudgeValidator(client, threshold: config.JudgeThreshold);
+            var runner             = new TestRunner(client, embeddingValidator, judgeValidator, runsPerTest: config.NumberOfRuns, minPassRun: config.MinimumPassingRuns);
             var loader             = new JsonTestLoader();
             var reportGenerator    = new ReportGenerator("reports");
 

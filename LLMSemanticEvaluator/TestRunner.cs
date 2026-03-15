@@ -15,21 +15,25 @@ public class TestRunner
     private readonly EmbeddingValidator _embeddingValidator;
     private readonly LLMJudgeValidator  _judgeValidator;
     private readonly int                _runsPerTest;
+    private readonly int                _minPassRun;
 
     /// <param name="llmClient">Sends prompts to OpenAI and gets responses.</param>
     /// <param name="embeddingValidator">Validates using cosine similarity.</param>
     /// <param name="judgeValidator">Validates using LLM-as-judge scoring.</param>
-    /// <param name="runsPerTest">How many times to run each test (default: 3).</param>
+    /// <param name="runsPerTest">How many times to run each test.</param>
+    /// <param name="minPassRun">Minimum passing number out of total test run.</param>
     public TestRunner(
         ILLMClient         llmClient,
         EmbeddingValidator embeddingValidator,
         LLMJudgeValidator  judgeValidator,
-        int                runsPerTest = 3)
+        int                runsPerTest,
+        int                minPassRun)
     {
         _llmClient          = llmClient;
         _embeddingValidator = embeddingValidator;
         _judgeValidator     = judgeValidator;
         _runsPerTest        = runsPerTest;
+        _minPassRun         = minPassRun;
     }
 
     /// <summary>
@@ -119,7 +123,7 @@ public class TestRunner
         result.PassedRunsCount       = result.Runs.Count(r => r.Passed);
         result.AverageEmbeddingScore = result.Runs.Average(r => r.EmbeddingScore);
         result.AverageJudgeScore     = result.Runs.Average(r => r.JudgeScore);
-        result.Passed                = result.PassedRunsCount >= 2; // majority vote: 2/3
+        result.Passed                = result.PassedRunsCount >= _minPassRun; // majority vote: 2/3
 
         return result;
     }
