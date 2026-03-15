@@ -70,9 +70,9 @@
   <div class="header">
     <div>
       <h1>LLM evaluation report</h1>
-      <div class="subtitle">4 tests &middot; 12 total runs &middot; definition, factual, reasoning &middot; 15 Mar 2026 13:43</div>
+      <div class="subtitle">4 tests &middot; 12 total runs &middot; definition, factual, reasoning &middot; 15 Mar 2026 10:11</div>
     </div>
-    <span class="badge badge-fail">50.0% pass rate</span>
+    <span class="badge badge-pass">100.0% pass rate</span>
   </div>
 
   <!-- Section 1: Metric cards -->
@@ -84,18 +84,18 @@
     </div>
     <div class="metric-card">
       <div class="metric-lbl">Pass rate</div>
-      <div class="metric-val" style="color:#3B6D11;">50.0%</div>
-      <div class="metric-sub" style="color:#5f5e5a;">2 / 4 passed</div>
+      <div class="metric-val" style="color:#3B6D11;">100.0%</div>
+      <div class="metric-sub" style="color:#5f5e5a;">4 / 4 passed</div>
     </div>
     <div class="metric-card">
       <div class="metric-lbl">Avg embedding score</div>
-      <div class="metric-val">0.71</div>
+      <div class="metric-val">0.50</div>
       <div class="metric-sub" style="color:#BA7517;">Below 0.85 threshold</div>
     </div>
     <div class="metric-card">
       <div class="metric-lbl">Avg judge score</div>
-      <div class="metric-val">6.0<span style="font-size:14px;color:#888780;">/10</span></div>
-      <div class="metric-sub" style="color:#BA7517;">Below threshold (>=8)</div>
+      <div class="metric-val">9.4<span style="font-size:14px;color:#888780;">/10</span></div>
+      <div class="metric-sub" style="color:#3B6D11;">Above threshold (>=8)</div>
     </div>
   </div>
 
@@ -185,7 +185,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 // ── Data injected by ReportGenerator.cs ─────────────────────────────────────
-const tests = [{"id":"quick_test_001","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.76,"avgJudge":8,"embRuns":[0.76,0.76,0.76],"judgeRuns":[8,8,8]},{"id":"quick_test_002","cat":"factual","passed":false,"runs":0,"total":3,"avgEmb":0.58,"avgJudge":4,"embRuns":[0.58,0.58,0.58],"judgeRuns":[4,4,4]},{"id":"definition_002","cat":"definition","passed":false,"runs":0,"total":3,"avgEmb":0.84,"avgJudge":4,"embRuns":[0.84,0.84,0.84],"judgeRuns":[4,4,4]},{"id":"reasoning_021","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.68,"avgJudge":8,"embRuns":[0.68,0.68,0.68],"judgeRuns":[8,8,8]}];
+const tests = [{"id":"quick_test_001","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.5,"avgJudge":10,"embRuns":[0.5,0.5,0.5],"judgeRuns":[10,10,10]},{"id":"quick_test_002","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.53,"avgJudge":10,"embRuns":[0.53,0.53,0.53],"judgeRuns":[10,10,10]},{"id":"definition_002","cat":"definition","passed":true,"runs":3,"total":3,"avgEmb":0.52,"avgJudge":8.7,"embRuns":[0.51,0.51,0.54],"judgeRuns":[9,8,9]},{"id":"reasoning_021","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.46,"avgJudge":9,"embRuns":[0.46,0.46,0.46],"judgeRuns":[9,9,9]}];
 
 // ── Category colour map ──────────────────────────────────────────────────────
 const CAT_COLORS = {

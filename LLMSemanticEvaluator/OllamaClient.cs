@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -8,44 +7,41 @@ using LLMSemanticEvaluator.Interfaces;
 namespace LLMSemanticEvaluator;
 
 /// <summary>
-/// Communicates with any OpenAI-compatible REST API.
-/// Used for both OpenAI and Grok (which shares the same API shape).
-/// The base URL and API key are injected by <see cref="LLMClientFactory"/>,
-/// so this class never needs to know which provider it is talking to.
+/// Communicates with a locally running Ollama instance (http://localhost:11434 by default).
+///
+/// DIFFERENCES FROM OpenAIClient:
+///   - No API key — Ollama runs locally and requires no authentication.
+///   - Chat endpoint : POST /api/chat    (response field: message.content)
+///   - Embedding endpoint: POST /api/embeddings (response field: embedding — a flat float[])
+///   - Requires "stream": false to get a single JSON response instead of a stream.
+///
+/// SETUP:
+///   1. Install Ollama from https://ollama.com
+///   2. Pull a model: `ollama pull llama3`
+///   3. Set ChatModel to "llama3" (or whichever model you pulled) in appsettings.json
+///   4. Set EmbeddingModel to "nomic-embed-text" (good general-purpose embedding model)
+///      and pull it first: `ollama pull nomic-embed-text`
 /// </summary>
-
-public sealed class OpenAIClient : ILLMClient, IEmbeddingProvider, IDisposable
+public sealed class OllamaClient : ILLMClient, IEmbeddingProvider, IDisposable
 {
-    private readonly string _chatEndpoint;
-    private readonly string _embeddingEndpoint;
-
+    private readonly string                _chatEndpoint;
+    private readonly string                _embeddingEndpoint;
     private readonly HttpClient            _httpClient;
     private readonly TestConfiguration    _config;
     private readonly JsonSerializerOptions _jsonOptions;
 
-
-    /// <param name="config">Shared configuration (timeout, delay, models, temperature).</param>
-    /// <param name="baseUrl">API base URL — e.g. https://api.openai.com/v1 or https://api.x.ai/v1</param>
-    /// <param name="apiKey">Bearer token for this provider.</param>
-    public OpenAIClient(TestConfiguration config, string baseUrl, string apiKey)
+    public OllamaClient(TestConfiguration config)
     {
         _config = config ?? throw new ArgumentNullException(nameof(config));
-        // _config.Validate();
 
-        // Normalise base URL (strip trailing slash) and build endpoints
-        baseUrl            = baseUrl.TrimEnd('/');
-        _chatEndpoint      = $"{baseUrl}/chat/completions";
-        _embeddingEndpoint = $"{baseUrl}/embeddings";
+        var baseUrl        = config.OllamaBaseUrl.TrimEnd('/');
+        _chatEndpoint      = $"{baseUrl}/api/chat";
+        _embeddingEndpoint = $"{baseUrl}/api/embeddings";
 
         _httpClient = new HttpClient
         {
             Timeout = TimeSpan.FromSeconds(config.TimeoutSeconds)
         };
-
-        _httpClient.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", apiKey);
-        _httpClient.DefaultRequestHeaders.Accept
-            .Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
         _jsonOptions = new JsonSerializerOptions
         {
@@ -66,19 +62,20 @@ public sealed class OpenAIClient : ILLMClient, IEmbeddingProvider, IDisposable
         if (string.IsNullOrWhiteSpace(prompt))
             throw new ArgumentException("Prompt must not be empty.", nameof(prompt));
 
-        var requestBody = new ChatRequest
+        var requestBody = new OllamaChatRequest
         {
             Model    = _config.ChatModel,
-            Messages = [new ChatMessage { Role = "user", Content = prompt }],
-            Temperature = _config.Temperature
+            Messages = [new OllamaChatMessage { Role = "user", Content = prompt }],
+            Stream   = false,           // get one complete JSON response, not a stream
+            Options  = new OllamaOptions { Temperature = _config.Temperature }
         };
 
         var responseJson = await PostAsync(_chatEndpoint, requestBody, cancellationToken);
-        var response     = Deserialize<ChatResponse>(responseJson);
+        var response     = Deserialize<OllamaChatResponse>(responseJson);
 
-        var content = response?.Choices?.FirstOrDefault()?.Message?.Content?.Trim();
+        var content = response?.Message?.Content?.Trim();
         if (string.IsNullOrWhiteSpace(content))
-            throw new InvalidOperationException("Provider returned an empty chat response.");
+            throw new InvalidOperationException("Ollama returned an empty chat response.");
 
         return content;
     }
@@ -99,20 +96,19 @@ public sealed class OpenAIClient : ILLMClient, IEmbeddingProvider, IDisposable
         if (string.IsNullOrWhiteSpace(text))
             throw new ArgumentException("Text must not be empty.", nameof(text));
 
-        var requestBody = new EmbeddingRequest
+        var requestBody = new OllamaEmbeddingRequest
         {
-            Model = _config.EmbeddingModel,
-            Input = text
+            Model  = _config.EmbeddingModel,
+            Prompt = text
         };
 
         var responseJson = await PostAsync(_embeddingEndpoint, requestBody, cancellationToken);
-        var response     = Deserialize<EmbeddingResponse>(responseJson);
+        var response     = Deserialize<OllamaEmbeddingResponse>(responseJson);
 
-        var vector = response?.Data?.FirstOrDefault()?.Embedding;
-        if (vector == null || vector.Length == 0)
-            throw new InvalidOperationException("Provider returned an empty embedding vector.");
+        if (response?.Embedding == null || response.Embedding.Length == 0)
+            throw new InvalidOperationException("Ollama returned an empty embedding vector.");
 
-        return vector;
+        return response.Embedding;
     }
 
     // -------------------------------------------------------------------------
@@ -124,7 +120,6 @@ public sealed class OpenAIClient : ILLMClient, IEmbeddingProvider, IDisposable
         object requestBody,
         CancellationToken cancellationToken)
     {
-        // Optional per-request delay (rate-limit guard)
         if (_config.RequestDelayMs > 0)
             await Task.Delay(_config.RequestDelayMs, cancellationToken);
 
@@ -136,7 +131,7 @@ public sealed class OpenAIClient : ILLMClient, IEmbeddingProvider, IDisposable
 
         if (!httpResponse.IsSuccessStatusCode)
             throw new HttpRequestException(
-                $"API error {(int)httpResponse.StatusCode}: {body}");
+                $"Ollama error {(int)httpResponse.StatusCode}: {body}");
 
         return body;
     }
@@ -150,7 +145,7 @@ public sealed class OpenAIClient : ILLMClient, IEmbeddingProvider, IDisposable
         var result = JsonSerializer.Deserialize<T>(json, _jsonOptions);
         if (result == null)
             throw new InvalidOperationException(
-                $"Failed to deserialize response as {typeof(T).Name}.");
+                $"Failed to deserialize Ollama response as {typeof(T).Name}.");
         return result;
     }
 
@@ -160,47 +155,42 @@ public sealed class OpenAIClient : ILLMClient, IEmbeddingProvider, IDisposable
     // Private DTOs — Chat
     // -------------------------------------------------------------------------
 
-    private sealed class ChatRequest
+    private sealed class OllamaChatRequest
     {
-        public string            Model       { get; set; } = string.Empty;
-        public List<ChatMessage> Messages    { get; set; } = [];
-        public int               MaxTokens   { get; set; } = 1000;
-        public double            Temperature { get; set; }
+        public string                  Model    { get; set; } = string.Empty;
+        public List<OllamaChatMessage> Messages { get; set; } = [];
+        public bool                    Stream   { get; set; } = false;
+        public OllamaOptions?          Options  { get; set; }
     }
 
-    private sealed class ChatMessage
+    private sealed class OllamaChatMessage
     {
         public string Role    { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
     }
 
-    private sealed class ChatResponse
+    private sealed class OllamaOptions
     {
-        public List<ChatChoice>? Choices { get; set; }
+        public double Temperature { get; set; }
     }
 
-    private sealed class ChatChoice
+    private sealed class OllamaChatResponse
     {
-        public ChatMessage? Message { get; set; }
+        public OllamaChatMessage? Message { get; set; }
     }
 
     // -------------------------------------------------------------------------
     // Private DTOs — Embeddings
     // -------------------------------------------------------------------------
 
-    private sealed class EmbeddingRequest
+    private sealed class OllamaEmbeddingRequest
     {
-        public string Model { get; set; } = string.Empty;
-        public string Input { get; set; } = string.Empty;
+        public string Model  { get; set; } = string.Empty;
+        public string Prompt { get; set; } = string.Empty;   // Ollama uses "prompt", not "input"
     }
 
-    private sealed class EmbeddingResponse
+    private sealed class OllamaEmbeddingResponse
     {
-        public List<EmbeddingData>? Data { get; set; }
-    }
-
-    private sealed class EmbeddingData
-    {
-        public float[]? Embedding { get; set; }
+        public float[]? Embedding { get; set; }   // flat array, not wrapped in data[]
     }
 }

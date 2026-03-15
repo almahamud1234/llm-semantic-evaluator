@@ -1,21 +1,21 @@
 ============================================================
   LLM SEMANTIC EVALUATOR — TEST REPORT
-  Generated: 2026-03-15 10:11:40
+  Generated: 2026-03-15 13:43:28
 ============================================================
 
 OVERALL SUMMARY
 ------------------------------------------------------------
 Total Tests         : 4
-Passed              : 4
-Failed              : 0
-Pass Rate           : 100.0%
-Avg Embedding Score : 0.50
-Avg Judge Score     : 9.4/10
+Passed              : 2
+Failed              : 2
+Pass Rate           : 50.0%
+Avg Embedding Score : 0.71
+Avg Judge Score     : 6.0/10
 
 CATEGORY BREAKDOWN
 ------------------------------------------------------------
-definition           1/1 passed  (100.0%)
-factual              2/2 passed  (100.0%)
+definition           0/1 passed  (0.0%)
+factual              1/2 passed  (50.0%)
 reasoning            1/1 passed  (100.0%)
 
 PER-TEST DETAILS
@@ -24,37 +24,43 @@ PER-TEST DETAILS
   Prompt  : What is 5 times 5?
   Expected: 25
   Runs    : 3/3 passed
-  Avg Embedding: 0.50  Avg Judge: 10.0/10
-    Run 1 [pass] Emb: 0.50  Judge: 10/10  → 5 times 5 is 25.
-    Run 2 [pass] Emb: 0.50  Judge: 10/10  → 5 times 5 is 25.
-    Run 3 [pass] Emb: 0.50  Judge: 10/10  → 5 times 5 is 25.
+  Avg Embedding: 0.76  Avg Judge: 8.0/10
+    Run 1 [pass] Emb: 0.76  Judge: 8/10  → Five times five is 25.
+    Run 2 [pass] Emb: 0.76  Judge: 8/10  → Five times five is 25.
+    Run 3 [pass] Emb: 0.76  Judge: 8/10  → Five times five is 25.
 
-[PASS] quick_test_002  (Category: factual)
+[FAIL] quick_test_002  (Category: factual)
   Prompt  : Name the first president of the USA
   Expected: George Washington
-  Runs    : 3/3 passed
-  Avg Embedding: 0.53  Avg Judge: 10.0/10
-    Run 1 [pass] Emb: 0.53  Judge: 10/10  → The first president of the United States was George Washingt...
-    Run 2 [pass] Emb: 0.53  Judge: 10/10  → The first president of the United States was George Washingt...
-    Run 3 [pass] Emb: 0.53  Judge: 10/10  → The first president of the United States was George Washingt...
+  Runs    : 0/3 passed
+  Avg Embedding: 0.58  Avg Judge: 4.0/10
+    Run 1 [fail] Emb: 0.58  Judge: 4/10  → The first president of the United States was George Washingt...
+    Run 2 [fail] Emb: 0.58  Judge: 4/10  → The first president of the United States was George Washingt...
+    Run 3 [fail] Emb: 0.58  Judge: 4/10  → The first president of the United States was George Washingt...
 
-[PASS] definition_002  (Category: definition)
+[FAIL] definition_002  (Category: definition)
   Prompt  : What is artificial intelligence?
   Expected: Computer systems that can perform tasks requiring human intelligence
-  Runs    : 3/3 passed
-  Avg Embedding: 0.52  Avg Judge: 8.7/10
-    Run 1 [pass] Emb: 0.51  Judge: 9/10  → Artificial intelligence (AI) refers to the simulation of hum...
-    Run 2 [pass] Emb: 0.51  Judge: 8/10  → Artificial intelligence (AI) refers to the simulation of hum...
-    Run 3 [pass] Emb: 0.54  Judge: 9/10  → Artificial intelligence (AI) refers to the simulation of hum...
+  Runs    : 0/3 passed
+  Avg Embedding: 0.84  Avg Judge: 4.0/10
+    Run 1 [fail] Emb: 0.84  Judge: 4/10  → Artificial intelligence (AI) refers to the development of co...
+    Run 2 [fail] Emb: 0.84  Judge: 4/10  → Artificial intelligence (AI) refers to the development of co...
+    Run 3 [fail] Emb: 0.84  Judge: 4/10  → Artificial intelligence (AI) refers to the development of co...
 
 [PASS] reasoning_021  (Category: reasoning)
   Prompt  : If all dogs are animals, and Max is a dog, what is Max?
   Expected: An animal
   Runs    : 3/3 passed
-  Avg Embedding: 0.46  Avg Judge: 9.0/10
-    Run 1 [pass] Emb: 0.46  Judge: 9/10  → If all dogs are animals and Max is a dog, then Max is an ani...
-    Run 2 [pass] Emb: 0.46  Judge: 9/10  → If all dogs are animals and Max is a dog, then Max is an ani...
-    Run 3 [pass] Emb: 0.46  Judge: 9/10  → If all dogs are animals and Max is a dog, then Max is an ani...
+  Avg Embedding: 0.68  Avg Judge: 8.0/10
+    Run 1 [pass] Emb: 0.68  Judge: 8/10  → A classic example of a syllogism.
+
+The statement "All dogs a...
+    Run 2 [pass] Emb: 0.68  Judge: 8/10  → A classic example of a syllogism.
+
+The statement "All dogs a...
+    Run 3 [pass] Emb: 0.68  Judge: 8/10  → A classic example of a syllogism.
+
+The statement "All dogs a...
 
 ============================================================
 END OF REPORT
