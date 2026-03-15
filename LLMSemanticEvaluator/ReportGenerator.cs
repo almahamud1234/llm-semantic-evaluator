@@ -221,6 +221,7 @@ public class ReportGenerator
                     passed         = run.Passed,
                     embeddingScore = Math.Round(run.EmbeddingScore, 2),
                     judgeScore     = run.JudgeScore,
+                    judgeReasoning = run.JudgeReasoning,
                     response       = run.Response,
                     executedAt     = run.ExecutedAt
                 })

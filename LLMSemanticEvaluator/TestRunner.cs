@@ -86,7 +86,7 @@ public class TestRunner
 
                 // Step 2: Validate with both validators independently
                 var embResult   = await _embeddingValidator.ValidateAsync(testCase.ExpectedOutput, actual);
-                var judgeResult = await _judgeValidator.ValidateAsync(testCase.Prompt, testCase.ExpectedOutput, actual);
+                var judgeResult = await _judgeValidator.ValidateAsync(testCase.Prompt, testCase.ExpectedOutput, actual, testCase.EvaluationCriteria);
 
                 // Step 3: Record each validator's outcome separately.
                 // TestRun.Passed is a computed property: true if EmbeddingPassed OR JudgePassed
@@ -97,6 +97,7 @@ public class TestRunner
                     JudgeScore      = (int)judgeResult.Score,
                     EmbeddingPassed = embResult.Passed,
                     JudgePassed     = judgeResult.Passed,
+                    JudgeReasoning  = judgeResult.Reasoning ?? string.Empty,
                     ExecutedAt      = DateTime.UtcNow
                 });
             }
