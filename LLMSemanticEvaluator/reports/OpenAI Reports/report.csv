@@ -1,5 +1,0 @@
-TestId,Category,Passed,PassedRuns,TotalRuns,AvgEmbeddingScore,AvgJudgeScore,Prompt,ExpectedOutput
-"quick_test_001","factual",True,3,3,0.50,10.0,"What is 5 times 5?","25"
-"quick_test_002","factual",True,3,3,0.53,10.0,"Name the first president of the USA","George Washington"
-"definition_002","definition",True,3,3,0.52,8.7,"What is artificial intelligence?","Computer systems that can perform tasks requiring human intelligence"
-"reasoning_021","reasoning",True,3,3,0.46,9.0,"If all dogs are animals, and Max is a dog, what is Max?","An animal"
