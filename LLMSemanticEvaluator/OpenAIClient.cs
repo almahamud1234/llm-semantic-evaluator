@@ -65,13 +65,22 @@ public sealed class OpenAIClient : ILLMClient, IEmbeddingProvider, IDisposable
     {
         if (string.IsNullOrWhiteSpace(prompt))
             throw new ArgumentException("Prompt must not be empty.", nameof(prompt));
-
+                                    
         var requestBody = new ChatRequest
         {
             Model    = _config.ChatModel,
-            Messages = [new ChatMessage { Role = "user", Content = prompt }],
-            Temperature = _config.Temperature
+            Messages = [new ChatMessage { Role = "user", Content = prompt }]
         };
+
+        if (_config.ChatModel.StartsWith("gpt-5"))
+            requestBody.MaxCompletionTokens = 1000;
+        else
+            requestBody.MaxTokens = 1000;
+
+        if (!_config.ChatModel.StartsWith("gpt-5"))
+        {
+            requestBody.Temperature = _config.Temperature;
+        }
 
         var responseJson = await PostAsync(_chatEndpoint, requestBody, cancellationToken);
         var response     = Deserialize<ChatResponse>(responseJson);
@@ -164,8 +173,15 @@ public sealed class OpenAIClient : ILLMClient, IEmbeddingProvider, IDisposable
     {
         public string            Model       { get; set; } = string.Empty;
         public List<ChatMessage> Messages    { get; set; } = [];
-        public int               MaxTokens   { get; set; } = 1000;
-        public double            Temperature { get; set; }
+        public double?            Temperature { get; set; }
+
+        // Older models use max_tokens, newer models (gpt-5-mini, o1, o3 etc.) use max_completion_tokens.
+        // Only one should be serialized — the other stays null and is excluded via WhenWritingNull.
+        [JsonPropertyName("max_tokens")]
+        public int? MaxTokens           { get; set; }
+
+        [JsonPropertyName("max_completion_tokens")]
+        public int? MaxCompletionTokens { get; set; }
     }
 
     private sealed class ChatMessage

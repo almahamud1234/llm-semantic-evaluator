@@ -76,7 +76,7 @@ namespace LLMSemanticEvaluator
             try
             {
                 Console.WriteLine("Loading test cases...");
-                testCases = await loader.LoadTestsAsync("data/quick_tests.json");
+                testCases = await loader.LoadTestsAsync("data/sample_test_cases.json");
                 if (testCases.Count == 0)
                 {
                     Console.WriteLine("[Error] No test cases were loaded.");

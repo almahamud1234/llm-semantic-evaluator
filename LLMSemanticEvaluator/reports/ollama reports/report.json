@@ -1,0 +1,193 @@
+{
+  "generatedAt": "2026-03-15T13:43:28.3091324+01:00",
+  "summary": {
+    "totalTests": 4,
+    "passed": 2,
+    "failed": 2,
+    "passRatePercent": 50,
+    "avgEmbeddingScore": 0.71,
+    "avgJudgeScore": 6
+  },
+  "categoryBreakdown": [
+    {
+      "category": "definition",
+      "total": 1,
+      "passed": 0,
+      "passRatePercent": 0
+    },
+    {
+      "category": "factual",
+      "total": 2,
+      "passed": 1,
+      "passRatePercent": 50
+    },
+    {
+      "category": "reasoning",
+      "total": 1,
+      "passed": 1,
+      "passRatePercent": 100
+    }
+  ],
+  "testResults": [
+    {
+      "testId": "quick_test_001",
+      "category": "factual",
+      "prompt": "What is 5 times 5?",
+      "expectedOutput": "25",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.76,
+      "avgJudgeScore": 8,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.76,
+          "judgeScore": 8,
+          "judgeReasoning": "Step 1 \u2014 Reason step by step:\nThe actual answer provided is \u0022Five times five is 25\u0022, which correctly addresses the query and captures the same meaning as the expected answer. This demonstrates a clear understanding of mathematical concepts and the ability to apply them accurately.\n\nHowever, there are some minor wording differences between the two answers. The expected answer uses the phrase \u00225 times 5\u0022 while the actual answer uses \u0022Five times five\u0022. While this is not a major issue from a semantic standpoint, it does detract slightly from the clarity of the response.\n\nStep 2 \u2014 Assign a score:",
+          "response": "Five times five is 25.",
+          "executedAt": "2026-03-15T12:39:29.9246938Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.76,
+          "judgeScore": 8,
+          "judgeReasoning": "Step 1 \u2014 Reason step by step:\nThe actual answer provided is \u0022Five times five is 25\u0022, which correctly addresses the query and captures the same meaning as the expected answer. This demonstrates a clear understanding of mathematical concepts and the ability to apply them accurately.\n\nHowever, there are some minor wording differences between the two answers. The expected answer uses the phrase \u00225 times 5\u0022 while the actual answer uses \u0022Five times five\u0022. While this is not a major issue from a semantic standpoint, it does detract slightly from the clarity of the response.\n\nStep 2 \u2014 Assign a score:",
+          "response": "Five times five is 25.",
+          "executedAt": "2026-03-15T12:39:42.0185824Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.76,
+          "judgeScore": 8,
+          "judgeReasoning": "Step 1 \u2014 Reason step by step:\nThe actual answer provided is \u0022Five times five is 25\u0022, which correctly addresses the query and captures the same meaning as the expected answer. This demonstrates a clear understanding of mathematical concepts and the ability to apply them accurately.\n\nHowever, there are some minor wording differences between the two answers. The expected answer uses the phrase \u00225 times 5\u0022 while the actual answer uses \u0022Five times five\u0022. While this is not a major issue from a semantic standpoint, it does detract slightly from the clarity of the response.\n\nStep 2 \u2014 Assign a score:",
+          "response": "Five times five is 25.",
+          "executedAt": "2026-03-15T12:39:54.1557738Z"
+        }
+      ]
+    },
+    {
+      "testId": "quick_test_002",
+      "category": "factual",
+      "prompt": "Name the first president of the USA",
+      "expectedOutput": "George Washington",
+      "passed": false,
+      "passedRuns": 0,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.58,
+      "avgJudgeScore": 4,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": false,
+          "embeddingScore": 0.58,
+          "judgeScore": 4,
+          "judgeReasoning": "To assess the quality of the AI response, I will follow the provided steps.\n\nStep 1 \u2014 Reason step by step:\n\nThe actual answer correctly identifies George Washington as the first president of the United States. However, it does not capture the same meaning as the expected answer, which explicitly states that he served from 1789 to 1797. The AI response also omits the fact that Washington was unanimously elected as the first president by the Electoral College in 1789.\n\nStep 2 \u2014 Assign a score:",
+          "response": "The first president of the United States was George Washington. He served from 1789 to 1797.",
+          "executedAt": "2026-03-15T12:40:05.9963264Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": false,
+          "embeddingScore": 0.58,
+          "judgeScore": 4,
+          "judgeReasoning": "To assess the quality of the AI response, I will follow the provided steps.\n\nStep 1 \u2014 Reason step by step:\n\nThe actual answer correctly identifies George Washington as the first president of the United States. However, it does not capture the same meaning as the expected answer, which explicitly states that he served from 1789 to 1797. The AI response also omits the fact that Washington was unanimously elected as the first president by the Electoral College in 1789.\n\nStep 2 \u2014 Assign a score:",
+          "response": "The first president of the United States was George Washington. He served from 1789 to 1797.",
+          "executedAt": "2026-03-15T12:40:18.3524434Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": false,
+          "embeddingScore": 0.58,
+          "judgeScore": 4,
+          "judgeReasoning": "To assess the quality of the AI response, I will follow the provided steps.\n\nStep 1 \u2014 Reason step by step:\n\nThe actual answer correctly identifies George Washington as the first president of the United States. However, it does not capture the same meaning as the expected answer, which explicitly states that he served from 1789 to 1797. The AI response also omits the fact that Washington was unanimously elected as the first president by the Electoral College in 1789.\n\nStep 2 \u2014 Assign a score:",
+          "response": "The first president of the United States was George Washington. He served from 1789 to 1797.",
+          "executedAt": "2026-03-15T12:40:30.6014231Z"
+        }
+      ]
+    },
+    {
+      "testId": "definition_002",
+      "category": "definition",
+      "prompt": "What is artificial intelligence?",
+      "expectedOutput": "Computer systems that can perform tasks requiring human intelligence",
+      "passed": false,
+      "passedRuns": 0,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.84,
+      "avgJudgeScore": 4,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": false,
+          "embeddingScore": 0.84,
+          "judgeScore": 4,
+          "judgeReasoning": "Step 1 \u2014 Reason step by step:\n\nThe actual answer provided does not accurately address the query regarding what artificial intelligence (AI) is. It instead provides a definition of AI that focuses on its capabilities and limitations, which is somewhat relevant but not directly addressing the question. Furthermore, it fails to mention the key distinction between narrow or weak AI and general or strong AI.\n\nThe actual answer also omits important details about the development and applications of AI, such as its potential for superintelligence and its impact on various industries and aspects of society.\n\nStep 2 \u2014 Assign a score:",
+          "response": "Artificial intelligence (AI) refers to the development of computer systems that can perform tasks that typically require human intelligence, such as learning, problem-solving, decision-making, and perception. AI systems use algorithms and data to make decisions or take actions without being explicitly programmed.\n\nThere are several types of AI, including:\n\n1. Narrow or Weak AI: This type of AI is designed to perform a specific task, such as facial recognition or language translation. It is not capable of general intelligence or reasoning.\n2. General or Strong AI: This type of AI aims to create a machine that can think and learn like humans, with the ability to reason, understand context, and apply knowledge across various domains.\n3. Superintelligence: This refers to an AI system that is significantly more intelligent than the best human minds, potentially capable of solving complex problems that are currently unsolvable.\n\nAI systems use various techniques, such as machine learning, deep learning, and natural language processing, to achieve their goals. These techniques allow AI systems to:\n\n* Learn from data and improve their performance over time\n* Make predictions or decisions based on patterns in the data\n* Understand and generate human-like language\n* Perceive and interpret visual data\n\nAI has many potential applications, including:\n\n* Virtual assistants (e.g., Siri, Alexa)\n* Image recognition and analysis\n* Natural language processing (e.g., chatbots, voice assistants)\n* Predictive maintenance and optimization\n* Healthcare and medical diagnosis\n* Financial analysis and trading\n\nHowever, AI also raises important questions about ethics, accountability, and job displacement. As AI becomes more advanced, it is essential to consider these issues and ensure that its development and deployment align with human values and societal needs.\n\nIs there anything specific you\u0027d like to know about AI or its applications?",
+          "executedAt": "2026-03-15T12:41:09.9588173Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": false,
+          "embeddingScore": 0.84,
+          "judgeScore": 4,
+          "judgeReasoning": "Step 1 \u2014 Reason step by step:\n\nThe actual answer provided does not accurately address the query regarding what artificial intelligence (AI) is. It instead provides a definition of AI that focuses on its capabilities and limitations, which is somewhat relevant but not directly addressing the question. Furthermore, it fails to mention the key distinction between narrow or weak AI and general or strong AI.\n\nThe actual answer also omits important details about the development and applications of AI, such as its potential for superintelligence and its impact on various industries and aspects of society.\n\nStep 2 \u2014 Assign a score:",
+          "response": "Artificial intelligence (AI) refers to the development of computer systems that can perform tasks that typically require human intelligence, such as learning, problem-solving, decision-making, and perception. AI systems use algorithms and data to make decisions or take actions without being explicitly programmed.\n\nThere are several types of AI, including:\n\n1. Narrow or Weak AI: This type of AI is designed to perform a specific task, such as facial recognition or language translation. It is not capable of general intelligence or reasoning.\n2. General or Strong AI: This type of AI aims to create a machine that can think and learn like humans, with the ability to reason, understand context, and apply knowledge across various domains.\n3. Superintelligence: This refers to an AI system that is significantly more intelligent than the best human minds, potentially capable of solving complex problems that are currently unsolvable.\n\nAI systems use various techniques, such as machine learning, deep learning, and natural language processing, to achieve their goals. These techniques allow AI systems to:\n\n* Learn from data and improve their performance over time\n* Make predictions or decisions based on patterns in the data\n* Understand and generate human-like language\n* Perceive and interpret visual data\n\nAI has many potential applications, including:\n\n* Virtual assistants (e.g., Siri, Alexa)\n* Image recognition and analysis\n* Natural language processing (e.g., chatbots, voice assistants)\n* Predictive maintenance and optimization\n* Healthcare and medical diagnosis\n* Financial analysis and trading\n\nHowever, AI also raises important questions about ethics, accountability, and job displacement. As AI becomes more advanced, it is essential to consider these issues and ensure that its development and deployment align with human values and societal needs.\n\nIs there anything specific you\u0027d like to know about AI or its applications?",
+          "executedAt": "2026-03-15T12:41:50.3355075Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": false,
+          "embeddingScore": 0.84,
+          "judgeScore": 4,
+          "judgeReasoning": "Step 1 \u2014 Reason step by step:\n\nThe actual answer provided does not accurately address the query regarding what artificial intelligence (AI) is. It instead provides a definition of AI that focuses on its capabilities and limitations, which is somewhat relevant but not directly addressing the question. Furthermore, it fails to mention the key distinction between narrow or weak AI and general or strong AI.\n\nThe actual answer also omits important details about the development and applications of AI, such as its potential for superintelligence and its impact on various industries and aspects of society.\n\nStep 2 \u2014 Assign a score:",
+          "response": "Artificial intelligence (AI) refers to the development of computer systems that can perform tasks that typically require human intelligence, such as learning, problem-solving, decision-making, and perception. AI systems use algorithms and data to make decisions or take actions without being explicitly programmed.\n\nThere are several types of AI, including:\n\n1. Narrow or Weak AI: This type of AI is designed to perform a specific task, such as facial recognition or language translation. It is not capable of general intelligence or reasoning.\n2. General or Strong AI: This type of AI aims to create a machine that can think and learn like humans, with the ability to reason, understand context, and apply knowledge across various domains.\n3. Superintelligence: This refers to an AI system that is significantly more intelligent than the best human minds, potentially capable of solving complex problems that are currently unsolvable.\n\nAI systems use various techniques, such as machine learning, deep learning, and natural language processing, to achieve their goals. These techniques allow AI systems to:\n\n* Learn from data and improve their performance over time\n* Make predictions or decisions based on patterns in the data\n* Understand and generate human-like language\n* Perceive and interpret visual data\n\nAI has many potential applications, including:\n\n* Virtual assistants (e.g., Siri, Alexa)\n* Image recognition and analysis\n* Natural language processing (e.g., chatbots, voice assistants)\n* Predictive maintenance and optimization\n* Healthcare and medical diagnosis\n* Financial analysis and trading\n\nHowever, AI also raises important questions about ethics, accountability, and job displacement. As AI becomes more advanced, it is essential to consider these issues and ensure that its development and deployment align with human values and societal needs.\n\nIs there anything specific you\u0027d like to know about AI or its applications?",
+          "executedAt": "2026-03-15T12:42:30.4765992Z"
+        }
+      ]
+    },
+    {
+      "testId": "reasoning_021",
+      "category": "reasoning",
+      "prompt": "If all dogs are animals, and Max is a dog, what is Max?",
+      "expectedOutput": "An animal",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.68,
+      "avgJudgeScore": 8,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.68,
+          "judgeScore": 8,
+          "judgeReasoning": "Step 1 \u2014 Reason step by step:\n\nThe actual answer \u0022An animal\u0022 correctly addresses the query by applying the universal statement \u0022All dogs are animals\u0022 to Max. It captures the same meaning as the expected answer, which is that Max is an animal due to being a dog.\n\nHowever, there are some minor wording differences between the two answers. The expected answer uses the phrase \u0022If all dogs are animals,\u0022 whereas the actual answer simply states \u0022An animal.\u0022 This slight difference in phrasing does not significantly impact the overall meaning of the response.\n\nStep 2 \u2014 Assign a score:",
+          "response": "A classic example of a syllogism.\n\nThe statement \u0022All dogs are animals\u0022 is a universal statement that applies to all dogs. The conclusion drawn from this statement is that Max is an animal.\n\nIn other words, the logical structure of the statement is:\n\n* All A (dogs) are B (animals)\n* S (Max is a dog)\n* Therefore, S (Max is an animal)\n\nSo, in this case, \u0022Max\u0022 refers to the dog Max.",
+          "executedAt": "2026-03-15T12:42:49.7088936Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.68,
+          "judgeScore": 8,
+          "judgeReasoning": "Step 1 \u2014 Reason step by step:\n\nThe actual answer \u0022An animal\u0022 correctly addresses the query by applying the universal statement \u0022All dogs are animals\u0022 to Max. It captures the same meaning as the expected answer, which is that Max is an animal due to being a dog.\n\nHowever, there are some minor wording differences between the two answers. The expected answer uses the phrase \u0022If all dogs are animals,\u0022 whereas the actual answer simply states \u0022An animal.\u0022 This slight difference in phrasing does not significantly impact the overall meaning of the response.\n\nStep 2 \u2014 Assign a score:",
+          "response": "A classic example of a syllogism.\n\nThe statement \u0022All dogs are animals\u0022 is a universal statement that applies to all dogs. The conclusion drawn from this statement is that Max is an animal.\n\nIn other words, the logical structure of the statement is:\n\n* All A (dogs) are B (animals)\n* S (Max is a dog)\n* Therefore, S (Max is an animal)\n\nSo, in this case, \u0022Max\u0022 refers to the dog Max.",
+          "executedAt": "2026-03-15T12:43:09.0618356Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.68,
+          "judgeScore": 8,
+          "judgeReasoning": "Step 1 \u2014 Reason step by step:\n\nThe actual answer \u0022An animal\u0022 correctly addresses the query by applying the universal statement \u0022All dogs are animals\u0022 to Max. It captures the same meaning as the expected answer, which is that Max is an animal due to being a dog.\n\nHowever, there are some minor wording differences between the two answers. The expected answer uses the phrase \u0022If all dogs are animals,\u0022 whereas the actual answer simply states \u0022An animal.\u0022 This slight difference in phrasing does not significantly impact the overall meaning of the response.\n\nStep 2 \u2014 Assign a score:",
+          "response": "A classic example of a syllogism.\n\nThe statement \u0022All dogs are animals\u0022 is a universal statement that applies to all dogs. The conclusion drawn from this statement is that Max is an animal.\n\nIn other words, the logical structure of the statement is:\n\n* All A (dogs) are B (animals)\n* S (Max is a dog)\n* Therefore, S (Max is an animal)\n\nSo, in this case, \u0022Max\u0022 refers to the dog Max.",
+          "executedAt": "2026-03-15T12:43:28.2859315Z"
+        }
+      ]
+    }
+  ]
+}
