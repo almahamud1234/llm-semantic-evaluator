@@ -1,55 +1,406 @@
-# ML 25/26-08 – Implementing Tests for LLM Prompts with Semantic Assertions
+# ML 25/26-08 — LLM Semantic Evaluator
 
-A semantic evaluation framework for testing Large Language Model (LLM) prompts using AI-powered assertions. This project addresses the challenge of testing non-deterministic LLM outputs by implementing semantic validation instead of exact string matching.
+A **.NET 8 / C#** testing framework for evaluating LLM prompts using **semantic assertions** rather than exact string matching. It handles the inherent non-determinism of LLM outputs by applying two independent validation methods — embedding-based cosine similarity and a G-Eval style LLM-as-a-Judge — combined with a majority-vote strategy across repeated test runs.
 
-Developed by **LLM QA Lab**, this project provides an automated, reproducible approach to validating LLM responses by combining embedding-based similarity checks and LLM-as-a-judge evaluation techniques.
-
----
-
-## The Problem
-
-When testing LLM outputs, traditional assertion methods fail because the same prompt can generate semantically equivalent but lexically different responses:
-
-- *"The capital of France is Paris."*
-- *"Paris is France's capital city."*
-- *"Paris."*
-
-Traditional testing (`assert output == "Paris"`) fails all three. This framework uses **semantic understanding** to correctly identify all three as passing.
+Supports **OpenAI GPT**, **xAI Grok**, and **locally hosted Ollama** models with no code changes needed to switch between them.
 
 ---
 
-## How It Works
+<a name="top"></a>
 
-Each test case runs through a two-stage validation pipeline:
+## Table of Contents
+
+1. [Abstract](#abstract)
+2. [Features](#features)
+3. [System Requirements](#system-requirements)
+4. [Architecture](#architecture)
+5. [Installation](#installation)
+   - [Prerequisites](#prerequisites)
+   - [Setup Steps](#setup-steps)
+   - [Ollama Setup (Local Models)](#ollama-setup-local-models)
+6. [Configuration](#configuration)
+7. [Test Case Format](#test-case-format)
+8. [Usage](#usage)
+9. [Results & Visualisation](docs/results.md)
+10. [Unit Testing](docs/unit-testing.md)
+11. [Project Structure](#project-structure)
+
+---
+
+## Abstract
+
+Traditional software testing asserts correctness through exact string equality — a strategy that fails entirely for Large Language Model outputs. An LLM responding to *"What is the capital of France?"* may answer *"Paris"*, *"The capital of France is Paris"*, or *"Paris serves as France's capital city"*. All three are semantically correct; exact matching would only accept one.
+
+This project implements the LLM Semantic Evaluator, a .NET/C# framework that replaces lexical matching with two semantic validation approaches required by ML project 25/26-08:
+
+- **Approach 1 — Embedding Cosine Similarity:** Both the expected and actual outputs are converted to high-dimensional embedding vectors. The cosine similarity between them is measured. A run passes if `similarity ≥ EmbeddingThreshold` (default 0.85).
+- **Approach 2 — LLM-as-a-Judge (G-Eval style):** A secondary LLM reasons step-by-step about the response before assigning a score from 1–10. A run passes if `score ≥ JudgeThreshold` (default 8).
+
+A run passes if **either** validator succeeds (logical OR). A test case passes overall if at least **2 out of 3 runs** pass (configurable majority vote). Evaluated on 130 test cases, the framework achieved **97.7% pass rate** with OpenAI `gpt-4o-mini` and **44.6%** with Ollama `llama3.2:1b` — with the gap explained by judge model miscalibration rather than factual response errors.
+
+---
+
+## Features
+
+- **Two semantic validation methods** — cosine similarity on embeddings and G-Eval style LLM judge
+- **Hybrid OR logic** — a run passes if either validator succeeds, compensating for short-expected-output cases where embedding similarity is structurally low
+- **Majority-vote aggregation** — configurable runs per test (default 3) with a configurable pass threshold (default 2/3)
+- **Multi-provider support** — OpenAI, xAI Grok (OpenAI-compatible REST API), and local Ollama (no API key or internet required)
+- **JSON test case loader** — accepts bare arrays or `{ "tests": [...] }` wrapped format, with full validation
+- **Four report formats** — plain text, JSON (with per-run judge reasoning), CSV, and an interactive HTML dashboard
+- **HTML dashboard** — auto-opens in browser with metric cards, score distribution charts, category breakdown, and a per-test heatmap table
+- **Zero-friction provider switching** — change `Provider` in `appsettings.json`, no code changes required
+- **Robust error handling** — API timeouts are caught per-run, counted as failures, and the suite continues
+- **31 unit tests** — file handling, cosine similarity formula, score parsing, and configuration validation
+
+---
+
+## System Requirements
+
+| Requirement | Minimum |
+|---|---|
+| Operating System | Windows 10+ or macOS 10.15+ |
+| .NET SDK | 8.0 |
+| Memory | 4 GB RAM (8 GB+ recommended for Ollama models) |
+| Internet | Required for OpenAI / Grok; not required for Ollama |
+| API Access | OpenAI or Grok API key **or** a local Ollama installation |
+
+---
+
+## Architecture
+
+The application follows a linear pipeline architecture. Each stage is a dedicated C# class communicating through a well-defined interface, keeping components independently testable and replaceable.
 
 ```
-Prompt → OpenAI → LLM Response
-                       ↓
-          ┌────────────────────────┐
-          │   EmbeddingValidator   │  cosine similarity ≥ threshold e.g. 0.75
-          │   LLMJudgeValidator    │  judge score ≥ threshold e.g. 8/10
-          └────────────────────────┘
-                       ↓
-            Pass if either validator passes
-                       ↓
-              Repeat 3 times per test
-                       ↓
-          Pass if 2/3 runs pass (majority vote)
+appsettings.json
+      │
+      ▼
+TestConfiguration ──► Validate()
+      │                (fails fast with a clear error if misconfigured)
+      ▼
+LLMClientFactory
+  ├── OpenAIClient    (OpenAI API  │  Grok — same class, different base URL)
+  └── OllamaClient    (local Ollama — no API key required)
+      │
+      ▼
+JsonTestLoader ──► List<TestCase>
+      │             (from data/sample_test_cases.json)
+      ▼
+TestRunner  ─── repeats each test NumberOfRuns times (default: 3)
+  │
+  ├── ILLMClient.SendPromptAsync()  ──►  LLM response
+  │
+  ├── EmbeddingValidator
+  │     └── embed(expected) + embed(actual)
+  │           → CosineSimilarityCalculator
+  │             → score ≥ EmbeddingThreshold?  ✔ EmbeddingPassed
+  │
+  └── LLMJudgeValidator  (G-Eval style)
+        └── BuildJudgePrompt() → LLM
+              → ParseScore() + ExtractReasoning()
+                → score ≥ JudgeThreshold?  ✔ JudgePassed
+      │
+      ▼  RunPassed = EmbeddingPassed OR JudgePassed
+      ▼  TestPassed = PassedRunsCount >= MinimumPassingRuns
+      │
+      ▼
+ReportGenerator
+  ├── reports/report.txt   — human-readable summary
+  ├── reports/report.json  — full structured data (per-run scores + reasoning)
+  ├── reports/report.csv   — flat data for Excel / charting tools
+  └── reports/report.html  — interactive dashboard (auto-opens in browser)
 ```
+
+**Interface contracts — each can be replaced without modifying other components:**
+
+| Interface | Purpose | Implemented by |
+|---|---|---|
+| `ILLMClient` | Send a prompt, receive a response string | `OpenAIClient`, `OllamaClient` |
+| `IEmbeddingProvider` | Generate a `float[]` embedding vector for a text | `OpenAIClient`, `OllamaClient` |
+| `ISimilarityCalculator` | Compute similarity between two vectors | `CosineSimilarityCalculator` |
+| `ITestLoader` | Load a `List<TestCase>` from a source | `JsonTestLoader` |
 
 ---
 
-## Key Features
+## Installation
 
-- Console-based evaluation framework built with **.NET 8 / C#**
-- Automated execution of prompt test cases loaded from JSON
-- **Embedding-based semantic similarity** using cosine similarity
-- **LLM-as-a-judge** evaluation for nuanced correctness checks
-- **Multiple test runs** with majority vote to handle LLM non-determinism
-- Comprehensive reporting in **TXT, JSON, and CSV** formats
-- Configurable similarity thresholds and pass criteria
-- Graceful error handling for API failures, rate limits, and malformed input
-- Support for 100+ test cases across multiple categories
+### Prerequisites
+
+1. **Install .NET 8.0 SDK**
+
+   Download from the [Microsoft .NET website](https://dotnet.microsoft.com/download/dotnet/8.0) and verify:
+   ```bash
+   dotnet --version
+   # Expected: 8.0.x
+   ```
+
+2. **Choose your LLM provider:**
+   - **OpenAI** — create an API key at [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+   - **Grok (xAI)** — create an API key at [console.x.ai](https://console.x.ai)
+   - **Ollama** — free, fully local — see [Ollama Setup](#ollama-setup-local-models) below
+
+---
+
+### Setup Steps
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/username/LLMSemanticEvaluator.git
+   cd LLMSemanticEvaluator
+   ```
+
+2. **Create your configuration file**
+   ```bash
+   cp appsettings_example.json appsettings.json
+   ```
+   Edit `appsettings.json` with your API key and settings. See [Configuration](#configuration) for all fields.
+
+3. **Restore and build**
+   ```bash
+   dotnet restore
+   dotnet build
+   ```
+
+4. **Run**
+   ```bash
+   dotnet run
+   ```
+   Test cases load from `data/sample_test_cases.json`, all tests run, reports are saved to `reports/`, and the HTML dashboard opens automatically in your browser.
+
+---
+
+### Ollama Setup (Local Models)
+
+Ollama runs LLMs entirely on your machine — no API key, no usage costs, no internet required after the initial download.
+
+1. **Install Ollama**
+
+   | Platform | Command |
+   |---|---|
+   | macOS / Linux | `curl -fsSL https://ollama.com/install.sh \| sh` |
+   | Windows | Download installer from [ollama.com](https://ollama.com) |
+
+2. **Pull the required models**
+   ```bash
+   ollama pull llama3.2:1b       # chat model (also used as the judge)
+   ollama pull nomic-embed-text  # embedding model
+   ```
+
+   > **Tip:** `llama3.2:1b` is too small to be a reliable judge. See [Results](docs/results.md) for details. For better judge accuracy prefer `llama3.2:3b` or `llama3:8b`.
+
+3. **Verify**
+   ```bash
+   ollama list
+   ```
+
+4. **Update `appsettings.json`**
+   ```json
+   {
+     "Provider": "ollama",
+     "EmbeddingProvider": "ollama",
+     "ChatModel": "llama3.2:1b",
+     "EmbeddingModel": "nomic-embed-text",
+     "OllamaBaseUrl": "http://localhost:11434"
+   }
+   ```
+
+---
+
+## Configuration
+
+All settings live in `appsettings.json`. Copy `appsettings_example.json` as a starting point and **never commit a file containing a real API key** to version control.
+
+```json
+{
+  "Provider": "openai",
+  "EmbeddingProvider": "openai",
+  "OpenAIApiKey": "YOUR_OPENAI_API_KEY_HERE",
+  "GrokApiKey": "YOUR_GROK_API_KEY_HERE",
+  "OllamaBaseUrl": "http://localhost:11434",
+  "ChatModel": "gpt-4o-mini",
+  "EmbeddingModel": "text-embedding-3-small",
+  "Temperature": 0.0,
+  "EmbeddingThreshold": 0.85,
+  "JudgeThreshold": 8,
+  "NumberOfRuns": 3,
+  "MinimumPassingRuns": 2,
+  "TimeoutSeconds": 30,
+  "RequestDelayMs": 200
+}
+```
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `Provider` | string | `openai` | Chat LLM provider: `openai` \| `grok` \| `ollama` |
+| `EmbeddingProvider` | string | `openai` | Embedding provider: `openai` \| `ollama`. **Grok not supported.** |
+| `OpenAIApiKey` | string | — | Required when Provider or EmbeddingProvider is `openai`. |
+| `GrokApiKey` | string | — | Required when Provider is `grok`. |
+| `OllamaBaseUrl` | string | `http://localhost:11434` | Base URL of your running Ollama instance. |
+| `ChatModel` | string | `gpt-4o-mini` | Model name sent with every chat completion request. |
+| `EmbeddingModel` | string | `text-embedding-3-small` | Model used to generate embedding vectors. |
+| `Temperature` | double | `0.0` | Sampling temperature. `0.0` = near-deterministic. Strongly recommended for testing. |
+| `EmbeddingThreshold` | double | `0.85` | Minimum cosine similarity (0.0–1.0) for the embedding validator to pass a run. |
+| `JudgeThreshold` | int | `8` | Minimum judge score (1–10) for the judge validator to pass a run. |
+| `NumberOfRuns` | int | `3` | How many times each test case is executed. |
+| `MinimumPassingRuns` | int | `2` | Passing runs needed for the overall test to pass (majority vote). |
+| `TimeoutSeconds` | int | `30` | HTTP request timeout per API call. Increase for slow local models. |
+| `RequestDelayMs` | int | `200` | Delay (ms) between requests — rate-limit guard. |
+
+### Quick-start configs per provider
+
+<details>
+<summary><strong>OpenAI</strong></summary>
+
+```json
+{
+  "Provider": "openai",
+  "EmbeddingProvider": "openai",
+  "OpenAIApiKey": "sk-...",
+  "ChatModel": "gpt-4o-mini",
+  "EmbeddingModel": "text-embedding-3-small"
+}
+```
+</details>
+
+<details>
+<summary><strong>Grok (xAI)</strong></summary>
+
+```json
+{
+  "Provider": "grok",
+  "EmbeddingProvider": "openai",
+  "GrokApiKey": "xai-...",
+  "OpenAIApiKey": "sk-...",
+  "ChatModel": "grok-3-mini",
+  "EmbeddingModel": "text-embedding-3-small"
+}
+```
+> Grok shares the OpenAI REST API shape. Because xAI does not provide an embeddings endpoint, supply an OpenAI key for embeddings alongside your Grok key.
+</details>
+
+<details>
+<summary><strong>Ollama (fully local)</strong></summary>
+
+```json
+{
+  "Provider": "ollama",
+  "EmbeddingProvider": "ollama",
+  "OllamaBaseUrl": "http://localhost:11434",
+  "ChatModel": "llama3.2:1b",
+  "EmbeddingModel": "nomic-embed-text",
+  "TimeoutSeconds": 60
+}
+```
+> Increase `TimeoutSeconds` for larger models. 7B+ parameter models on CPU can take 20–40 seconds per response.
+</details>
+
+---
+
+## Test Case Format
+
+Test cases are stored in `data/sample_test_cases.json`. The loader accepts both a bare JSON array and a `{ "tests": [...] }` wrapped format, and validates all required fields at startup.
+
+### Schema
+
+| Field | Required | Description |
+|---|---|---|
+| `id` | ✅ | Unique identifier. Recommended format: `category_NNN` (e.g. `factual_001`). |
+| `prompt` | ✅ | The query sent verbatim to the LLM under test. |
+| `expectedOutput` | ✅ | The reference answer used by both validators. |
+| `category` | — | Label for report grouping. Defaults to `general` if omitted. |
+| `evaluationCriteria` | — | Custom scoring guidance injected into the judge prompt. |
+
+### Example
+
+```json
+[
+  {
+    "id": "factual_021",
+    "prompt": "What is the capital of France?",
+    "expectedOutput": "Paris",
+    "category": "factual"
+  },
+  {
+    "id": "reasoning_006",
+    "prompt": "How can you measure exactly 4 litres using a 3L and a 5L jug?",
+    "expectedOutput": "Fill the 5L jug. Pour into the 3L jug until full — 2L remain. Empty the 3L jug. Pour the 2L into it. Refill the 5L jug. Pour until the 3L jug is full — 1L fits, leaving 4L in the 5L jug.",
+    "category": "reasoning",
+    "evaluationCriteria": "The response must describe valid steps that correctly arrive at exactly 4 litres."
+  },
+  {
+    "id": "math_012",
+    "prompt": "What is 15% of 240?",
+    "expectedOutput": "36",
+    "category": "math"
+  }
+]
+```
+
+### Tips for writing effective test cases
+
+- **Avoid single-word expected outputs** like `"Paris"` or `"36"`. A single word produces cosine similarity in the range 0.30–0.55 against a correct full-sentence response — far below the 0.85 threshold. Use a full sentence as the expected output or add an `evaluationCriteria` to guide the judge instead.
+- **Use `evaluationCriteria`** for complex questions where many valid phrasings exist — reasoning tasks, open-ended explanations, or multi-step problems.
+- **Use descriptive IDs** with a category prefix (`factual_001`, `history_020`) so reports group and label results automatically.
+
+---
+
+## Usage
+
+### Running the evaluator
+
+```bash
+dotnet run
+```
+
+### Console output
+
+During the run the console logs real-time progress. Each line shows the test index, ID, result, and how many of the three runs passed:
+
+```
+Chat provider      : openai
+Embedding provider : openai
+Chat model         : gpt-4o-mini
+Embedding model    : text-embedding-3-small
+Runs               : 3  |  Emb threshold: 0.85  |  Judge threshold: 8/10
+
+Loading test cases...
+Loaded 130 test cases.
+
+Starting test run: 130 tests, 3 runs each
+
+[1/130] factual_021 ...  ✅ PASS  (3/3 runs passed)
+[2/130] factual_022 ...  ✅ PASS  (3/3 runs passed)
+...
+[14/130] history_020 ... ❌ FAIL  (0/3 runs passed)
+...
+Done. Passed: 127/130
+
+=== Report Summary ===
+Total  : 130
+Passed : 127
+Failed : 3
+Rate   : 97.7%
+
+Reports saved to: /path/to/project/reports/
+  report.txt  — human-readable summary
+  report.json — full data (per-run scores and judge reasoning)
+  report.csv  — flat data for Excel/charts
+  report.html — interactive visual dashboard
+```
+
+### How the pass / fail logic works
+
+```
+For each run (repeated NumberOfRuns times):
+  EmbeddingScore >= EmbeddingThreshold  →  EmbeddingPassed = true
+  JudgeScore     >= JudgeThreshold      →  JudgePassed     = true
+  RunPassed      =  EmbeddingPassed  OR  JudgePassed
+
+After all runs:
+  TestPassed = (PassedRunsCount >= MinimumPassingRuns)
+```
+
+The OR combination means a test passes if the embedding similarity is high **or** the judge considers the response correct. This is critical for test cases with short expected outputs where embedding similarity is structurally low even for correct responses. In the OpenAI run, nearly all 127 passes are driven by the judge path — average embedding score was 0.51, well below the 0.85 threshold.
 
 ---
 
@@ -57,259 +408,49 @@ Prompt → OpenAI → LLM Response
 
 ```
 LLMSemanticEvaluator/
-├── Configuration/
-│   └── CommandLineOptions.cs
-│   └── TestConfiguration.cs      # Loads appsettings.json
+│
+├── appsettings.json              ← Your local config (never commit this)
+├── appsettings_example.json      ← Template — copy and rename
+│
 ├── data/
-│   └── sample_test_cases.json
-├── Interfaces/
-│   ├── IEmbeddingProvider.cs
-│   ├── ILLMClient.cs
-│   ├── IReportGenerator.cs
-│   ├── ISimilarityCalculator.cs
-│   └── ITestLoader.cs
-│   └── ITestRunner.cs
-│   └── ITestValidator.cs
-├── Models/
-│   ├── CategoryStats.cs
-│   ├── TestCase.cs               # Input: prompt + expected output
-│   ├── TestProgressEventArgs.cs
-│   ├── TestReport.cs
-│   ├── TestResult.cs             # Output: aggregated pass/fail
-│   ├── TestRun.cs                # Single run scores
-│   └── ValidationResult.cs      # Per-validator outcome
-├── reports/                      # Auto-generated on each run
+│   └── sample_test_cases.json   ← 130 test cases across 7 categories
+│
+├── reports/                     ← Generated after each run (auto-created)
 │   ├── report.txt
 │   ├── report.json
-│   └── report.csv
-├── appsettings.json
-├── CosineSimilarityCalculator.cs
-├── EmbeddingValidator.cs         # Validates via embedding similarity
-├── JsonTestLoader.cs             # Loads test cases from JSON
-├── LLMJudgeValidator.cs          # Validates via LLM-as-judge
-├── LLMSemanticEvaluator.csproj
-├── OpenAIClient.cs               # Handles all OpenAI API calls
-├── Program.cs                    # Entry point
-├── ReportGenerator.cs            # Generates txt/json/csv reports
-└── TestRunner.cs                 # Orchestrates test execution
+│   ├── report.csv
+│   └── report.html
+│
+├── Program.cs                   ← Entry point — wires all components
+├── TestConfiguration.cs         ← Deserialises appsettings.json + Validate()
+├── LLMClientFactory.cs          ← Factory: creates OpenAIClient or OllamaClient
+├── OpenAIClient.cs              ← ILLMClient + IEmbeddingProvider for OpenAI/Grok
+├── OllamaClient.cs              ← ILLMClient + IEmbeddingProvider for local Ollama
+├── JsonTestLoader.cs            ← Loads and validates test cases from JSON
+├── TestRunner.cs                ← Orchestrates runs, majority vote, aggregation
+├── EmbeddingValidator.cs        ← Embedding cosine similarity validation
+├── CosineSimilarityCalculator.cs← (A·B)/(‖A‖×‖B‖), clamped, edge-case safe
+├── LLMJudgeValidator.cs         ← G-Eval prompt builder + 2-stage score parser
+├── ReportGenerator.cs           ← Writes .txt / .json / .csv / .html reports
+├── ReportTemplate.html          ← HTML dashboard template (%%PLACEHOLDER%% tokens)
+│
+├── unitTestProject/             ← 31 unit tests (xUnit)
+│   ├── FileHandlingTests.cs
+│   ├── SimilarityCalcTests.cs
+│   ├── PreprocessingTests.cs
+│   └── UtilsTests.cs
+│
+└── docs/
+    ├── results.md               ← Full results analysis with charts
+    └── unit-testing.md          ← Unit test documentation
 ```
 
 ---
 
-## Requirements
+📊 **[View Full Results & Visualisation →](docs/results.md)**
 
-- .NET 8.0 SDK or higher
-- OpenAI API key
-- C# 12.0
+🧪 **[View Unit Testing Documentation →](docs/unit-testing.md)**
 
 ---
 
-## Installation
-
-**1. Clone the repository**
-```bash
-git clone https://github.com/almahamud1234/llm-semantic-evaluator.git
-cd llm-semantic-evaluator
-```
-
-**2. Restore dependencies**
-```bash
-dotnet restore
-```
-
-**3. Configure your API key**
-
-Copy the example config and add your key:
-```bash
-cp appsettings.example.json appsettings.json
-```
-
-Open `appsettings.json` and replace the placeholder:
-```json
-{
-  "ApiKey": "sk-your-actual-key-here",
-  "Model": "gpt-4o-mini",
-  "EmbeddingModel": "text-embedding-ada-002"
-}
-```
-
-> Note: `appsettings.json` is listed in `.gitignore` — your key will never be committed.
-
-**4. Build the project**
-```bash
-dotnet build
-```
-
----
-
-## Usage
-
-```bash
-dotnet run
-```
-
-Console output during a run:
-```
-Loading test cases...
-  Loaded 120 test cases from sample_test_cases.json
-
-Starting test run: 120 tests, 3 runs each
-
-[1/120]  factual_001 ... ✅ PASS (3/3 runs passed)
-[2/120]  factual_002 ... ✅ PASS (2/3 runs passed)
-[3/120]  math_001    ... ✅ PASS (3/3 runs passed)
-...
-
-=== Report Summary ===
-Total  : 120
-Passed : 108
-Failed : 12
-Rate   : 90.0%
-
-Reports saved to: /path/to/reports/
-  report.txt  — human-readable summary
-  report.json — full data for visualization
-  report.csv  — flat data for Excel/charts
-```
-
----
-
-## Test Case Format
-
-Test cases are stored in `data/sample_tests.json` as a JSON array:
-
-```json
-[
-  {
-    "id": "factual_001",
-    "category": "factual",
-    "prompt": "What is the capital of France?",
-    "expected_output": "Paris",
-    "evaluation_criteria": "Response must identify Paris as the capital of France"
-  }
-]
-```
-
-| Field | Required | Description |
-|-------|----------|-------------|
-| `id` | ✅ | Unique identifier for the test |
-| `prompt` | ✅ | The question sent to the LLM |
-| `expected_output` | ✅ | The expected correct answer |
-| `category` | ❌ | Groups tests in reports (defaults to `general`) |
-| `evaluation_criteria` | ❌ | Human-readable grading hint |
-
----
-
-## Test Categories
-
-The 120 included test cases cover six categories:
-
-| Category | Count | Examples |
-|----------|-------|---------|
-| Factual | 20 | Capitals, geography, basic facts |
-| Math | 20 | Arithmetic, percentages, sequences |
-| Definitions | 20 | Scientific, economic, technical terms |
-| Reasoning | 20 | Logic puzzles, syllogisms, sequences |
-| Science | 20 | Physics, biology, chemistry |
-| History | 20 | Dates, people, events |
-
----
-
-## Evaluation Strategies
-
-### 1. Embedding-Based Semantic Similarity
-
-Converts text to high-dimensional vectors and computes cosine similarity:
-
-```
-similarity = (A · B) / (||A|| × ||B||)
-```
-
-- Score range: 0.0 to 1.0
-- Default threshold: 0.75 (configurable)
-- Pass condition: `similarity ≥ threshold`
-
-### 2. LLM-as-Judge Validation
-
-Uses a secondary LLM to evaluate responses based on factual correctness, semantic equivalence, and criteria compliance:
-
-- Score range: 1–10
-- Default threshold: 8 (configurable)
-- Pass condition: `score ≥ threshold`
-
-### 3. Combined Validation (Majority Vote)
-
-A single **run** passes if **either** validator passes.
-A **test** passes overall if **2 out of 3 runs** pass.
-
-This approach handles LLM non-determinism — a single unlucky response won't fail an otherwise reliable test.
-
----
-
-## Configuration
-
-All thresholds are adjustable in `Program.cs`:
-
-```csharp
-// Lower = more lenient embedding matching
-var embeddingValidator = new EmbeddingValidator(client, new CosineSimilarityCalculator(), threshold: 0.75);
-
-// Lower = more lenient judge scoring
-var judgeValidator = new LLMJudgeValidator(client, threshold: 8);
-
-// Fewer runs = faster and cheaper (minimum recommended: 3)
-var runner = new TestRunner(client, embeddingValidator, judgeValidator, runsPerTest: 3);
-```
-
----
-
-## Reports
-
-Three report files are auto-generated in the `reports/` folder after each run:
-
-**report.txt** — human-readable with overall summary, category breakdown, and per-test details including individual run scores.
-
-**report.json** — full structured data including all runs and scores, useful for custom visualizations or further analysis.
-
-**report.csv** — one row per test case for Excel or Google Sheets. Columns:
-`TestId, Category, Passed, PassedRuns, TotalRuns, AvgEmbeddingScore, AvgJudgeScore, Prompt, ExpectedOutput`
-
-### Quick Visualization
-1. Open `reports/report.csv` in Excel or Google Sheets
-2. Select the `Category` and `Passed` columns
-3. Insert → Chart → Bar chart
-
----
-
-## Error Handling
-
-The framework handles the following gracefully without crashing:
-
-| Scenario | Behaviour |
-|----------|-----------|
-| Missing or placeholder API key | Detected at startup, exits with a clear message |
-| Malformed JSON in test file | Specific error message, file skipped |
-| Individual test missing required fields | Test skipped with a warning, rest continue |
-| Empty LLM response | Counted as a failed run automatically |
-| Request timeout | Counted as a failed run, execution continues |
-
----
-
-## License
-
-This project is licensed under the MIT License.
-
----
-
-## Team
-
-**LLM QA Lab**
-- [Md Abdulla AL Mahamud Rosi](https://github.com/almahamud1234)
-
----
-
-## References
-
-- [OpenAI API Documentation](https://platform.openai.com/docs)
-- [Cosine Similarity — Wikipedia](https://en.wikipedia.org/wiki/Cosine_similarity)
-- [LLM-as-a-Judge Paper](https://arxiv.org/abs/2306.05685)
+[⬆️ Back to Top](#top)
