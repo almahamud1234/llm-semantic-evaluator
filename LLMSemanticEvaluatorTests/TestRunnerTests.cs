@@ -33,8 +33,10 @@ public class TestRunnerTests
 
     /// <summary>
     /// Builds a TestRunner wired to all shared mocks.
+    /// minPassRun defaults to 1 for single-run tests, matching runsPerTest: 1.
+    /// Pass minPassRun: 2 explicitly for majority-vote (3-run) tests.
     /// </summary>
-    private TestRunner BuildRunner(int runsPerTest = 1)
+    private TestRunner BuildRunner(int runsPerTest = 1, int minPassRun = 1)
     {
         var embeddingValidator = new EmbeddingValidator(
             _embeddingsMock.Object, _calculatorMock.Object, threshold: 0.85);
@@ -46,7 +48,8 @@ public class TestRunnerTests
             _llmClientMock.Object,
             embeddingValidator,
             judgeValidator,
-            runsPerTest);
+            runsPerTest,
+            minPassRun);
     }
 
     /// <summary>
@@ -96,7 +99,7 @@ public class TestRunnerTests
     {
         // Arrange
         SetupPassingRun(similarity: 0.92);
-        var runner = BuildRunner(runsPerTest: 1);
+        var runner = BuildRunner(runsPerTest: 1, minPassRun: 1);
 
         // Act
         var results = await runner.RunAllAsync(new List<TestCase> { MakeTestCase() });
@@ -113,7 +116,7 @@ public class TestRunnerTests
     {
         // Arrange
         SetupPassingRun(similarity: 0.92);
-        var runner   = BuildRunner(runsPerTest: 1);
+        var runner   = BuildRunner(runsPerTest: 1, minPassRun: 1);
         var testCase = MakeTestCase(id: "factual_001", category: "factual");
 
         // Act
@@ -148,7 +151,7 @@ public class TestRunnerTests
             .Setup(c => c.CalculateCosineSimilarity(It.IsAny<float[]>(), It.IsAny<float[]>()))
             .Returns(0.92);
 
-        var runner = BuildRunner(runsPerTest: 1);
+        var runner = BuildRunner(runsPerTest: 1, minPassRun: 1);
         var cases  = new List<TestCase> { MakeTestCase("t1"), MakeTestCase("t2") };
 
         // Act
@@ -172,7 +175,7 @@ public class TestRunnerTests
     {
         // Arrange — high similarity, judge score irrelevant (OR logic)
         SetupPassingRun(similarity: 0.92, judgeResponse: "5");
-        var runner = BuildRunner(runsPerTest: 1);
+        var runner = BuildRunner(runsPerTest: 1, minPassRun: 1);
 
         // Act
         var results = await runner.RunAllAsync(new List<TestCase> { MakeTestCase() });
@@ -189,7 +192,7 @@ public class TestRunnerTests
     {
         // Arrange — low similarity AND low judge score
         SetupPassingRun(similarity: 0.60, judgeResponse: "3");
-        var runner = BuildRunner(runsPerTest: 1);
+        var runner = BuildRunner(runsPerTest: 1, minPassRun: 1);
 
         // Act
         var results = await runner.RunAllAsync(new List<TestCase> { MakeTestCase() });
@@ -199,7 +202,7 @@ public class TestRunnerTests
     }
 
     // =========================================================================
-    // Majority Vote (requires runsPerTest: 3)
+    // Majority Vote (requires runsPerTest: 3, minPassRun: 2)
     // =========================================================================
 
     /// <summary>
@@ -227,7 +230,7 @@ public class TestRunnerTests
             .Returns(0.92)   // run 2
             .Returns(0.50);  // run 3
 
-        var runner = BuildRunner(runsPerTest: 3);
+        var runner = BuildRunner(runsPerTest: 3, minPassRun: 2);
 
         // Act
         var results = await runner.RunAllAsync(new List<TestCase> { MakeTestCase() });
@@ -261,7 +264,7 @@ public class TestRunnerTests
             .Returns(0.50)
             .Returns(0.50);
 
-        var runner = BuildRunner(runsPerTest: 3);
+        var runner = BuildRunner(runsPerTest: 3, minPassRun: 2);
 
         // Act
         var results = await runner.RunAllAsync(new List<TestCase> { MakeTestCase() });
@@ -284,7 +287,7 @@ public class TestRunnerTests
     {
         // Arrange — single run, known scores
         SetupPassingRun(similarity: 0.90, judgeResponse: "8");
-        var runner = BuildRunner(runsPerTest: 1);
+        var runner = BuildRunner(runsPerTest: 1, minPassRun: 1);
 
         // Act
         var results = await runner.RunAllAsync(new List<TestCase> { MakeTestCase() });
@@ -310,7 +313,7 @@ public class TestRunnerTests
             .Setup(c => c.SendPromptAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new HttpRequestException("API unavailable"));
 
-        var runner = BuildRunner(runsPerTest: 1);
+        var runner = BuildRunner(runsPerTest: 1, minPassRun: 1);
 
         // Act
         var results = await runner.RunAllAsync(new List<TestCase> { MakeTestCase() });
@@ -344,7 +347,7 @@ public class TestRunnerTests
             .Setup(c => c.CalculateCosineSimilarity(It.IsAny<float[]>(), It.IsAny<float[]>()))
             .Returns(0.92);
 
-        var runner = BuildRunner(runsPerTest: 3);
+        var runner = BuildRunner(runsPerTest: 3, minPassRun: 2);
 
         // Act
         var results = await runner.RunAllAsync(new List<TestCase> { MakeTestCase() });

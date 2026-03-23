@@ -49,8 +49,8 @@ public class JsonTestLoaderTests
                 "id": "test_001",
                 "category": "factual",
                 "prompt": "What is the capital of France?",
-                "expectedOutput": "Paris",
-                "evaluationCriteria": "Must identify Paris"
+                "expected_output": "Paris",
+                "evaluation_criteria": "Must identify Paris"
               }
             ]
             """);
@@ -83,7 +83,7 @@ public class JsonTestLoaderTests
                 {
                   "id": "test_001",
                   "prompt": "What is 2 + 2?",
-                  "expectedOutput": "4"
+                  "expected_output": "4"
                 }
               ]
             }
@@ -102,17 +102,17 @@ public class JsonTestLoaderTests
     }
 
     /// <summary>
-    /// Fields 'category' and 'evaluationCriteria' are optional.
+    /// Fields 'category' and 'evaluation_criteria' are optional.
     /// When absent, the loader should set sensible defaults so downstream
     /// code never receives null/empty values for these fields.
     /// </summary>
     [Fact]
     public async Task LoadTestsAsync_MissingOptionalFields_SetsDefaults()
     {
-        // Arrange — no category, no evaluationCriteria
+        // Arrange — no category, no evaluation_criteria
         string path = WriteTempFile("""
             [
-              { "id": "t1", "prompt": "Hello?", "expectedOutput": "Hi" }
+              { "id": "t1", "prompt": "Hello?", "expected_output": "Hi" }
             ]
             """);
 
@@ -129,16 +129,17 @@ public class JsonTestLoaderTests
     }
 
     /// <summary>
-    /// JSON is case-insensitive for property names (e.g. "ID" vs "id").
+    /// JSON property name matching is case-insensitive (e.g. "ID" vs "id",
+    /// "EXPECTED_OUTPUT" vs "expected_output").
     /// Verifies the PropertyNameCaseInsensitive option is working.
     /// </summary>
     [Fact]
     public async Task LoadTestsAsync_CaseInsensitiveProperties_ParsesCorrectly()
     {
-        // Arrange — uppercase property names
+        // Arrange — uppercase snake_case property names
         string path = WriteTempFile("""
             [
-              { "ID": "t1", "PROMPT": "Hi?", "EXPECTEDOUTPUT": "Hello" }
+              { "ID": "t1", "PROMPT": "Hi?", "EXPECTED_OUTPUT": "Hello" }
             ]
             """);
 
@@ -164,9 +165,9 @@ public class JsonTestLoaderTests
         // Arrange
         string path = WriteTempFile("""
             [
-              { "id": "t1", "prompt": "Q1", "expectedOutput": "A1" },
-              { "id": "t2", "prompt": "Q2", "expectedOutput": "A2" },
-              { "id": "t3", "prompt": "Q3", "expectedOutput": "A3" }
+              { "id": "t1", "prompt": "Q1", "expected_output": "A1" },
+              { "id": "t2", "prompt": "Q2", "expected_output": "A2" },
+              { "id": "t3", "prompt": "Q3", "expected_output": "A3" }
             ]
             """);
 
@@ -254,7 +255,7 @@ public class JsonTestLoaderTests
     public async Task LoadTestsAsync_MissingId_ThrowsInvalidOperationException()
     {
         string path = WriteTempFile("""
-            [{ "prompt": "Hello?", "expectedOutput": "Hi" }]
+            [{ "prompt": "Hello?", "expected_output": "Hi" }]
             """);
         try
         {
@@ -269,7 +270,7 @@ public class JsonTestLoaderTests
     public async Task LoadTestsAsync_MissingPrompt_ThrowsInvalidOperationException()
     {
         string path = WriteTempFile("""
-            [{ "id": "t1", "expectedOutput": "Hi" }]
+            [{ "id": "t1", "expected_output": "Hi" }]
             """);
         try
         {
@@ -279,7 +280,7 @@ public class JsonTestLoaderTests
         finally { File.Delete(path); }
     }
 
-    /// <summary>A test case without a required 'expectedOutput' field must throw InvalidOperationException.</summary>
+    /// <summary>A test case without a required 'expected_output' field must throw InvalidOperationException.</summary>
     [Fact]
     public async Task LoadTestsAsync_MissingExpectedOutput_ThrowsInvalidOperationException()
     {
@@ -303,8 +304,8 @@ public class JsonTestLoaderTests
     {
         string path = WriteTempFile("""
             [
-              { "id": "t1", "prompt": "Q1", "expectedOutput": "A1" },
-              { "id": "t1", "prompt": "Q2", "expectedOutput": "A2" }
+              { "id": "t1", "prompt": "Q1", "expected_output": "A1" },
+              { "id": "t1", "prompt": "Q2", "expected_output": "A2" }
             ]
             """);
         try
