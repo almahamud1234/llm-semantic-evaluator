@@ -1,12 +1,10 @@
-# ML 25/26-08 — LLM Semantic Evaluator
+# ML 25/26-08 – Implementing Tests for LLM Prompts with Semantic Assertions
 
 A **.NET 8 / C#** testing framework for evaluating LLM prompts using **semantic assertions** rather than exact string matching. It handles the inherent non-determinism of LLM outputs by applying two independent validation methods — embedding-based cosine similarity and a G-Eval style LLM-as-a-Judge — combined with a majority-vote strategy across repeated test runs.
 
 Supports **OpenAI GPT**, **xAI Grok**, and **locally hosted Ollama** models with no code changes needed to switch between them.
 
 ---
-
-<a name="top"></a>
 
 ## Table of Contents
 
@@ -433,24 +431,20 @@ LLMSemanticEvaluator/
 ├── LLMJudgeValidator.cs         ← G-Eval prompt builder + 2-stage score parser
 ├── ReportGenerator.cs           ← Writes .txt / .json / .csv / .html reports
 ├── ReportTemplate.html          ← HTML dashboard template (%%PLACEHOLDER%% tokens)
-│
-├── unitTestProject/             ← 31 unit tests (xUnit)
-│   ├── FileHandlingTests.cs
-│   ├── SimilarityCalcTests.cs
-│   ├── PreprocessingTests.cs
-│   └── UtilsTests.cs
-│
-└── docs/
-    ├── results.md               ← Full results analysis with charts
-    └── unit-testing.md          ← Unit test documentation
+
+LLMSemanticEvaluatorTests/
+├── CosineSimilarityCalculatorTests.cs
+├── EmbeddingValidatorTests.cs
+├── JsonTestLoaderTests.cs
+├── LLMJudgeValidatorTests.cs
+├── ReportGeneratorTests.cs
+└── TestRunnerTests.cs
 ```
 
 ---
 
-📊 **[View Full Results & Visualisation →](docs/results.md)**
+**[View Full Results & Visualisation →](Documentation/results.md)**
 
-🧪 **[View Unit Testing Documentation →](docs/unit-testing.md)**
+**[View Unit Testing Documentation →](Documentation/unit-testing.md)**
 
 ---
-
-[⬆️ Back to Top](#top)

@@ -1,0 +1,212 @@
+<svg width="920" viewBox="0 0 920 870" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!--
+  COORDINATE MAP (all boxes):
+  appsettings.json      x=60..270   y=20..64    cx=165
+  sample_test_cases     x=490..720  y=20..64    cx=605
+  TestConfiguration     x=55..275   y=88..132   cx=165
+  JsonTestLoader        x=490..720  y=88..132   cx=605
+  LLMClientFactory      x=55..275   y=156..200  cx=165
+  OpenAIClient          x=30..250   y=244..302  cx=140
+  OllamaClient          x=270..490  y=244..302  cx=380
+  LLMJudgeValidator     x=72..342   y=360..418  cx=207
+  EmbeddingValidator    x=540..760  y=390..434  cx=650
+  CosineSimilarity      x=530..770  y=456..500  cx=650
+  TestRunner            x=200..660  y=530..588  cx=430
+  ReportGenerator       x=255..665  y=615..659  cx=460
+  output boxes          y=730..774
+
+  ROUTING DECISIONS:
+  A) IEmbeddingProvider (both clients → EmbeddingValidator):
+     - Route from TOP of each client (y=244), go up to y=228
+     - Meet at horizontal rail y=228, travel right to x=780
+     - Drop straight down at x=780 to EmbeddingValidator top (y=390)
+     - This stays ABOVE all client boxes, no crossing
+
+  B) ILLMClient solid (both clients → LLMJudgeValidator):
+     - Left spine x=18, enter from left of clients bottom (y=302)
+     - Solid line only, arrow into LLMJudgeValidator left
+
+  C) ILLMClient dashed (clients → TestRunner, for real prompt execution):
+     - Separate spine x=510 (gap between OllamaClient right=490 and EmbeddingValidator left=540)
+     - From OllamaClient right (x=490, y=273), go right to x=510, down to TestRunner top
+     - Clearly separated from solid spine on left
+
+  D) CosineSim → TestRunner:
+     - Enter TestRunner from the RIGHT side top corner (x=660, y=540)
+     - Path: CosineSim bottom center (x=650,y=500) → down to y=515 → right to x=670 → up... 
+     - Better: CosineSim bottom (x=650, y=500) → down to y=520 → left to x=660 → into TestRunner right (x=660, y=559)
+
+  E) JsonTestLoader dashed → TestRunner:
+     - Far-right spine x=875, completely outside all boxes (rightmost box edge=770)
+     - JsonTestLoader right (x=720, y=110) → x=875 → down to y=559 → left into TestRunner right (x=660, y=559)
+-->
+
+<!-- ═══════════ ROW 1 — input files ═══════════ -->
+<rect x="60" y="20" width="210" height="44" rx="5" fill="none" stroke="rgb(194,192,182)" stroke-width="0.9"/>
+<text x="165" y="36" text-anchor="middle" dominant-baseline="central" fill="rgb(250,249,245)" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="500">appsettings.json</text>
+<text x="165" y="53" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">provider · models · thresholds</text>
+
+<rect x="490" y="20" width="230" height="44" rx="5" fill="none" stroke="rgb(194,192,182)" stroke-width="0.9"/>
+<text x="605" y="36" text-anchor="middle" dominant-baseline="central" fill="rgb(250,249,245)" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="500">sample_test_cases.json</text>
+<text x="605" y="53" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">prompt · expectedOutput</text>
+
+<line x1="165" y1="64" x2="165" y2="88" stroke="rgb(250,249,245)" stroke-width="1.1" marker-end="url(#arr)"/>
+<line x1="605" y1="64" x2="605" y2="88" stroke="rgb(250,249,245)" stroke-width="1.1" marker-end="url(#arr)"/>
+
+<!-- ═══════════ ROW 2 — TestConfiguration + JsonTestLoader ═══════════ -->
+<rect x="55" y="88" width="220" height="44" rx="5" fill="none" stroke="rgb(194,192,182)" stroke-width="0.9"/>
+<text x="165" y="104" text-anchor="middle" dominant-baseline="central" fill="rgb(250,249,245)" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="500">TestConfiguration</text>
+<text x="165" y="121" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">Load() · Validate()</text>
+
+<rect x="490" y="88" width="230" height="44" rx="5" fill="none" stroke="rgb(194,192,182)" stroke-width="0.9"/>
+<text x="605" y="104" text-anchor="middle" dominant-baseline="central" fill="rgb(250,249,245)" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="500">JsonTestLoader</text>
+<text x="605" y="121" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">LoadTestsAsync()</text>
+
+<line x1="165" y1="132" x2="165" y2="156" stroke="rgb(250,249,245)" stroke-width="1.1" marker-end="url(#arr)"/>
+
+<!-- ═══════════ ROW 3 — LLMClientFactory ═══════════ -->
+<rect x="55" y="156" width="220" height="44" rx="5" fill="none" stroke="rgb(194,192,182)" stroke-width="0.9"/>
+<text x="165" y="172" text-anchor="middle" dominant-baseline="central" fill="rgb(250,249,245)" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="500">LLMClientFactory</text>
+<text x="165" y="189" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">Create() · CreateEmbeddingProvider()</text>
+
+<!-- Factory → OpenAIClient (left fork) -->
+<path d="M120 200 L120 218 L90 218 L90 244" stroke="rgb(250,249,245)" stroke-width="1.1" fill="none" marker-end="url(#arr)"/>
+<!-- Factory → OllamaClient (right fork) -->
+<path d="M210 200 L210 218 L380 218 L380 244" stroke="rgb(250,249,245)" stroke-width="1.1" fill="none" marker-end="url(#arr)"/>
+
+<!-- ═══════════ ROW 4 — OpenAIClient + OllamaClient ═══════════ -->
+<rect x="30" y="244" width="220" height="58" rx="5" fill="none" stroke="rgb(194,192,182)" stroke-width="0.9"/>
+<text x="140" y="261" text-anchor="middle" dominant-baseline="central" fill="rgb(250,249,245)" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="500">OpenAIClient</text>
+<text x="140" y="277" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">ILLMClient · IEmbeddingProvider</text>
+<text x="140" y="292" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">OpenAI API · Grok API</text>
+
+<rect x="270" y="244" width="220" height="58" rx="5" fill="none" stroke="rgb(194,192,182)" stroke-width="0.9"/>
+<text x="380" y="261" text-anchor="middle" dominant-baseline="central" fill="rgb(250,249,245)" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="500">OllamaClient</text>
+<text x="380" y="277" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">ILLMClient · IEmbeddingProvider</text>
+<text x="380" y="292" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">Local Ollama · no API key</text>
+
+<!-- ───────────────────────────────────────────────────────────────
+     WIRE A: IEmbeddingProvider → EmbeddingValidator
+     Route goes UP from client tops (y=244), meets at y=228 rail,
+     travels right to x=780, then drops down to EmbeddingValidator top (y=390).
+     Stays entirely above client boxes — no crossing.
+─────────────────────────────────────────────────────────────── -->
+<!-- OpenAIClient top → up to rail y=228 -->
+<line x1="140" y1="244" x2="140" y2="228" stroke="rgb(250,249,245)" stroke-width="1.1" fill="none"/>
+<!-- OllamaClient top → up to rail y=228 -->
+<line x1="380" y1="244" x2="380" y2="228" stroke="rgb(250,249,245)" stroke-width="1.1" fill="none"/>
+<!-- Horizontal rail y=228 from x=140 to x=670 -->
+<line x1="140" y1="228" x2="670" y2="228" stroke="rgb(250,249,245)" stroke-width="1.1" fill="none"/>
+<!-- Drop from x=670 (center of EmbeddingValidator) down to its top (y=390) -->
+<line x1="670" y1="228" x2="670" y2="390" stroke="rgb(250,249,245)" stroke-width="1.1" fill="none" marker-end="url(#arr)"/>
+
+<!-- ───────────────────────────────────────────────────────────────
+     WIRE B: ILLMClient solid → LLMJudgeValidator
+     Left spine x=18. Both clients' bottom-left → merge → arrow right into LLMJudgeValidator.
+─────────────────────────────────────────────────────────────── -->
+<!-- ILLMClient: both clients exit bottom, drop to y=318 (below both boxes bottom=302), merge left at x=18, down to LLMJudgeValidator -->
+<path d="M34 302 L34 318 L18 318 L18 389 L72 389" stroke="rgb(250,249,245)" stroke-width="1.1" fill="none" marker-end="url(#arr)"/>
+<path d="M274 302 L274 318 L18 318" stroke="rgb(250,249,245)" stroke-width="1.1" fill="none"/>
+
+<!-- ───────────────────────────────────────────────────────────────
+     WIRE C: ILLMClient dashed → TestRunner (prompt execution path)
+     Spine x=510, in the gap between OllamaClient(right=490) and EmbeddingValidator(left=560).
+     From OllamaClient right side → x=510 → down to TestRunner top.
+─────────────────────────────────────────────────────────────── -->
+<path d="M490 273 L510 273 L510 530" stroke="rgb(250,249,245)" stroke-width="1.1" fill="none" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+<!-- ═══════════ ROW 5a — LLMJudgeValidator ═══════════ -->
+<rect x="72" y="360" width="270" height="58" rx="5" fill="none" stroke="rgb(194,192,182)" stroke-width="0.9"/>
+<text x="207" y="378" text-anchor="middle" dominant-baseline="central" fill="rgb(250,249,245)" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="500">LLMJudgeValidator</text>
+<text x="207" y="394" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">G-Eval prompt · ParseScore()</text>
+<text x="207" y="409" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">score ≥ 8 / 10</text>
+
+<!-- ═══════════ ROW 5b — EmbeddingValidator + CosineSim ═══════════ -->
+<!-- EmbeddingValidator: x=560..780, cx=670 -->
+<rect x="560" y="390" width="220" height="44" rx="5" fill="none" stroke="rgb(194,192,182)" stroke-width="0.9"/>
+<text x="670" y="406" text-anchor="middle" dominant-baseline="central" fill="rgb(250,249,245)" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="500">EmbeddingValidator</text>
+<text x="670" y="423" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">GenerateEmbedding() ×2</text>
+
+<line x1="670" y1="434" x2="670" y2="456" stroke="rgb(250,249,245)" stroke-width="1.1" marker-end="url(#arr)"/>
+
+<!-- CosineSimilarityCalculator: x=550..790, cx=670 -->
+<rect x="550" y="456" width="240" height="44" rx="5" fill="none" stroke="rgb(194,192,182)" stroke-width="0.9"/>
+<text x="670" y="472" text-anchor="middle" dominant-baseline="central" fill="rgb(250,249,245)" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="500">CosineSimilarityCalculator</text>
+<text x="670" y="489" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">(A·B)/(‖A‖·‖B‖) · score ≥ 0.85</text>
+
+<!-- ───────────────────────────────────────────────────────────────
+     WIRE D: CosineSim → TestRunner
+     Go left from CosineSim left edge, then down into TestRunner top-right area.
+     CosineSim left=550, TestRunner x=200..660, top=530.
+     Path: left edge of CosineSim (x=550, y=478) → left to x=530 → down to y=520 → left to x=580 → down into TestRunner top (y=530).
+     Cleaner: straight down from CosineSim bottom center (x=670,y=500) to y=515,
+     then left to x=590, then down to TestRunner top (y=530).
+─────────────────────────────────────────────────────────────── -->
+<path d="M670 500 L670 515 L590 515 L590 530" stroke="rgb(250,249,245)" stroke-width="1.1" fill="none" marker-end="url(#arr)"/>
+
+<!-- ───────────────────────────────────────────────────────────────
+     WIRE: LLMJudgeValidator → TestRunner
+     Bottom of LLMJudge (x=207, y=418) → down to y=515 → right to x=290 → down into TestRunner top.
+─────────────────────────────────────────────────────────────── -->
+<path d="M207 418 L207 515 L290 515 L290 530" stroke="rgb(250,249,245)" stroke-width="1.1" fill="none" marker-end="url(#arr)"/>
+
+<!-- ───────────────────────────────────────────────────────────────
+     WIRE E: JsonTestLoader dashed → TestRunner
+     Far-right spine x=875. JsonTestLoader right=720.
+     Path: (720,110) → (875,110) → (875,559) → (660,559)
+─────────────────────────────────────────────────────────────── -->
+<path d="M720 110 L875 110 L875 559 L660 559" stroke="rgb(194,192,182)" stroke-width="1" fill="none" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+<text x="880" y="350" text-anchor="start" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="10">List&lt;TestCase&gt;</text>
+
+<!-- ═══════════ ROW 6 — TestRunner ═══════════ -->
+<!-- x=200..660, cx=430 -->
+<rect x="200" y="530" width="460" height="58" rx="5" fill="none" stroke="rgb(194,192,182)" stroke-width="0.9"/>
+<text x="430" y="547" text-anchor="middle" dominant-baseline="central" fill="rgb(250,249,245)" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="500">TestRunner</text>
+<text x="430" y="563" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">3 runs · RunPassed = EmbPassed OR JudgePassed</text>
+<text x="430" y="578" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">TestPassed if PassedRuns ≥ 2 / 3</text>
+
+<!-- TestRunner → ReportGenerator -->
+<line x1="430" y1="588" x2="430" y2="615" stroke="rgb(250,249,245)" stroke-width="1.1" marker-end="url(#arr)"/>
+<text x="436" y="607" text-anchor="start" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="10">List&lt;TestResult&gt;</text>
+
+<!-- ═══════════ ROW 7 — ReportGenerator ═══════════ -->
+<rect x="255" y="615" width="350" height="44" rx="5" fill="none" stroke="rgb(194,192,182)" stroke-width="0.9"/>
+<text x="430" y="631" text-anchor="middle" dominant-baseline="central" fill="rgb(250,249,245)" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="500">ReportGenerator</text>
+<text x="430" y="648" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">GenerateAsync() · auto-opens HTML</text>
+
+<!-- ReportGenerator → 4 output files via T-junction -->
+<line x1="430" y1="659" x2="430" y2="700" stroke="rgb(250,249,245)" stroke-width="1.1" fill="none"/>
+<line x1="100" y1="700" x2="730" y2="700" stroke="rgb(250,249,245)" stroke-width="1.1" fill="none"/>
+<line x1="100" y1="700" x2="100" y2="720" stroke="rgb(250,249,245)" stroke-width="1.1" marker-end="url(#arr)"/>
+<line x1="320" y1="700" x2="320" y2="720" stroke="rgb(250,249,245)" stroke-width="1.1" marker-end="url(#arr)"/>
+<line x1="540" y1="700" x2="540" y2="720" stroke="rgb(250,249,245)" stroke-width="1.1" marker-end="url(#arr)"/>
+<line x1="730" y1="700" x2="730" y2="720" stroke="rgb(250,249,245)" stroke-width="1.1" marker-end="url(#arr)"/>
+
+<!-- ═══════════ ROW 8 — output files ═══════════ -->
+<!-- report.txt cx=100 -->
+<rect x="40" y="720" width="120" height="44" rx="5" fill="none" stroke="rgb(194,192,182)" stroke-width="0.9"/>
+<text x="100" y="736" text-anchor="middle" dominant-baseline="central" fill="rgb(250,249,245)" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="500">report.txt</text>
+<text x="100" y="753" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">summary</text>
+
+<!-- report.json cx=320 -->
+<rect x="260" y="720" width="120" height="44" rx="5" fill="none" stroke="rgb(194,192,182)" stroke-width="0.9"/>
+<text x="320" y="736" text-anchor="middle" dominant-baseline="central" fill="rgb(250,249,245)" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="500">report.json</text>
+<text x="320" y="753" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">per-run data</text>
+
+<!-- report.csv cx=540 -->
+<rect x="480" y="720" width="120" height="44" rx="5" fill="none" stroke="rgb(194,192,182)" stroke-width="0.9"/>
+<text x="540" y="736" text-anchor="middle" dominant-baseline="central" fill="rgb(250,249,245)" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="500">report.csv</text>
+<text x="540" y="753" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">flat rows</text>
+
+<!-- report.html cx=730 -->
+<rect x="670" y="720" width="120" height="44" rx="5" fill="none" stroke="rgb(194,192,182)" stroke-width="0.9"/>
+<text x="730" y="736" text-anchor="middle" dominant-baseline="central" fill="rgb(250,249,245)" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="500">report.html</text>
+<text x="730" y="753" text-anchor="middle" dominant-baseline="central" fill="rgb(194,192,182)" font-family="'Segoe UI',sans-serif" font-size="11">dashboard</text>
+
+</svg>
