@@ -15,7 +15,7 @@ Supports **OpenAI GPT**, **xAI Grok**, and **locally hosted Ollama** models with
 5. [Installation](#installation)
    - [Prerequisites](#prerequisites)
    - [Setup Steps](#setup-steps)
-   - [Ollama Setup (Local Models)](#ollama-setup-local-models)
+   - [Ollama Setup](#ollama-setup)
 6. [Configuration](#configuration)
 7. [Test Case Format](#test-case-format)
 8. [Usage](#usage)
@@ -49,8 +49,7 @@ A run passes if **either** validator succeeds (logical OR). A test case passes o
 - **HTML dashboard** — auto-opens in browser with metric cards, score distribution charts, category breakdown, and a per-test heatmap table
 - **Zero-friction provider switching** — change `Provider` in `appsettings.json`, no code changes required
 - **Robust error handling** — API timeouts are caught per-run, counted as failures, and the suite continues
-- **31 unit tests** — file handling, cosine similarity formula, score parsing, and configuration validation
-
+- **85 unit tests across 6 groups** — file handling, cosine similarity, embedding validation, LLM judge validation, report generation, and test runner logic; all external dependencies are mocked with Moq so the full suite runs in under 5 seconds without any API key or internet connection
 ---
 
 ## System Requirements
@@ -135,7 +134,7 @@ ReportGenerator
 2. **Choose your LLM provider:**
    - **OpenAI** — create an API key at [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
    - **Grok (xAI)** — create an API key at [console.x.ai](https://console.x.ai)
-   - **Ollama** — free, fully local — see [Ollama Setup](#ollama-setup-local-models) below
+   - **Ollama** — free, fully local — see [Ollama Setup](#ollama-setup) below
 
 ---
 
@@ -143,7 +142,7 @@ ReportGenerator
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/username/LLMSemanticEvaluator.git
+   git clone https://github.com/almahamud1234/llm-semantic-evaluator
    cd LLMSemanticEvaluator
    ```
 
@@ -169,27 +168,26 @@ ReportGenerator
 
 ### Ollama Setup (Local Models)
 
-Ollama runs LLMs entirely on your machine — no API key, no usage costs, no internet required after the initial download.
+Ollama runs LLMs entirely on your machine — no API key, no usage costs, no internet required after the initial download. The recommended way to run Ollama for this project is via Docker Compose, which is already included in the repository.
 
-1. **Install Ollama**
-
-   | Platform | Command |
-   |---|---|
-   | macOS / Linux | `curl -fsSL https://ollama.com/install.sh \| sh` |
-   | Windows | Download installer from [ollama.com](https://ollama.com) |
-
-2. **Pull the required models**
+1. **Start the Ollama container**
    ```bash
-   ollama pull llama3.2:1b       # chat model (also used as the judge)
-   ollama pull nomic-embed-text  # embedding model
+   docker compose up
+   ```
+
+2. **Pull the required models into the container**
+   ```bash
+   docker exec -it ollama ollama pull llama3.2:1b       # chat model (also used as the judge)
+   docker exec -it ollama ollama pull nomic-embed-text  # embedding model
    ```
 
    > **Tip:** `llama3.2:1b` is too small to be a reliable judge. See [Results](docs/results.md) for details. For better judge accuracy prefer `llama3.2:3b` or `llama3:8b`.
 
-3. **Verify**
+3. **Verify the models are available**
    ```bash
-   ollama list
+   docker exec -it ollama ollama list
    ```
+   You should see both llama3.2:1b and nomic-embed-text listed.
 
 4. **Update `appsettings.json`**
    ```json
@@ -234,7 +232,7 @@ All settings live in `appsettings.json`. Copy `appsettings_example.json` as a st
 | `OpenAIApiKey` | string | — | Required when Provider or EmbeddingProvider is `openai`. |
 | `GrokApiKey` | string | — | Required when Provider is `grok`. |
 | `OllamaBaseUrl` | string | `http://localhost:11434` | Base URL of your running Ollama instance. |
-| `ChatModel` | string | `gpt-4o-mini` | Model name sent with every chat completion request. |
+| `ChatModel` | string | `gpt-5-mini` | Model name sent with every chat completion request. |
 | `EmbeddingModel` | string | `text-embedding-3-small` | Model used to generate embedding vectors. |
 | `Temperature` | double | `0.0` | Sampling temperature. `0.0` = near-deterministic. Strongly recommended for testing. |
 | `EmbeddingThreshold` | double | `0.85` | Minimum cosine similarity (0.0–1.0) for the embedding validator to pass a run. |
@@ -254,7 +252,7 @@ All settings live in `appsettings.json`. Copy `appsettings_example.json` as a st
   "Provider": "openai",
   "EmbeddingProvider": "openai",
   "OpenAIApiKey": "sk-...",
-  "ChatModel": "gpt-4o-mini",
+  "ChatModel": "gpt-5-mini",
   "EmbeddingModel": "text-embedding-3-small"
 }
 ```
@@ -304,9 +302,9 @@ Test cases are stored in `data/sample_test_cases.json`. The loader accepts both 
 |---|---|---|
 | `id` | ✅ | Unique identifier. Recommended format: `category_NNN` (e.g. `factual_001`). |
 | `prompt` | ✅ | The query sent verbatim to the LLM under test. |
-| `expectedOutput` | ✅ | The reference answer used by both validators. |
+| `expected_output` | ✅ | The reference answer used by both validators. |
 | `category` | — | Label for report grouping. Defaults to `general` if omitted. |
-| `evaluationCriteria` | — | Custom scoring guidance injected into the judge prompt. |
+| `evaluation_criteria` | — | Custom scoring guidance injected into the judge prompt. |
 
 ### Example
 
@@ -314,30 +312,32 @@ Test cases are stored in `data/sample_test_cases.json`. The loader accepts both 
 [
   {
     "id": "factual_021",
+    "category": "factual",
     "prompt": "What is the capital of France?",
-    "expectedOutput": "Paris",
-    "category": "factual"
+    "expected_output": "Paris",
+    "evaluation_criteria": "The response must correctly identify Paris as the capital"
   },
   {
     "id": "reasoning_006",
-    "prompt": "How can you measure exactly 4 litres using a 3L and a 5L jug?",
-    "expectedOutput": "Fill the 5L jug. Pour into the 3L jug until full — 2L remain. Empty the 3L jug. Pour the 2L into it. Refill the 5L jug. Pour until the 3L jug is full — 1L fits, leaving 4L in the 5L jug.",
     "category": "reasoning",
-    "evaluationCriteria": "The response must describe valid steps that correctly arrive at exactly 4 litres."
+    "prompt": "How can you measure exactly 4 litres using a 3L and a 5L jug?",
+    "expected_output": "Fill the 5L jug. Pour into the 3L jug until full — 2L remain. Empty the 3L jug. Pour the 2L into it. Refill the 5L jug. Pour until the 3L jug is full — 1L fits, leaving 4L in the 5L jug.",
+    "evaluation_criteria": "The response must describe valid steps that correctly arrive at exactly 4 litres."
   },
   {
     "id": "math_012",
+    "category": "math",
     "prompt": "What is 15% of 240?",
-    "expectedOutput": "36",
-    "category": "math"
+    "expected_output": "36",
+    "evaluation_criteria": "The response must calculate the correct percentage"
   }
 ]
 ```
 
 ### Tips for writing effective test cases
 
-- **Avoid single-word expected outputs** like `"Paris"` or `"36"`. A single word produces cosine similarity in the range 0.30–0.55 against a correct full-sentence response — far below the 0.85 threshold. Use a full sentence as the expected output or add an `evaluationCriteria` to guide the judge instead.
-- **Use `evaluationCriteria`** for complex questions where many valid phrasings exist — reasoning tasks, open-ended explanations, or multi-step problems.
+- **Avoid single-word expected outputs** like `"Paris"` or `"36"`. A single word produces cosine similarity in the range 0.30–0.55 against a correct full-sentence response — far below the 0.85 threshold. Use a full sentence as the expected output or add an `evaluation_criteria` to guide the judge instead.
+- **Use `evaluation_criteria`** for complex questions where many valid phrasings exist — reasoning tasks, open-ended explanations, or multi-step problems.
 - **Use descriptive IDs** with a category prefix (`factual_001`, `history_020`) so reports group and label results automatically.
 
 ---
@@ -357,7 +357,7 @@ During the run the console logs real-time progress. Each line shows the test ind
 ```
 Chat provider      : openai
 Embedding provider : openai
-Chat model         : gpt-4o-mini
+Chat model         : gpt-5-mini
 Embedding model    : text-embedding-3-small
 Runs               : 3  |  Emb threshold: 0.85  |  Judge threshold: 8/10
 

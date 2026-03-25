@@ -57,7 +57,7 @@ The 53-point gap between the two runs is not caused by factual errors in Ollama'
 The HTML report opens automatically in the browser after every run. The metric cards at the top give an at-a-glance summary.
 
 *Fig 1: OpenAI run — overview metric cards (130 tests · 97.7% pass rate · avg judge score 9.7/10)*
-![OpenAI report header](images/openai_header.png)
+![OpenAI report header](Images/Fig 5 OpenAI Report Overview.png)
 
 Notice that the average embedding score (0.51) is flagged **amber** (below the 0.85 threshold), while the average judge score (9.7/10) is **green**. This confirms that nearly all 127 passing tests passed via the judge path rather than the embedding path — a direct consequence of the short-expected-output problem (see [Key Takeaways](#key-takeaways)).
 
