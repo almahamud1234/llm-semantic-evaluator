@@ -56,18 +56,21 @@ The 53-point gap between the two runs is not caused by factual errors in Ollama'
 
 The HTML report opens automatically in the browser after every run. The metric cards at the top give an at-a-glance summary.
 
-*Fig 1: OpenAI run — overview metric cards (130 tests · 97.7% pass rate · avg judge score 9.7/10)*
-![OpenAI report header](Images/Fig 5 OpenAI Report Overview.png)
+<img width="908" height="537" alt="image" src="https://github.com/user-attachments/assets/16941c0b-7ff7-4744-b189-c1fdaaf6577e" /> <br>
+Fig 1: OpenAI run — overview metric cards (130 tests · 97.7% pass rate · avg judge score 9.7/10)
 
 Notice that the average embedding score (0.51) is flagged **amber** (below the 0.85 threshold), while the average judge score (9.7/10) is **green**. This confirms that nearly all 127 passing tests passed via the judge path rather than the embedding path — a direct consequence of the short-expected-output problem (see [Key Takeaways](#key-takeaways)).
 
-*Fig 2: OpenAI run — score distribution and category pass-rate charts*
-![OpenAI charts](images/openai_charts.png)
+| | |
+|---|---|
+| <img width="100%" alt="image" src="https://github.com/user-attachments/assets/609571a8-de49-4409-8c48-f09e9f5cf2a4" /> | <img width="100%" alt="image" src="https://github.com/user-attachments/assets/e1be1a31-b269-425f-bc4c-cee5200d6889" /> | <br>
+Fig 2: OpenAI run — score distribution and category pass-rate charts
 
-The left chart shows the embedding score distribution: most runs cluster in the 0.30–0.60 band, confirming that few tests pass via the embedding validator alone. The right chart shows the per-category pass rate — math and reasoning hit 100%, while factual, history, and science each record one failure.
+The first chart shows the embedding score distribution: most runs cluster in the 0.30–0.60 band, confirming that few tests pass via the embedding validator alone. The second chart shows the per-category pass rate — math and reasoning hit 100%, while factual, history, and science each record one failure.
 
-*Fig 3: OpenAI run — per-test heatmap table (top rows)*
-![OpenAI results table](images/openai_table.png)
+
+<img width="1053" height="636" alt="image" src="https://github.com/user-attachments/assets/a2a014d0-f10c-4530-bdfc-61e45cd59fdf" /> <br>
+Fig 3: OpenAI run — per-test heatmap table (top rows)
 
 Each row shows one test case. The three columns under "Embedding score / run" and "Judge score / run" are colour-coded: green cells meet the threshold, red cells do not. The "Status" column reflects the majority-vote outcome.
 
@@ -75,13 +78,15 @@ Each row shows one test case. The three columns under "Embedding score / run" an
 
 ## HTML Dashboard — Ollama Run
 
-*Fig 4: Ollama run — overview metric cards (130 tests · 44.6% pass rate · avg judge score 5.8/10)*
-![Ollama report header](images/ollama_header.png)
+<img width="888" height="545" alt="image" src="https://github.com/user-attachments/assets/9158e4de-f3b3-4479-8f0d-5ade68817417" /> <br>
+Fig 4: Ollama run — overview metric cards (130 tests · 44.6% pass rate · avg judge score 5.8/10)
 
 Both the embedding score (0.64) and judge score (5.8/10) are flagged amber. The judge score being below the threshold (8/10) is the dominant cause of failure — the embedding score of 0.64 is actually *higher* than the OpenAI run (0.51), which is discussed below.
 
-*Fig 5: Ollama run — score distribution and category pass-rate charts*
-![Ollama charts](images/ollama_charts.png)
+| | |
+|---|---|
+| <img width="100%" alt="image" src="https://github.com/user-attachments/assets/b899697d-baac-4f41-a6da-d0a3ad68ec1a" /> | <img width="100%" alt="image" src="https://github.com/user-attachments/assets/900e61f3-3e4d-46f4-8f87-5ca51d7c9541" /> | <br>
+Fig 5: Ollama run — score distribution and category pass-rate charts
 
 The category chart shows a stark difference from the OpenAI run: definitions and history both sit at around 25%, while math (65.2%) and reasoning (59.1%) are the strongest categories. The bimodal judge score pattern — many low scores and some high scores, with a gap in the middle — is the visual signature of miscalibration.
 
