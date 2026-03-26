@@ -443,8 +443,8 @@ LLMSemanticEvaluatorTests/
 
 ---
 
-**[View Full Results & Visualisation →](Documentation/results.md)**
+**[View Full Results & Visualisation →](results.md)**
 
-**[View Unit Testing Documentation →](Documentation/unit-testing.md)**
+**[View Unit Testing Documentation →](unit-testing.md)**
 
 ---
