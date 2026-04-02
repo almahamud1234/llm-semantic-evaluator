@@ -46,7 +46,8 @@ The Ollama dataset was deliberately limited to 50 cases because `llama3.2:3b` in
 
 During each run, the console prints a startup banner confirming the active configuration, then one line per test in real time showing the test index, ID, pass/fail verdict, and how many of the three runs passed.
 
-image will be here
+<img width="882" height="668" alt="OpenAI Console Output" src="https://github.com/user-attachments/assets/f794d741-1975-4d6f-ad71-51b26f0a6cee" />
+
 *Fig. 2: Console output during OpenAI run showing real-time test progress and results*
 
 The real-time output allows an operator to spot unexpected failures immediately, without waiting for the full run to complete. Each line is written through `ILogger<T>` so the same output appears in Docker container logs and CI pipeline output.
@@ -85,21 +86,23 @@ The primary evaluation ran `gpt-5-mini` on all 138 test cases across 6 knowledge
 
 The HTML dashboard (`reports/report.html`) opens automatically in your browser after each run. It presents the overall pass rate, average scores, a per-category bar chart, and a per-test expandable table.
 
-<!-- SCREENSHOT PLACEHOLDER
-     Screenshot: The full HTML dashboard for the OpenAI run, showing the
-     header metric cards and the per-category bar chart below them.
-     File to add: docs/images/fig4-html-dashboard-openai.png
-     Replace this comment block with:
-     ![Fig. 4 – HTML report dashboard, OpenAI run](images/fig4-html-dashboard-openai.png)
-     *Fig. 4: HTML report dashboard — OpenAI run (report.html)*
--->
+<img width="936" height="552" alt="OpenAI Dashboard" src="https://github.com/user-attachments/assets/e151b055-a12b-4124-bf2b-abe56d5c8d78" />
+
+*Fig. 4: HTML report dashboard — OpenAI run (report.html)*
 
 The header row of metric cards shows pass rate, average embedding score, average judge score, and the configuration used (provider, thresholds, run count). The colour of each metric card reflects its health: green for pass rates above ~90%, amber for lower values. This makes it immediately visible at a glance whether a run was successful before reading any individual test results.
 
 The per-category bar chart below the header breaks pass rates down by knowledge domain. For the OpenAI run, all bars reach 100% except history, which shows the single failure.
 
-Expanding any row in the per-test table of json file reveals all three individual runs for that test case — the model's actual response text, the embedding score, the judge score, and the judge's full chain-of-thought reasoning. This makes any failure diagnosable without opening any other file.
+<img width="766" height="424" alt="image" src="https://github.com/user-attachments/assets/45c7edb6-b72e-46dd-aa36-b9be6a68110f" />
 
+*Fig. 5: Per category pass rate — OpenAI run (report.html)*
+
+Expanding any row in the per-test array of json file reveals all three individual runs for that test case — the model's actual response text, the embedding score, the judge score, and the judge's full chain-of-thought reasoning. This makes any failure diagnosable without opening any other file.
+
+<img width="1214" height="758" alt="image" src="https://github.com/user-attachments/assets/4e4c36a7-7470-4a55-b0f3-c4807331f051" />
+
+*Fig. 6: Per test response — OpenAI run (report.json)*
 ---
 
 ## OpenAI Run — Failure Analysis
@@ -110,15 +113,9 @@ This is historically correct. Caesar was assassinated in 44 BC, and the Roman Em
 
 The framework behaves correctly here: it surfaces the disagreement and stores the judge's full reasoning in `report.json` so a developer can inspect the case. Correcting the expected output to `"The Roman Republic"` would bring the OpenAI pass rate to 100%.
 
-<!-- SCREENSHOT PLACEHOLDER
-     Screenshot: The expanded row for history_006 in the HTML dashboard,
-     or the relevant excerpt from report.json showing the judge reasoning
-     for each of the 3 runs and the final FAIL verdict.
-     File to add: docs/images/fig6-openai-failure-history006.png
-     Replace this comment block with:
-     ![Fig. 6 – OpenAI failure: model answer historically more accurate than expected output](images/fig6-openai-failure-history006.png)
-     *Fig. 6: OpenAI failure — model answer historically more accurate than expected output*
--->
+<img width="1233" height="807" alt="image" src="https://github.com/user-attachments/assets/89e6ba30-5077-4636-95fa-b2a9d7ca1cd7" />
+
+*Fig. 7: OpenAI failure — model answer historically more accurate than expected output*
 
 ---
 
@@ -128,16 +125,9 @@ The average embedding score across the OpenAI run is 0.52 — well below the 0.8
 
 When `expected_output` is a short phrase like `"Paris"` or `"4"` and the model responds with a full sentence like `"The capital of France is Paris."`, cosine similarity is geometrically low (~0.45) even though the answer is correct. This is a structural property of embedding spaces at different text lengths. Only 6 of the 414 individual runs (138 tests × 3 runs) reached the 0.85 threshold. The remaining passes were all driven by the judge path, which correctly scored the responses 10/10 by evaluating meaning rather than vector distance.
 
-<!-- SCREENSHOT PLACEHOLDER
-     Screenshot: A specific test row from the HTML dashboard or a JSON
-     excerpt showing a run where embedding score is ~0.45 but judge score
-     is 10/10 and the run is marked PASS — demonstrating the OR logic in
-     action.
-     File to add: docs/images/fig3-judge-path-pass-low-embedding.png
-     Replace this comment block with:
-     ![Fig. 3 – Test passes via judge path despite low embedding score](images/fig3-judge-path-pass-low-embedding.png)
-     *Fig. 3: Test passes via judge path despite low embedding score (embedding: 0.45, judge: 10/10)*
--->
+<img width="1146" height="260" alt="image" src="https://github.com/user-attachments/assets/8249822e-c5af-4b52-8593-266c30b028f9" />
+
+*Fig. 8: Test passes via judge path despite low embedding score (embedding: 0.45, judge: 10/10)*
 
 This confirms that removing either validator would break the framework. A pure embedding approach would fail roughly even for a model answering correctly. A pure judge approach would be vulnerable to small-model miscalibration. The OR combination is structurally necessary, not a workaround.
 
@@ -160,15 +150,9 @@ The second evaluation ran `llama3.2:3b` locally on a 50-case subset covering the
 
 ## Ollama Run — HTML Dashboard
 
-<!-- SCREENSHOT PLACEHOLDER
-     Screenshot: The full HTML dashboard for the Ollama run, showing the
-     header metric cards with the lower pass rate and judge score clearly
-     flagged (amber/red colouring).
-     File to add: docs/images/fig5-html-dashboard-ollama.png
-     Replace this comment block with:
-     ![Fig. 5 – HTML report dashboard, Ollama run](images/fig5-html-dashboard-ollama.png)
-     *Fig. 5: HTML report dashboard — Ollama run (report.html)*
--->
+<img width="944" height="545" alt="Ollama Dashboard" src="https://github.com/user-attachments/assets/7d032073-f6d7-49c6-92c3-c3f0b5aa3c2d" />
+
+*Fig. 9: HTML report dashboard — Ollama run (report.html)*
 
 The Ollama dashboard is visually distinct from the OpenAI run. The average judge score card shows 7.8/10 rather than 10/10, and the pass rate card shows 82% rather than 99.3%. The per-category bar chart shows a consistent shortfall across all 6 domains — the gap is not concentrated in any one subject area, which confirms this is a provider-wide calibration problem rather than a subject-matter weakness of the model.
 
@@ -186,16 +170,9 @@ Nine test cases failed in the Ollama run. Three factors contribute:
 
 The clearest example is `math_001`: prompt *"What is 2 + 2?"*, expected output `"4"`, model response *"2 + 2 = 4."* The judge's own reasoning across all three runs stated: *"The actual answer correctly addresses the query. It captures the same meaning as the expected answer. There are no factual errors or key omissions. The actual answer is semantically identical to the expected answer."* Despite this, the judge assigned a score of 1/10 on all three runs. The embedding score of 0.77 was also below the 0.85 threshold, so both validators failed and the test was marked failed.
 
-<!-- SCREENSHOT PLACEHOLDER
-     Screenshot: The expanded row for math_001 in the Ollama HTML dashboard,
-     or the relevant excerpt from report.json showing the judge reasoning
-     (which says the answer is correct) alongside the score of 1/10 —
-     demonstrating the contradiction.
-     File to add: docs/images/fig7-ollama-miscalibration-math001.png
-     Replace this comment block with:
-     ![Fig. 7 – Ollama miscalibration: judge reasoning contradicts the assigned score](images/fig7-ollama-miscalibration-math001.png)
-     *Fig. 7: Ollama miscalibration — judge reasoning states the answer is correct but assigns 1/10*
--->
+<img width="1229" height="779" alt="image" src="https://github.com/user-attachments/assets/0b9ac90e-6d88-4b50-993f-043615f011ea" />
+
+*Fig. 10: Ollama miscalibration — judge reasoning states the answer is correct but assigns 1/10*
 
 This failure mode is diagnosable directly from `report.json`: open the file, find the failed test, and read the `JudgeReasoning` field. If the reasoning agrees the answer is correct but the score is low, the model is miscalibrated. This is the recommended first diagnostic step for any unexpected Ollama failure.
 
@@ -211,15 +188,9 @@ The repository includes `provider-comparison-tool.html`, a standalone browser-ba
 
 The headline comparison across all metrics for each provider, displayed side by side.
 
-<!-- SCREENSHOT PLACEHOLDER
-     Screenshot: The overall summary panel of the comparison tool showing
-     OpenAI (100% pass rate, avg judge 10/10) vs Ollama (82% pass rate,
-     avg judge 7.8/10) on the same 50-case dataset.
-     File to add: docs/images/fig8-comparison-overall-summary.png
-     Replace this comment block with:
-     ![Fig. 8 – Overall summary comparison between OpenAI and Ollama](images/fig8-comparison-overall-summary.png)
-     *Fig. 8: Overall summary comparison — OpenAI vs Ollama on 50-case dataset*
--->
+<img width="734" height="500" alt="Overall Summary" src="https://github.com/user-attachments/assets/6cbe6ad6-1436-4f81-bf72-85db76ffd747" />
+
+*Fig. 11: Overall summary comparison — OpenAI vs Ollama on 50-case dataset*
 
 On the same 50 cases, OpenAI passes all 50 while Ollama fails 9. The average judge score difference (10/10 vs 7.8/10) is the primary driver of this gap.
 
@@ -227,15 +198,9 @@ On the same 50 cases, OpenAI passes all 50 while Ollama fails 9. The average jud
 
 A horizontal bar chart per knowledge domain, one bar per provider. If the gap is consistent across all categories, it is a provider-wide calibration problem, not a subject-matter weakness.
 
-<!-- SCREENSHOT PLACEHOLDER
-     Screenshot: The pass rate by category panel showing horizontal bars
-     for OpenAI and Ollama across all 6 knowledge domains. OpenAI bars
-     should all reach 100%; Ollama bars should show a consistent shortfall.
-     File to add: docs/images/fig9-comparison-category-breakdown.png
-     Replace this comment block with:
-     ![Fig. 9 – Pass rate by category comparison between OpenAI and Ollama](images/fig9-comparison-category-breakdown.png)
-     *Fig. 9: Pass rate by category — OpenAI vs Ollama*
--->
+<img width="922" height="554" alt="Pass rate by category" src="https://github.com/user-attachments/assets/4c82f34b-c371-4564-bbf9-bc1f65e9ead5" />
+
+*Fig. 12: Pass rate by category — OpenAI vs Ollama*
 
 The consistent shortfall across all 6 categories confirms that Ollama's lower pass rate is a provider-wide calibration issue rather than a subject-matter weakness.
 
@@ -243,19 +208,9 @@ The consistent shortfall across all 6 categories confirms that Ollama's lower pa
 
 Side-by-side histograms of judge scores and embedding scores, each bucketed into five ranges. A well-calibrated provider produces a right-skewed distribution concentrated at 9–10. A miscalibrated provider shows a significant cluster at 1–3 — correct answers that the judge scored wrong.
 
-<!-- SCREENSHOT PLACEHOLDER
-     Screenshot: The score distributions panel showing judge score
-     histograms for both providers side by side. OpenAI should be
-     concentrated at 9-10; Ollama should show a bimodal or flat
-     distribution with a cluster at 1-3.
-     The embedding score histograms should both show a wide distribution
-     skewed toward lower values (confirming that low embedding scores
-     are normal for both providers).
-     File to add: docs/images/fig10-comparison-score-distributions.png
-     Replace this comment block with:
-     ![Fig. 10 – Score distribution comparison between OpenAI and Ollama](images/fig10-comparison-score-distributions.png)
-     *Fig. 10: Score distributions — judge scores (left) and embedding scores (right)*
--->
+<img width="1524" height="451" alt="Score Comparison" src="https://github.com/user-attachments/assets/7001aedd-9945-4f60-a490-50f9409ea0a7" />
+
+*Fig. 10: Score distributions — judge scores (left) and embedding scores (right)*
 
 The embedding score histogram confirms that low embedding scores are normal for both providers — validating that the OR logic between the two validators is necessary regardless of which provider is used.
 
@@ -271,18 +226,7 @@ The primary deliverable. Opens in any browser. Includes metric cards, a per-cate
 
 ### report.json — Structured data
 
-The most information-dense output. Records the full per-run array for every test case, including the model's response, embedding score, judge score, and complete judge reasoning text. Used as the input file for the Provider Comparison Tool. The excerpt below shows the structure for one test case with a low embedding score that passes via the judge path:
-
-<!-- SCREENSHOT PLACEHOLDER
-     Screenshot: A report.json excerpt showing one test case where the
-     embedding score is ~0.45 (below threshold) but the judge score is
-     10/10 (above threshold), and RunPassed = true — illustrating the
-     OR logic in the structured output.
-     File to add: docs/images/fig3b-reportjson-judge-path-excerpt.png
-     Replace this comment block with:
-     ![report.json excerpt — test passes via judge path despite low embedding score](images/fig3b-reportjson-judge-path-excerpt.png)
-     *report.json: embedding score 0.45, judge score 10/10, RunPassed = true*
--->
+The most information-dense output. Records the full per-run array for every test case, including the model's response, embedding score, judge score, and complete judge reasoning text. Used as the input file for the Provider Comparison Tool. 
 
 ### report.csv — Flat data for spreadsheets
 
