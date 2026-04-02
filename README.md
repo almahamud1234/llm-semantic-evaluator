@@ -71,45 +71,9 @@ Note: .NET 10 (the current LTS release) was chosen for its modern async runtime,
 
 The application follows a linear pipeline architecture. Each stage is a dedicated C# class communicating through a well-defined interface, keeping components independently testable and replaceable.
 
-```
-appsettings.json
-      │
-      ▼
-TestConfiguration ──► Validate()
-      │                (fails fast with a clear error if misconfigured)
-      ▼
-LLMClientFactory
-  ├── OpenAIClient    (OpenAI API  │  Grok — same class, different base URL)
-  └── OllamaClient    (local Ollama — no API key required)
-      │
-      ▼
-JsonTestLoader ──► List<TestCase>
-      │             (from data/sample_test_cases.json)
-      ▼
-TestRunner  ─── repeats each test NumberOfRuns times (default: 3)
-  │
-  ├── ILLMClient.SendPromptAsync()  ──►  LLM response
-  │
-  ├── EmbeddingValidator
-  │     └── embed(expected) + embed(actual)
-  │           → CosineSimilarityCalculator
-  │             → score ≥ EmbeddingThreshold?  ✔ EmbeddingPassed
-  │
-  └── LLMJudgeValidator  (G-Eval style)
-        └── BuildJudgePrompt() → LLM
-              → ParseScore() + ExtractReasoning()
-                → score ≥ JudgeThreshold?  ✔ JudgePassed
-      │
-      ▼  RunPassed = EmbeddingPassed OR JudgePassed
-      ▼  TestPassed = PassedRunsCount >= MinimumPassingRuns
-      │
-      ▼
-ReportGenerator
-  ├── reports/report.txt   — human-readable summary
-  ├── reports/report.json  — full structured data (per-run scores + reasoning)
-  ├── reports/report.csv   — flat data for Excel / charting tools
-  └── reports/report.html  — interactive dashboard (auto-opens in browser)
-```
+<img width="952" height="778" alt="system-architecture-design" src="https://github.com/user-attachments/assets/055a1145-2c98-4293-bca2-f9e6bcd2e4a6" />
+
+*Fig 1: System Architecture Diagram*
 
 **Interface contracts — each can be replaced without modifying other components:**
 
@@ -303,9 +267,9 @@ Test cases are stored in `data/sample_test_cases.json`. The loader accepts both 
 
 | Field | Required | Description |
 |---|---|---|
-| `id` | ✅ | Unique identifier. Recommended format: `category_NNN` (e.g. `factual_001`). |
-| `prompt` | ✅ | The query sent verbatim to the LLM under test. |
-| `expected_output` | ✅ | The reference answer used by both validators. |
+| `id` | Yes | Unique identifier. Recommended format: `category_NNN` (e.g. `factual_001`). |
+| `prompt` | Yes | The query sent verbatim to the LLM under test. |
+| `expected_output` | Yes | The reference answer used by both validators. |
 | `category` | — | Label for report grouping. Defaults to `general` if omitted. |
 | `evaluation_criteria` | — | Custom scoring guidance injected into the judge prompt. |
 
@@ -357,37 +321,9 @@ dotnet run
 
 During the run the console logs real-time progress. Each line shows the test index, ID, result, and how many of the three runs passed:
 
-```
-Chat provider      : openai
-Embedding provider : openai
-Chat model         : gpt-5-mini
-Embedding model    : text-embedding-3-small
-Runs               : 3  |  Emb threshold: 0.85  |  Judge threshold: 8/10
+<img width="882" height="668" alt="OpenAI Console Output" src="https://github.com/user-attachments/assets/996a5042-d24e-4d75-9c92-898deff5601b" />
 
-Loading test cases...
-Loaded 130 test cases.
-
-Starting test run: 130 tests, 3 runs each
-
-[1/130] factual_021 ...  ✅ PASS  (3/3 runs passed)
-[2/130] factual_022 ...  ✅ PASS  (3/3 runs passed)
-...
-[14/130] history_020 ... ❌ FAIL  (0/3 runs passed)
-...
-Done. Passed: 127/130
-
-=== Report Summary ===
-Total  : 130
-Passed : 127
-Failed : 3
-Rate   : 97.7%
-
-Reports saved to: /path/to/project/reports/
-  report.txt  — human-readable summary
-  report.json — full data (per-run scores and judge reasoning)
-  report.csv  — flat data for Excel/charts
-  report.html — interactive visual dashboard
-```
+Fig 2: Console output for OpenAI run*
 
 ### How the pass / fail logic works
 
