@@ -1,0 +1,799 @@
+TestId,Category,Prompt,ExpectedOutput,TestPassed,PassedRuns,TotalRuns,AvgEmbeddingScore,AvgJudgeScore,RunNumber,RunPassed,EmbeddingScore,JudgeScore,LLMResponse,JudgeReasoning,ExecutedAt
+"factual_022","factual","Who wrote Romeo and Juliet?","William Shakespeare",True,3,3,0.53,10.0,1,True,0.54,10,"Romeo and Juliet was written by William Shakespeare, the English playwright and poet. It was likely written in the mid-1590s and first published in 1597.","The answer correctly identifies William Shakespeare as the author of Romeo and Juliet. It conveys the same meaning as the expected answer and adds accurate contextual information about its likely composition date and first publication. There are no factual errors or relevant omissions for this query.","2026-04-01T09:22:34.1044948Z"
+"factual_022","factual","Who wrote Romeo and Juliet?","William Shakespeare",True,3,3,0.53,10.0,2,True,0.54,10,"Romeo and Juliet was written by William Shakespeare — an Elizabethan English playwright. It was likely written in the mid-1590s.","The actual answer correctly identifies William Shakespeare as the author of Romeo and Juliet and adds accurate context that he was an Elizabethan playwright and the play was likely written in the mid-1590s. It captures the same meaning as the expected answer and contains no factual errors or irrelevant content. The additional dating information is accurate and does not detract from the core answer.","2026-04-01T09:22:43.2937447Z"
+"factual_022","factual","Who wrote Romeo and Juliet?","William Shakespeare",True,3,3,0.53,10.0,3,True,0.50,10,"Romeo and Juliet was written by William Shakespeare. It’s a tragedy believed to have been written in the mid-1590s (first published in 1597).","The response correctly identifies William Shakespeare as the author of Romeo and Juliet. It matches the expected answer and also provides accurate, relevant context (that it’s a tragedy from the mid-1590s, first published in 1597). There are no factual errors or omissions affecting the core question.","2026-04-01T09:22:52.3915542Z"
+"factual_004","factual","What is the largest ocean on Earth?","The Pacific Ocean",True,3,3,0.61,10.0,1,True,0.58,10,"The Pacific Ocean. It covers about 63.8 million square miles (≈165.2 million km²) and contains the deepest point on Earth, the Mariana Trench (≈11,000 m / 36,000 ft).","The actual answer correctly identifies the Pacific Ocean as the largest ocean, matching the expected answer. It also provides accurate supplementary facts (area and the Mariana Trench depth) that are relevant and not misleading. There are no factual errors or omissions affecting the core response.","2026-04-01T09:23:02.0674278Z"
+"factual_004","factual","What is the largest ocean on Earth?","The Pacific Ocean",True,3,3,0.61,10.0,2,True,0.63,10,"The Pacific Ocean. It is the largest ocean, covering about 165 million km² (≈63.8 million mi²), roughly 30% of Earth's surface.","The actual answer correctly names the Pacific Ocean as the largest ocean and adds accurate supporting facts (approximate area in km² and mi² and a reasonable percentage of Earth's surface). It matches the expected answer in meaning and contains no factual errors or irrelevant content. The extra numeric details are correct and appropriate, so the response is essentially perfect.","2026-04-01T09:23:12.2732857Z"
+"factual_004","factual","What is the largest ocean on Earth?","The Pacific Ocean",True,3,3,0.61,10.0,3,True,0.61,10,"The Pacific Ocean. It’s the largest ocean, covering about 165 million km² (≈63.8 million mi²) — roughly a third of Earth’s surface and more area than all the planet’s land combined.","The response correctly identifies the Pacific Ocean as the largest ocean and directly answers the query. It conveys the same meaning as the expected answer and adds accurate, relevant details (area and proportion of Earth's surface). There are no factual errors or irrelevant content.","2026-04-01T09:23:25.0730650Z"
+"factual_006","factual","What is the longest river in the world?","The Nile River",True,3,3,0.54,10.0,1,True,0.53,10,"Most sources list the Nile as the longest river in the world — about 6,650 km (4,130 miles). However, measurements vary depending on how a river’s source and channels are defined, and some studies claim the Amazon is longer (estimates range roughly 6,400–7,000+ km). 
+
+So: commonly cited answer — the Nile; but the Amazon may be longer depending on measurement method (the Amazon is definitely the largest by water discharge).","The actual answer correctly addresses the query by identifying the Nile as the longest river in most sources and gives a plausible length (~6,650 km). It captures the same meaning as the expected answer while responsibly noting that measurements vary and that some studies favor the Amazon, which is accurate and relevant. There are no factual errors or key omissions given the question's simple requirement to name the longest river.","2026-04-01T09:23:36.8358596Z"
+"factual_006","factual","What is the longest river in the world?","The Nile River",True,3,3,0.54,10.0,2,True,0.54,10,"Short answer: Traditionally the Nile is said to be the longest river in the world — about 6,650 km (≈4,130 mi).
+
+Important caveat: the ranking is disputed. Depending on which tributary is counted as a source and how length is measured, some recent studies claim the Amazon is slightly longer (estimates range from ~6,400 km up to ≈7,000+ km). The disagreement arises from choice of source river, changing channels, and measurement methods. For most general-purpose answers, ""the Nile"" is accepted, but you may see sources that list the Amazon instead.","The response correctly identifies the Nile as the traditionally accepted longest river and gives an appropriate approximate length. It captures the expected meaning while also responsibly noting the legitimate dispute over whether the Amazon may be longer depending on measurement choices. There are no factual errors and the caveat about source selection and measurement methods is relevant and accurate.","2026-04-01T09:23:49.8529970Z"
+"factual_006","factual","What is the longest river in the world?","The Nile River",True,3,3,0.54,10.0,3,True,0.54,10,"Short answer: the Nile is traditionally cited as the longest river — about 6,650 km (4,130 mi).
+
+Longer explanation: rankings depend on how you define a river’s source and measure its course. The Amazon is very close in length (often quoted around 6,400 km / 3,976 mi) and some studies that follow different headwaters report the Amazon as longer (values up to ~6,992 km have been published). The Amazon is, however, unquestionably the largest by water discharge and drainage basin.","The response correctly identifies the Nile as the longest river traditionally, giving an appropriate length (~6,650 km) that matches common sources. It captures the same meaning as the expected answer while responsibly noting the measurement debate with the Amazon and clarifying that the Amazon is the largest by discharge. There are no factual errors or irrelevant content.","2026-04-01T09:24:02.8583065Z"
+"factual_007","factual","What is the tallest mountain in the world?","Mount Everest",True,3,3,0.60,10.0,1,True,0.60,10,"By elevation above sea level, Mount Everest is the tallest mountain in the world. It stands at 8,848.86 m (29,031.7 ft) on the Nepal–China (Tibet) border, according to the 2020 joint survey.
+
+If you mean ""tallest"" in other ways:
+- From base to summit (including the submerged base), Mauna Kea in Hawaii is tallest at about 10,200+ m.
+- Farthest from the Earth's center is Mount Chimborazo in Ecuador, because of the equatorial bulge.","The actual answer correctly and directly identifies Mount Everest as the tallest mountain in the world by elevation above sea level, matching the expected answer. It accurately cites the 2020 joint survey height (8,848.86 m) and appropriately notes other ways ""tallest"" can be defined (Mauna Kea by base-to-summit, Chimborazo by distance from Earth's center), which are relevant clarifications rather than errors. There are no factual inaccuracies and the response fully addresses the query.","2026-04-01T09:24:12.9967754Z"
+"factual_007","factual","What is the tallest mountain in the world?","Mount Everest",True,3,3,0.60,10.0,2,True,0.59,10,"The tallest mountain above sea level is Mount Everest, on the Nepal–China (Tibet) border, with an official height of 8,848.86 m (29,031.7 ft) from the 2020 Nepal–China survey. If you measure from base to summit (including the part below sea level), Mauna Kea in Hawaii is larger — about 10,200+ m from its ocean floor base, though only ~4,207 m above sea level.","The actual answer correctly identifies Mount Everest as the tallest mountain above sea level and gives its official 2020 height. It captures the same meaning as the expected answer while providing accurate, relevant context about Mauna Kea being taller when measured from its ocean-floor base. There are no factual errors or key omissions; the extra information does not detract from the correct identification.","2026-04-01T09:24:25.2837018Z"
+"factual_007","factual","What is the tallest mountain in the world?","Mount Everest",True,3,3,0.60,10.0,3,True,0.60,10,"The tallest mountain above sea level is Mount Everest (Nepali: Sagarmāthā; Tibetan: Chomolungma) on the Nepal–China (Tibet) border, with an official height of 8,848.86 m (about 29,031.7 ft) from a 2020 Nepal–China survey.
+
+(If “tallest” is defined differently: Mauna Kea in Hawaii is tallest from base to summit (~10,210 m) when measured from its underwater base; Chimborazo in Ecuador is the point farthest from the Earth’s center because of the equatorial bulge.)","The actual answer correctly identifies Mount Everest as the tallest mountain above sea level and gives the 2020 Nepal–China survey height (8,848.86 m), matching the expected answer. It includes accurate additional details (Nepali and Tibetan names, location on the Nepal–China border) with no factual errors. The note about alternate definitions (Mauna Kea by base-to-summit, Chimborazo by distance from Earth's center) is relevant context and not misleading.","2026-04-01T09:24:38.5950559Z"
+"factual_009","factual","What is the smallest country in the world?","Vatican City",True,3,3,0.67,10.0,1,True,0.66,10,"The smallest country in the world is Vatican City (Vatican City State). It is an independent city‑state enclaved within Rome, Italy, with an area of about 44 hectares (≈0.44 km² or 110 acres) and a population of roughly a few hundred people.","The actual answer correctly identifies Vatican City as the smallest country and directly addresses the query. It captures the same meaning as the expected answer and adds accurate supporting details (official name, enclaved location, area in hectares/km²/acre, and a reasonable population estimate). There are no factual errors or irrelevant content; the phrase ""a few hundred people"" is a coarse population estimate but not misleading.","2026-04-01T09:24:52.1134226Z"
+"factual_009","factual","What is the smallest country in the world?","Vatican City",True,3,3,0.67,10.0,2,True,0.67,10,"Vatican City (the Holy See) is the smallest country in the world — about 0.44 km² (≈44 hectares or 110 acres) with a population of roughly 800. It’s an independent city-state enclaved within Rome and the seat of the Roman Catholic Church.","The response correctly identifies Vatican City as the smallest country in the world. It captures the same meaning as the expected answer and sensibly adds accurate, relevant details (area, population, status as an independent city-state). There are no factual errors or irrelevant content.","2026-04-01T09:25:02.9677913Z"
+"factual_009","factual","What is the smallest country in the world?","Vatican City",True,3,3,0.67,10.0,3,True,0.68,10,"The smallest country is Vatican City (Vatican City State). It covers about 44 hectares (0.44 km² / ~110 acres) and has a population of roughly 800 people. It is an independent city‑state enclaved within Rome and is the spiritual and administrative center of the Roman Catholic Church.","The actual answer correctly identifies Vatican City as the smallest country and provides the same meaning as the expected answer. It also gives accurate supporting details (area, approximate population, and status as an independent city‑state enclaved within Rome). There are no factual errors or relevant omissions.","2026-04-01T09:25:12.1272335Z"
+"factual_021","factual","What is the capital of France?","Paris",True,3,3,0.45,10.0,1,True,0.45,10,"The capital of France is Paris.","The actual answer correctly and directly addresses the query by identifying Paris as the capital of France. It captures the same meaning as the expected answer with no factual errors or irrelevant content. The response is complete and concise.","2026-04-01T09:25:16.3829869Z"
+"factual_021","factual","What is the capital of France?","Paris",True,3,3,0.45,10.0,2,True,0.45,10,"The capital of France is Paris.","The actual answer directly and correctly identifies Paris as the capital of France. It captures the same meaning as the expected answer with no factual errors or omissions. The response is concise and fully addresses the query.","2026-04-01T09:25:21.5017224Z"
+"factual_021","factual","What is the capital of France?","Paris",True,3,3,0.45,10.0,3,True,0.45,10,"The capital of France is Paris.","The actual answer correctly identifies Paris as the capital of France and directly addresses the query. It captures the same meaning as the expected answer with no factual errors or irrelevant content. The phrasing is slightly more explicit but conveys identical information.","2026-04-01T09:25:25.5974148Z"
+"factual_023","factual","What is the chemical symbol for gold?","Au",True,3,3,0.31,10.0,1,True,0.31,10,"The chemical symbol for gold is Au (from the Latin ""aurum""), atomic number 79.","The actual answer correctly addresses the query by stating the chemical symbol ""Au"" for gold and even gives the origin (""aurum"") and atomic number 79. It captures the same meaning as the expected answer and contains no factual errors or irrelevant content. The additional information is accurate and does not detract from the required response.","2026-04-01T09:25:30.4105239Z"
+"factual_023","factual","What is the chemical symbol for gold?","Au",True,3,3,0.31,10.0,2,True,0.32,10,"The chemical symbol for gold is Au. (From the Latin ""aurum""; atomic number 79.)","The actual answer correctly provides the chemical symbol ""Au"" for gold and therefore directly addresses the query. It conveys the same meaning as the expected answer and adds relevant, accurate context (Latin origin ""aurum"" and atomic number 79) without introducing errors. There are no omissions or irrelevant statements that affect correctness.","2026-04-01T09:25:37.1695374Z"
+"factual_023","factual","What is the chemical symbol for gold?","Au",True,3,3,0.31,10.0,3,True,0.30,10,"The chemical symbol for gold is Au (from the Latin ""aurum""). Gold's atomic number is 79.","The actual answer correctly and directly gives the chemical symbol ""Au"" for gold and even explains its Latin origin, matching the expected answer. It conveys the same meaning as the expected answer and adds a relevant, accurate fact (atomic number 79) without any errors or omissions.","2026-04-01T09:25:41.8792072Z"
+"factual_002","factual","What is the capital of Japan?","Tokyo",True,3,3,0.72,10.0,1,True,0.61,10,"The capital of Japan is Tokyo.","The actual answer directly and correctly identifies Tokyo as the capital of Japan. It captures the same meaning as the expected answer with no factual errors. There are no omissions or irrelevant details; the response is concise and accurate.","2026-04-01T09:25:46.5887044Z"
+"factual_002","factual","What is the capital of Japan?","Tokyo",True,3,3,0.72,10.0,2,True,0.61,10,"The capital of Japan is Tokyo.","The actual answer directly and correctly identifies Tokyo as the capital of Japan. It captures the same meaning as the expected answer and contains no factual errors or irrelevant content. The wording is slightly more verbose but semantically identical.","2026-04-01T09:25:52.6300913Z"
+"factual_002","factual","What is the capital of Japan?","Tokyo",True,3,3,0.72,10.0,3,True,0.92,10,"Tokyo.","The actual answer correctly identifies Tokyo as the capital of Japan. It captures the same meaning as the expected answer with no factual errors or omissions. There is no irrelevant content.","2026-04-01T09:25:58.9099615Z"
+"factual_003","factual","What is the capital of Australia?","Canberra",True,3,3,0.69,10.0,1,True,0.64,10,"The capital of Australia is Canberra. It's located in the Australian Capital Territory and was chosen as the national capital as a compromise between Sydney and Melbourne.","The response correctly identifies Canberra as the capital of Australia. It matches the expected answer and adds accurate, relevant context about the Australian Capital Territory and the historical compromise between Sydney and Melbourne. There are no factual errors or omissions.","2026-04-01T09:26:07.0695860Z"
+"factual_003","factual","What is the capital of Australia?","Canberra",True,3,3,0.69,10.0,2,True,0.77,10,"Canberra — the capital city of Australia, located in the Australian Capital Territory (ACT).","The actual answer directly and correctly identifies Canberra as the capital of Australia. It captures the same meaning as the expected answer and even adds a brief, accurate location detail (Australian Capital Territory). There are no factual errors or significant omissions, and no irrelevant content.","2026-04-01T09:26:12.7016347Z"
+"factual_003","factual","What is the capital of Australia?","Canberra",True,3,3,0.69,10.0,3,True,0.66,10,"The capital of Australia is Canberra — located in the Australian Capital Territory. It was chosen as a compromise between Sydney and Melbourne; the federal Parliament moved there in 1927.","The actual answer correctly identifies Canberra as the capital of Australia and therefore addresses the query directly. It captures the same meaning as the expected answer and adds accurate, relevant context (location in the Australian Capital Territory and historical reason for selection). There are no factual errors or omissions.","2026-04-01T09:26:20.8955889Z"
+"math_021","math","What is 2+2?","4",True,3,3,0.42,10.0,1,True,0.42,10,"2 + 2 = 4.","The actual answer directly and correctly addresses the query by giving the numerical result of 2+2. It captures the same meaning as the expected answer with no factual errors or irrelevant content. The response is concise and fully correct.","2026-04-01T09:26:25.8089670Z"
+"math_021","math","What is 2+2?","4",True,3,3,0.42,10.0,2,True,0.42,10,"2 + 2 = 4.","The actual answer directly and correctly addresses the query by providing the numerical result of the addition. It captures the same meaning as the expected answer with no factual errors or omissions. The response is concise and accurate.","2026-04-01T09:26:30.9489612Z"
+"math_021","math","What is 2+2?","4",True,3,3,0.42,10.0,3,True,0.42,10,"2 + 2 = 4.","The actual answer directly and correctly addresses the query by providing the correct numerical result. It captures the same meaning as the expected answer — both state that 2 + 2 equals 4. There are no factual errors, omissions, or irrelevant content.","2026-04-01T09:26:36.0597706Z"
+"math_022","math","Calculate 15% of 200","30",True,3,3,0.34,10.0,1,True,0.34,10,"15% of 200 = 0.15 × 200 = 30.","The actual answer correctly computes 15% of 200 by converting the percentage to a decimal and multiplying, yielding 30. It matches the expected answer exactly with no factual errors or omissions.","2026-04-01T09:26:40.4656693Z"
+"math_022","math","Calculate 15% of 200","30",True,3,3,0.34,10.0,2,True,0.34,10,"15% of 200 = 0.15 × 200 = 30.","The actual answer correctly computes 15% of 200 by showing the multiplication 0.15 × 200 and giving the result 30. It captures the same meaning as the expected answer and contains no factual errors or omissions. The response is concise and directly answers the query.","2026-04-01T09:26:45.2149951Z"
+"math_022","math","Calculate 15% of 200","30",True,3,3,0.34,10.0,3,True,0.32,10,"15% of 200 is 30.
+
+Calculation: 200 × 0.15 = 30 (or 200 × 15 ÷ 100 = 30).","The response correctly computes 15% of 200 as 30 and explicitly shows the arithmetic, matching the expected answer. It captures the same meaning and includes two equivalent calculation methods (multiplying by 0.15 and using fraction form). There are no factual errors, omissions, or irrelevant content.","2026-04-01T09:26:54.0155936Z"
+"math_023","math","What is the square root of 144?","12",True,3,3,0.31,10.0,1,True,0.41,10,"12
+
+(If you mean all real numbers whose square is 144, they are ±12, since (-12)² = 12² = 144.)","The actual answer correctly addresses the query by giving 12 as the square root of 144 and further clarifies that both ±12 square to 144, which is a helpful and accurate elaboration. It captures the same meaning as the expected answer and contains no factual errors or irrelevant content. The extra parenthetical note about ±12 is appropriate and not misleading.","2026-04-01T09:27:01.4917360Z"
+"math_023","math","What is the square root of 144?","12",True,3,3,0.31,10.0,2,True,0.25,10,"The principal square root of 144 is 12. (If solving x² = 144, the solutions are x = ±12.)","The response correctly answers the query by stating that the principal square root of 144 is 12. It captures the same meaning as the expected answer and usefully clarifies that solving x² = 144 yields x = ±12. There are no factual errors or irrelevant statements.","2026-04-01T09:27:08.1466947Z"
+"math_023","math","What is the square root of 144?","12",True,3,3,0.31,10.0,3,True,0.27,10,"The principal square root of 144 is 12, since 12 × 12 = 144. (If solving x² = 144, the solutions are x = ±12.)","The actual answer correctly states that the principal square root of 144 is 12 and supports it with 12 × 12 = 144. It also appropriately clarifies that when solving x² = 144 both ±12 are solutions, which is a helpful and accurate addition. There are no factual errors or irrelevant content.","2026-04-01T09:27:15.5193400Z"
+"math_001","math","What is 2 + 2?","4",True,3,3,0.62,10.0,1,True,0.42,10,"2 + 2 = 4.","The actual answer correctly addresses the query by providing the correct sum. It captures the same meaning as the expected answer and contains no factual errors or irrelevant content. The response is concise and directly states that 2 + 2 equals 4.","2026-04-01T09:27:20.8426086Z"
+"math_001","math","What is 2 + 2?","4",True,3,3,0.62,10.0,2,True,1.00,10,"4","The actual answer correctly addresses the query by providing the numeric result ""4."" It captures the same meaning as the expected answer exactly, with no difference in content. There are no factual errors, omissions, or irrelevant additions.","2026-04-01T09:27:25.8051272Z"
+"math_001","math","What is 2 + 2?","4",True,3,3,0.62,10.0,3,True,0.42,10,"2 + 2 = 4.","The actual answer correctly addresses the query by stating that 2 + 2 equals 4. It captures the same meaning as the expected answer with no factual errors or omissions. The response is concise and directly answers the question.","2026-04-01T09:27:31.3805679Z"
+"math_002","math","What is 15% of 200?","30",True,3,3,0.33,10.0,1,True,0.34,10,"15% of 200 is 0.15 × 200 = 30.","The actual answer correctly computes 15% of 200 as 0.15 × 200 = 30. This matches the expected answer exactly and contains no factual errors or omissions. The response is concise and directly states the correct result.","2026-04-01T09:27:38.4498894Z"
+"math_002","math","What is 15% of 200?","30",True,3,3,0.33,10.0,2,True,0.34,10,"15% of 200 is 30. 
+
+(10% of 200 = 20; 5% of 200 = 10; 20 + 10 = 30.)","The actual answer correctly and directly addresses the query by stating that 15% of 200 is 30. It matches the expected answer exactly and provides a clear, accurate breakdown (10% = 20, 5% = 10) with no factual errors or irrelevant content. The response is complete and succinct.","2026-04-01T09:27:45.7069258Z"
+"math_002","math","What is 15% of 200?","30",True,3,3,0.33,10.0,3,True,0.31,10,"15% of 200 is 30.
+
+Work: 10% of 200 = 20, 5% of 200 = 10, so 20 + 10 = 30.","The actual answer correctly addresses the query and states that 15% of 200 is 30. It matches the expected answer exactly and the supporting work (10% = 20, 5% = 10) is accurate and relevant. There are no factual errors or omissions.","2026-04-01T09:27:53.2015334Z"
+"math_004","math","What is 7 multiplied by 8?","56",True,3,3,1.00,10.0,1,True,1.00,10,"56","The actual answer ""56"" directly and correctly answers the query ""What is 7 multiplied by 8?"" It matches the expected answer exactly, with no factual errors, omissions, or irrelevant content. Therefore the response is perfect.","2026-04-01T09:27:57.7914095Z"
+"math_004","math","What is 7 multiplied by 8?","56",True,3,3,1.00,10.0,2,True,1.00,10,"56","The actual answer correctly addresses the query by providing the product of 7 and 8. It captures the same meaning as the expected answer, since both state the result is 56. There are no factual errors, omissions, or irrelevant content.","2026-04-01T09:28:02.9294852Z"
+"math_004","math","What is 7 multiplied by 8?","56",True,3,3,1.00,10.0,3,True,1.00,10,"56","The actual answer ""56"" correctly addresses the query ""What is 7 multiplied by 8?"" and matches the expected answer. It captures the same meaning exactly with no factual errors, omissions, or irrelevant content. The response is concise and fully correct.","2026-04-01T09:28:07.0986493Z"
+"math_005","math","What is 100 divided by 4?","25",True,3,3,0.43,10.0,1,True,0.43,10,"100 divided by 4 is 25.","The actual answer directly and correctly addresses the query by stating the numeric result. It matches the expected answer exactly, conveying that 100 divided by 4 equals 25. There are no factual errors, omissions, or irrelevant details.","2026-04-01T09:28:12.1450883Z"
+"math_005","math","What is 100 divided by 4?","25",True,3,3,0.43,10.0,2,True,0.43,10,"100 divided by 4 is 25.","The actual answer correctly addresses the query by stating the quotient is 25. It matches the expected answer exactly and contains no factual errors or irrelevant content. The response is concise and semantically identical to the expected answer.","2026-04-01T09:28:18.6572369Z"
+"math_005","math","What is 100 divided by 4?","25",True,3,3,0.43,10.0,3,True,0.43,10,"100 divided by 4 is 25.","The actual answer directly states that 100 divided by 4 is 25, which matches the expected answer. It correctly addresses the query with no factual errors or omissions. The wording is a full sentence rather than just the numeral, but the meaning is identical.","2026-04-01T09:28:25.3415401Z"
+"math_006","math","What is 2 to the power of 10?","1024",True,3,3,0.58,10.0,1,True,0.58,10,"2^10 = 1024.","The actual answer correctly addresses the query by explicitly giving the value: 2^10 = 1024. It captures the same meaning as the expected answer and there are no factual errors, omissions, or irrelevant content. The notation and wording are equivalent and concise.","2026-04-01T09:28:31.3967459Z"
+"math_006","math","What is 2 to the power of 10?","1024",True,3,3,0.58,10.0,2,True,0.58,10,"2^10 = 1024.","The response correctly answers the query by stating that 2 to the power of 10 equals 1024. It conveys the same meaning as the expected answer with no factual errors or omissions. The format ""2^10 = 1024"" is a clear and equivalent representation.","2026-04-01T09:28:35.6980476Z"
+"math_006","math","What is 2 to the power of 10?","1024",True,3,3,0.58,10.0,3,True,0.58,10,"2^10 = 1024.","The actual answer correctly addresses the query by stating the value of 2 to the power of 10. It captures the same meaning as the expected answer and contains no factual errors or omissions. The response is concise and exact.","2026-04-01T09:28:40.2029552Z"
+"reasoning_016","reasoning","A man walks into a bar and asks for a glass of water. The bartender pulls out a gun and points it at him. The man says thank you and leaves. Why?","The man had hiccups and the scare from the gun cured them, so he no longer needed the water",True,3,3,0.76,10.0,1,True,0.76,10,"He had the hiccups. Asking for water was his attempt to cure them; the bartender scared him by pointing a gun, which stopped the hiccups, so the man thanked him and left.","The actual answer correctly addresses the riddle by stating the man had hiccups and the bartender's sudden scare cured them. It captures the same meaning as the expected answer and explicitly mentions that the fright from the gun stopped the hiccups, so the man no longer needed the water. There are no factual errors, omissions, or irrelevant content.","2026-04-01T09:28:49.1121083Z"
+"reasoning_016","reasoning","A man walks into a bar and asks for a glass of water. The bartender pulls out a gun and points it at him. The man says thank you and leaves. Why?","The man had hiccups and the scare from the gun cured them, so he no longer needed the water",True,3,3,0.76,10.0,2,True,0.76,10,"He had the hiccups. Asking for water was to try to cure them; the bartender pulled a gun to scare him, which stopped the hiccups, so the man thanked him and left.","The actual answer correctly identifies that the man had hiccups and that the bartender's act of scaring him (with a gun) cured them, so he no longer needed the water. It captures the same meaning as the expected answer with no factual errors or omissions. The wording is slightly different but conveys the identical explanation succinctly. Therefore it fully matches the expected answer.","2026-04-01T09:28:55.9731585Z"
+"reasoning_016","reasoning","A man walks into a bar and asks for a glass of water. The bartender pulls out a gun and points it at him. The man says thank you and leaves. Why?","The man had hiccups and the scare from the gun cured them, so he no longer needed the water",True,3,3,0.76,10.0,3,True,0.77,10,"He had the hiccups. Asking for water was his attempt to stop them, but the bartender frightened him with the gun instead, which cured the hiccups — so the man thanked him and left.","The actual answer correctly explains that the man had hiccups and that the bartender's act of frightening him with a gun cured them. It captures the same meaning as the expected answer with no factual errors or missing key points. Wording is slightly different but semantically identical.","2026-04-01T09:29:04.6761985Z"
+"reasoning_024","reasoning","All roses are flowers. Some flowers fade quickly. Can we conclude all roses fade quickly?","No, we cannot conclude that all roses fade quickly",True,3,3,0.67,9.7,1,True,0.65,9,"No — that conclusion does not follow.
+
+Reason: ""All roses are flowers"" says the set of roses is a subset of flowers. ""Some flowers fade quickly"" only says at least one flower (maybe not a rose) fades quickly. Those two facts are compatible with every rose not fading quickly.
+
+Counterexample: Suppose flowers = {rose1, tulip1}, roses = {rose1}, and ""fade quickly"" = {tulip1}. Both premises are true (every rose is a flower; some flower fades quickly) but not every rose fades quickly (rose1 does not), so the conclusion is false.
+
+Formally: From ∀x(R(x) → F(x)) and ∃x(F(x) ∧ Q(x)) you cannot derive ∀x(R(x) → Q(x)). You would need a stronger premise (e.g., ""All flowers fade quickly"" or ""All roses are among the flowers that fade quickly"") to conclude that.","The actual answer correctly addresses the query and reaches the same conclusion as the expected answer: you cannot conclude that all roses fade quickly. It captures the core logical point (the conclusion does not follow from the premises) without factual errors. It is terse and omits the explanatory counterexample or formalization given in the expected answer, but that is a minor omission rather than a mistake.","2026-04-01T09:29:19.2167891Z"
+"reasoning_024","reasoning","All roses are flowers. Some flowers fade quickly. Can we conclude all roses fade quickly?","No, we cannot conclude that all roses fade quickly",True,3,3,0.67,9.7,2,True,0.70,10,"No — that conclusion does not follow.
+
+Reason: ""All roses are flowers"" means every rose is in the set of flowers. ""Some flowers fade quickly"" only says there exists at least one flower that fades quickly; it does not say which kinds of flowers those are. The quick-fading flowers might be tulips, not roses.
+
+Counterexample (concrete): Suppose all roses last a long time, and some daisies fade quickly. Both premises are true, but not all roses fade quickly.
+
+Formal countermodel: Domain = {a,b}. Let R(a)=true, Fl(a)=true, Q(a)=false (a is a rose that does not fade quickly). Let R(b)=false, Fl(b)=true, Q(b)=true (b is a different flower that fades quickly). Then
+- ∀x (R(x) → Fl(x)) holds,
+- ∃x (Fl(x) ∧ Q(x)) holds,
+but ∀x (R(x) → Q(x)) is false.
+
+So you cannot conclude ""all roses fade quickly.""","The actual answer correctly addresses the query and clearly concludes ""No"" — the conclusion does not follow from the premises. It captures the same meaning as the expected answer, explaining that an existential premise about flowers does not specify that roses are among those that fade quickly and giving both a verbal counterexample and a formal countermodel. There are no factual errors or irrelevant points; the reasoning and model are appropriate and complete.","2026-04-01T09:29:33.9668567Z"
+"reasoning_024","reasoning","All roses are flowers. Some flowers fade quickly. Can we conclude all roses fade quickly?","No, we cannot conclude that all roses fade quickly",True,3,3,0.67,9.7,3,True,0.66,10,"No.
+
+Reason: ""All roses are flowers"" says every rose is a flower (∀x, Rose(x) → Flower(x)). ""Some flowers fade quickly"" says at least one flower fades (∃x, Flower(x) ∧ Fade(x)). Those premises do not imply that every rose fades (∀x, Rose(x) → Fade(x)). The existential statement about some flowers could refer to non-roses.
+
+Counterexample (simple model)
+- Domain: {r, d}
+- r is a rose and a flower, but does not fade.
+- d is a flower (not a rose) and does fade.
+
+Both premises are true (every rose is a flower; some flower—d—fades), but ""all roses fade"" is false. Thus the inference is invalid.
+
+To validly conclude ""all roses fade quickly"" you would need a stronger premise such as ""All flowers fade quickly"" or ""All roses are among the flowers that fade quickly.""","The actual answer correctly responds ""No"" and explains in predicate logic why the universal premise plus an existential one do not entail that all roses fade. It supplies a clear counterexample model (a fading non-rose flower and a non-fading rose) and notes the stronger premises that would be needed to make the conclusion valid. There are no factual errors and it matches the expected answer.","2026-04-01T09:29:51.6790578Z"
+"reasoning_021","reasoning","If all dogs are animals, and Max is a dog, what is Max?","An animal",True,3,3,0.44,10.0,1,True,0.41,10,"Max is an animal.
+
+Reason: If all dogs are animals and Max is a dog, then by substitution Max must be an animal.","Yes — the actual answer directly and correctly addresses the query by asserting that Max is an animal. It captures the same meaning as the expected answer (only a minor wording difference: a full sentence vs. a noun phrase). There are no factual errors, omissions, or irrelevant content; the provided reason correctly explains the logical substitution.","2026-04-01T09:30:01.9197864Z"
+"reasoning_021","reasoning","If all dogs are animals, and Max is a dog, what is Max?","An animal",True,3,3,0.44,10.0,2,True,0.42,10,"Max is an animal. 
+
+Reason: From ""all dogs are animals"" and ""Max is a dog,"" it follows by simple logical instantiation that Max is an animal.","The actual answer directly and correctly addresses the query: ""Max is an animal"" restates the expected answer ""An animal."" It captures the same meaning and follows valid logical instantiation from the premises ""all dogs are animals"" and ""Max is a dog."" There are no factual errors, omissions, or irrelevant content.","2026-04-01T09:30:08.2675601Z"
+"reasoning_021","reasoning","If all dogs are animals, and Max is a dog, what is Max?","An animal",True,3,3,0.44,10.0,3,True,0.50,10,"Max is an animal.","The actual answer directly and correctly deduces that Max is an animal from the premises given. It captures the same meaning as the expected answer with no factual errors or omissions and demonstrates the intended logical deduction. The wording is slightly different but semantically identical.","2026-04-01T09:30:15.1285002Z"
+"reasoning_002","reasoning","A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?","5 cents",True,3,3,0.39,10.0,1,True,0.36,10,"Let the ball cost x dollars. Then the bat costs x + 1.00, and
+x + (x + 1.00) = 1.10
+2x + 1.00 = 1.10
+2x = 0.10
+x = 0.05
+
+The ball costs $0.05 (5 cents).","The actual answer correctly sets up the equations, solves for x, and concludes the ball costs $0.05 (5 cents), which matches the expected answer. The algebra is correct and there are no factual errors or omissions. The response is clear and directly answers the query.","2026-04-01T09:30:22.3993217Z"
+"reasoning_002","reasoning","A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?","5 cents",True,3,3,0.39,10.0,2,True,0.45,10,"The ball costs $0.05 (5 cents). 
+
+Check: ball $0.05 + bat $1.05 = $1.10, and $1.05 is $1.00 more than $0.05.","The actual answer correctly states that the ball costs $0.05 (5 cents) and shows the arithmetic check that $0.05 + $1.05 = $1.10 with the bat $1.00 more than the ball. It captures the same meaning as the expected answer with no factual errors or omissions. This is a correct and complete response.","2026-04-01T09:30:30.4893859Z"
+"reasoning_002","reasoning","A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?","5 cents",True,3,3,0.39,10.0,3,True,0.36,10,"Let the ball cost x dollars. Then the bat costs x + 1.00, and together:
+x + (x + 1.00) = 1.10
+2x + 1.00 = 1.10
+2x = 0.10
+x = 0.05
+
+So the ball costs $0.05 (5 cents).","The actual answer correctly solves the problem using simple algebra and arrives at x = $0.05, explicitly stating the ball costs 5 cents, which matches the expected answer. The reasoning and arithmetic are correct and there are no factual errors or omissions. The presentation is clear and complete.","2026-04-01T09:30:38.3736131Z"
+"reasoning_003","reasoning","If it takes 5 machines 5 minutes to make 5 widgets, how long does it take 100 machines to make 100 widgets?","5 minutes",True,3,3,0.54,10.0,1,True,0.55,10,"5 minutes.
+
+Reason: If 5 machines make 5 widgets in 5 minutes, each machine makes 1 widget in 5 minutes. So 100 machines make 100 widgets in the same 5 minutes.","The actual answer correctly addresses the query and matches the expected answer of 5 minutes. Its explanation that each machine makes one widget in 5 minutes and therefore 100 machines make 100 widgets in the same time is accurate and complete. There are no factual errors or omissions.","2026-04-01T09:30:46.0547038Z"
+"reasoning_003","reasoning","If it takes 5 machines 5 minutes to make 5 widgets, how long does it take 100 machines to make 100 widgets?","5 minutes",True,3,3,0.54,10.0,2,True,0.54,10,"5 minutes.
+
+Reason: 5 machines make 5 widgets in 5 minutes, so one machine makes one widget in 5 minutes. With 100 identical machines working simultaneously, they make 100 widgets in the same 5 minutes.","The actual answer correctly addresses the query by concluding 5 minutes and providing the correct reasoning that one machine makes one widget in 5 minutes, so 100 machines make 100 widgets in 5 minutes. It captures the same meaning as the expected answer with no factual errors or irrelevant content. The explanation is complete and succinct.","2026-04-01T09:30:55.1672820Z"
+"reasoning_003","reasoning","If it takes 5 machines 5 minutes to make 5 widgets, how long does it take 100 machines to make 100 widgets?","5 minutes",True,3,3,0.54,10.0,3,True,0.52,10,"5 minutes.
+
+Reason: 5 machines make 5 widgets in 5 minutes, so each machine makes 1 widget in 5 minutes. Thus 100 machines can make 100 widgets in the same 5 minutes (machines work simultaneously).","The actual answer correctly addresses the query and matches the expected answer of 5 minutes. The provided reasoning is accurate: each machine produces one widget in 5 minutes, so 100 machines produce 100 widgets in the same time when working simultaneously. There are no factual errors or omissions.","2026-04-01T09:31:03.2587864Z"
+"reasoning_004","reasoning","All roses are flowers. Some flowers fade quickly. Can we conclude that some roses fade quickly?","No, we cannot conclude that",True,3,3,0.44,9.7,1,True,0.46,10,"No — the conclusion does not follow.
+
+Counterexample: suppose there are three flowers: a tulip T that fades quickly, and two roses R1 and R2 that do not fade quickly. Then
+- All roses are flowers (true),
+- Some flowers fade quickly (true, T),
+- But no roses fade quickly (false conclusion).
+
+Formally: from ∀x (Rose(x) → Flower(x)) and ∃x (Flower(x) ∧ Fade(x)) you cannot derive ∃x (Rose(x) ∧ Fade(x)). The ""some flowers"" that fade could be non-roses.","The actual answer correctly addresses the query by denying the conclusion and matches the expected answer's meaning that the conclusion does not logically follow. It contains no factual errors, though it is very brief and omits the counterexample or formal explanation that would make the reasoning clearer. Overall it conveys the required logical judgement accurately.","2026-04-01T09:31:20.5630920Z"
+"reasoning_004","reasoning","All roses are flowers. Some flowers fade quickly. Can we conclude that some roses fade quickly?","No, we cannot conclude that",True,3,3,0.44,9.7,2,True,0.45,9,"No — the conclusion does not follow.
+
+Reason: ""All roses are flowers"" says every rose is in the set of flowers. ""Some flowers fade quickly"" says there exists at least one flower that fades quickly, but it doesn't say that that flower is a rose. The quick-fading flower could be a tulip, daisy, etc.
+
+Concrete counterexample:
+- Let a = a rose that does not fade quickly.
+- Let b = a tulip that does fade quickly.
+Then all roses are flowers (true), some flowers fade quickly (b) (true), but no rose fades quickly (false that any rose fades quickly). Thus the premises can be true while the conclusion ""some roses fade quickly"" is false.","The actual answer correctly addresses the query by saying the conclusion does not follow; it matches the expected ""No"" verdict and contains no factual error. However, it is very brief and omits the explanatory reasoning or counterexample given in the expected answer. Because it conveys the correct conclusion but lacks the supporting explanation, it merits a high but not perfect score.","2026-04-01T09:31:39.2235376Z"
+"reasoning_004","reasoning","All roses are flowers. Some flowers fade quickly. Can we conclude that some roses fade quickly?","No, we cannot conclude that",True,3,3,0.44,9.7,3,True,0.40,10,"No. That conclusion does not follow.
+
+Counterexample (informal): All roses are flowers. Some flowers (say, daisies) fade quickly. It's possible that none of the roses fade quickly — the flowers that fade quickly might all be non-roses.
+
+Counterexample (formal): Universe = {a,b}; let R = {a} (roses), F = {a,b} (flowers), Q = {b} (fade quickly). Then
+- All R are F is true (a is a flower).
+- Some F are Q is true (b is a flower that fades quickly).
+- Some R are Q is false (no rose is in Q).
+
+So the premises can be true while ""some roses fade quickly"" is false. Therefore the argument is invalid.","The actual answer correctly answers ""No"" and explains that the conclusion does not follow, matching the expected answer. It provides both an informal and a formal counterexample that clearly show the premises can be true while ""some roses fade quickly"" is false; there are no factual errors or irrelevant content. This is a complete and precise evaluation of the logical invalidity.","2026-04-01T09:31:54.9718313Z"
+"reasoning_010","reasoning","You have two coins that add up to 30 cents. One is not a nickel. What are the two coins?","A quarter and a nickel",True,3,3,0.69,10.0,1,True,0.71,10,"A quarter (25¢) and a nickel (5¢). The riddle says ""one is not a nickel"" — that can be the quarter, so the other coin may be a nickel, totaling 30¢.","The actual answer correctly identifies a quarter and a nickel and explains the riddle's wording by noting that ""one is not a nickel"" can refer to the quarter, allowing the other coin to be a nickel. This matches the expected answer and contains no factual errors. The explanation is clear and captures the intended trick of the riddle.","2026-04-01T09:32:02.9226020Z"
+"reasoning_010","reasoning","You have two coins that add up to 30 cents. One is not a nickel. What are the two coins?","A quarter and a nickel",True,3,3,0.69,10.0,2,True,0.69,10,"A quarter (25¢) and a nickel (5¢). 
+
+The riddle says ""one is not a nickel"" — that can be true of the quarter, while the other coin is the nickel, giving 25¢ + 5¢ = 30¢.","The actual answer correctly identifies the two coins as a quarter and a nickel and gives their values (25¢ and 5¢), which sum to 30¢. It captures the intended riddle trick: the phrase ""one is not a nickel"" applies to the quarter, while the other coin can be a nickel. There are no factual errors or omissions.","2026-04-01T09:32:10.8435961Z"
+"reasoning_010","reasoning","You have two coins that add up to 30 cents. One is not a nickel. What are the two coins?","A quarter and a nickel",True,3,3,0.69,10.0,3,True,0.67,10,"A quarter and a nickel.
+
+The riddle’s trick is the phrasing: “one is not a nickel” can be true (the quarter isn’t a nickel) while the other coin is a nickel, giving 25¢ + 5¢ = 30¢.","The actual answer correctly identifies a quarter and a nickel as the two coins. It captures the riddle's trick — saying ""one is not a nickel"" can be true of the quarter while the other coin is a nickel, totaling 30¢. There are no factual errors or omissions.","2026-04-01T09:32:19.8527639Z"
+"reasoning_011","reasoning","If you overtake the person in second place in a race, what position are you in?","Second place",True,3,3,0.57,10.0,1,True,0.55,10,"Second place.
+
+If you overtake the person who is in second, you take their spot — you become second and the person you passed drops to third.","The actual answer correctly addresses the query and explicitly states ""Second place,"" matching the expected answer. The added explanatory sentence clarifies the reasoning (you take their spot and they drop to third) without introducing errors or irrelevant information. It captures the same meaning as the expected answer and contains no factual mistakes.","2026-04-01T09:32:27.6360204Z"
+"reasoning_011","reasoning","If you overtake the person in second place in a race, what position are you in?","Second place",True,3,3,0.57,10.0,2,True,0.58,10,"Second place. If you pass the person who’s in second, you take their spot — you become second.","The actual answer correctly states ""Second place"" and explains succinctly that passing the person in second place means you take their position. It matches the expected answer exactly in meaning, with no factual errors or irrelevant content. The explanation is concise and accurate.","2026-04-01T09:32:35.5223042Z"
+"reasoning_011","reasoning","If you overtake the person in second place in a race, what position are you in?","Second place",True,3,3,0.57,10.0,3,True,0.58,10,"Second place — when you pass the person in second, you occupy their position.","The actual answer correctly addresses the query by stating ""Second place."" It captures the same meaning as the expected answer and concisely explains that passing the person in second puts you into their position. There are no factual errors, omissions, or irrelevant details.","2026-04-01T09:32:42.3821303Z"
+"reasoning_012","reasoning","A rooster lays an egg on the peak of a roof. Which way does it roll?","Roosters do not lay eggs",True,3,3,0.75,10.0,1,True,0.70,10,"It doesn't — roosters are male and don't lay eggs. The riddle is a trick question.","The actual answer correctly addresses the query by noting that roosters are male and therefore do not lay eggs. It conveys the same meaning as the expected answer and explicitly calls the riddle a trick question. There are no factual errors or missing key points.","2026-04-01T09:32:50.1631252Z"
+"reasoning_012","reasoning","A rooster lays an egg on the peak of a roof. Which way does it roll?","Roosters do not lay eggs",True,3,3,0.75,10.0,2,True,0.81,10,"It doesn't — roosters are male and don't lay eggs.","The actual answer correctly addresses the riddle by stating that a rooster does not lay eggs. It captures the same meaning as the expected answer with no factual errors. There are no omissions or irrelevant details — the response is concise and accurate.","2026-04-01T09:32:56.9225800Z"
+"reasoning_012","reasoning","A rooster lays an egg on the peak of a roof. Which way does it roll?","Roosters do not lay eggs",True,3,3,0.75,10.0,3,True,0.73,10,"It doesn't — roosters are male and don't lay eggs. The premise is impossible.","The actual answer correctly addresses the riddle by pointing out that roosters are male and therefore do not lay eggs, matching the expected answer. It captures the same meaning succinctly and contains no factual errors or irrelevant content. The response clearly and correctly concludes that the premise is impossible.","2026-04-01T09:33:04.1830080Z"
+"history_002","history","Who was the first President of the United States?","George Washington",True,3,3,0.63,10.0,1,True,0.64,10,"George Washington. He served as the first President of the United States from 1789 to 1797.","The actual answer correctly identifies George Washington as the first President of the United States and adds accurate service dates (1789–1797). It captures the same meaning as the expected answer with no factual errors or irrelevant content. The additional date information is correct and does not detract from the answer’s correctness.","2026-04-01T09:33:12.0787774Z"
+"history_002","history","Who was the first President of the United States?","George Washington",True,3,3,0.63,10.0,2,True,0.62,10,"George Washington. He served as the first President of the United States from 1789 to 1797 (unanimously elected by the first Electoral College).","The actual answer correctly identifies George Washington as the first President of the United States and adds accurate contextual details about his terms (1789–1797) and unanimous election. It captures the same meaning as the expected answer without factual errors or irrelevant content. No key omissions affect the core response.","2026-04-01T09:33:19.5528593Z"
+"history_002","history","Who was the first President of the United States?","George Washington",True,3,3,0.63,10.0,3,True,0.62,10,"George Washington — he served as the first President of the United States from 1789 to 1797.","The actual answer correctly identifies George Washington as the first President of the United States. It captures the same meaning as the expected answer and even adds accurate service dates (1789–1797). There are no factual errors, omissions, or irrelevant details.","2026-04-01T09:33:25.9012402Z"
+"history_004","history","Who wrote the theory of evolution by natural selection?","Charles Darwin",True,3,3,0.59,10.0,1,True,0.58,10,"The theory of evolution by natural selection was formulated and famously published by Charles Darwin (On the Origin of Species, 1859). Alfred Russel Wallace independently conceived the same idea around the same time; the two men are often credited jointly with discovering natural selection.","The actual answer correctly identifies Charles Darwin as the author of the theory and cites his 1859 work, matching the expected answer. It also accurately notes that Alfred Russel Wallace independently conceived the idea around the same time, which is relevant context rather than an error or omission. There are no factual errors or misleading statements.","2026-04-01T09:33:34.0924097Z"
+"history_004","history","Who wrote the theory of evolution by natural selection?","Charles Darwin",True,3,3,0.59,10.0,2,True,0.59,10,"The theory of evolution by natural selection was formulated and published by Charles Darwin — most famously in his 1859 book On the Origin of Species. Alfred Russel Wallace independently arrived at the same idea; their findings were presented jointly to the Linnean Society in 1858.","The actual answer correctly identifies Charles Darwin as the author of the theory of evolution by natural selection and cites his 1859 book On the Origin of Species. It conveys the same meaning as the expected answer and adds accurate, relevant context about Alfred Russel Wallace independently arriving at the idea and their joint 1858 presentation.","2026-04-01T09:33:43.2084312Z"
+"history_004","history","Who wrote the theory of evolution by natural selection?","Charles Darwin",True,3,3,0.59,10.0,3,True,0.59,10,"The theory of evolution by natural selection was developed and famously published by Charles Darwin — most notably in his 1859 book ""On the Origin of Species."" Alfred Russel Wallace independently arrived at the same idea around the same time and jointly prompted its presentation to science.","The response correctly identifies Charles Darwin as the developer and famous publisher of the theory of evolution by natural selection, citing his 1859 book ""On the Origin of Species."" It captures the expected answer's meaning and adds accurate, relevant context noting that Alfred Russel Wallace independently arrived at the same idea. There are no factual errors or problematic omissions.","2026-04-01T09:33:51.9120131Z"
+"history_008","history","Who was the first woman to win a Nobel Prize?","Marie Curie",True,3,3,0.65,10.0,1,True,0.74,10,"Marie Skłodowska Curie. She was the first woman to win a Nobel Prize — the 1903 Nobel Prize in Physics (shared with Pierre Curie and Henri Becquerel) for work on radioactivity. She later won a second Nobel (1911, Chemistry).","The actual answer correctly identifies Marie Curie (given as Marie Skłodowska Curie) as the first woman to win a Nobel Prize. It captures the same meaning as the expected answer and adds accurate, relevant details about the 1903 Physics prize (shared) and her later 1911 Chemistry prize. There are no factual errors or irrelevant content.","2026-04-01T09:33:59.3865926Z"
+"history_008","history","Who was the first woman to win a Nobel Prize?","Marie Curie",True,3,3,0.65,10.0,2,True,0.61,10,"The first woman to win a Nobel Prize was Marie Skłodowska Curie. She won the 1903 Nobel Prize in Physics (shared with Pierre Curie and Henri Becquerel).","The actual answer correctly identifies Marie Skłodowska Curie as the first woman to win a Nobel Prize. It conveys the same meaning as the expected answer (Marie Curie) and adds accurate, relevant detail about the 1903 Nobel Prize in Physics being shared with Pierre Curie and Henri Becquerel. There are no factual errors or omissions.","2026-04-01T09:34:10.7523383Z"
+"history_008","history","Who was the first woman to win a Nobel Prize?","Marie Curie",True,3,3,0.65,10.0,3,True,0.61,10,"The first woman to win a Nobel Prize was Marie Curie. She received the 1903 Nobel Prize in Physics (shared with Pierre Curie and Henri Becquerel). She later won a second Nobel Prize, the 1911 Nobel Prize in Chemistry.","The response correctly identifies Marie Curie as the first woman to win a Nobel Prize. It captures the same meaning as the expected answer and adds accurate supporting details about her 1903 Physics prize (shared) and her 1911 Chemistry prize. There are no factual errors, omissions, or irrelevant content.","2026-04-01T09:34:17.7166099Z"
+"history_009","history","Which country was the first to grant women the right to vote?","New Zealand",True,3,3,0.52,10.0,1,True,0.47,10,"The widely accepted answer is New Zealand — it became the first self-governing country to grant women the right to vote in parliamentary elections with the Electoral Act of 1893.
+
+(There are earlier, more limited or local precedents: small jurisdictions such as Pitcairn reportedly had women's voting in the 1830s; the U.S. territory of Wyoming extended women's suffrage in 1869; the Isle of Man gave some women the vote in 1881. Finland was the first in Europe to grant full political rights to women in 1906.)","The response correctly identifies New Zealand and the year 1893 as the first self-governing country to grant women the vote, matching the expected answer. It captures the same meaning and adds accurate, relevant context about earlier limited or local precedents (Pitcairn, Wyoming, Isle of Man) and Finland's 1906 milestone in Europe. There are no factual errors or omissions with respect to the core question.","2026-04-01T09:34:35.7399533Z"
+"history_009","history","Which country was the first to grant women the right to vote?","New Zealand",True,3,3,0.52,10.0,2,True,0.51,10,"The answer usually given is New Zealand — it was the first self-governing country to grant women the vote in parliamentary elections, with the Electoral Act passed in 1893 (signed into law 19 Sept 1893; women voted in the general election that November).
+
+(For context: some earlier jurisdictions granted women limited voting rights — e.g. the Wyoming Territory in the U.S. in 1869 and the Isle of Man in the 1880s — but New Zealand was the first independent, self-governing nation to do so.)","The actual answer correctly identifies New Zealand and gives the specific year (1893), matching the expected answer. It also accurately adds relevant context about earlier limited suffrage in places like Wyoming Territory and the Isle of Man while clarifying New Zealand’s status as the first self-governing nation to grant women parliamentary voting rights. There are no factual errors and no key omissions.","2026-04-01T09:34:51.5094791Z"
+"history_009","history","Which country was the first to grant women the right to vote?","New Zealand",True,3,3,0.52,10.0,3,True,0.59,10,"New Zealand. In 1893 it became the first self-governing country to give women the vote in national parliamentary elections (Electoral Act 1893, royal assent 19 Sept. 1893).
+
+For context: earlier cases include Wyoming Territory (U.S., 1869) and the Isle of Man (a Crown dependency, 1881), but New Zealand is generally cited as the first country to grant national women's suffrage.","The actual answer correctly names New Zealand and gives the year 1893 as when it became the first self-governing country to grant women the vote in national parliamentary elections. It matches the expected answer and adds accurate supporting detail (Electoral Act 1893 and royal assent date) plus relevant context about earlier cases (Wyoming, Isle of Man). There are no factual errors or omissions relative to the expectation.","2026-04-01T09:35:13.8321258Z"
+"history_011","history","Who was the leader of Nazi Germany during World War II?","Adolf Hitler",True,3,3,0.59,10.0,1,True,0.60,10,"Adolf Hitler. He was the Führer (leader) of Nazi Germany from 1934 and led the country through World War II until his death in 1945.","The actual answer correctly identifies Adolf Hitler as the leader of Nazi Germany during World War II. It captures the same meaning as the expected answer and adds accurate contextual details (that he was Führer from 1934 and remained in power until his death in 1945). There are no factual errors or relevant omissions.","2026-04-01T09:35:21.7163854Z"
+"history_011","history","Who was the leader of Nazi Germany during World War II?","Adolf Hitler",True,3,3,0.59,10.0,2,True,0.59,10,"Adolf Hitler — he was the Führer (dictator) of Nazi Germany, serving as Chancellor from 1933 and as Führer from 1934 until his death in 1945, including throughout World War II.","The actual answer correctly identifies Adolf Hitler as the leader of Nazi Germany during World War II and adds accurate, relevant context about his roles and dates in power. It captures the same meaning as the expected answer with no factual errors or unnecessary irrelevant content.","2026-04-01T09:35:29.1455135Z"
+"history_011","history","Who was the leader of Nazi Germany during World War II?","Adolf Hitler",True,3,3,0.59,10.0,3,True,0.59,10,"Adolf Hitler — the Führer (dictator) of Nazi Germany. He served as Chancellor from 1933 and as Führer from 1934, and led Germany during World War II (1939–1945).","The actual answer correctly identifies Adolf Hitler as the leader of Nazi Germany during World War II and adds accurate contextual details about his roles as Chancellor (from 1933) and Führer (from 1934). It captures the same meaning as the expected answer and contains no factual errors or irrelevant content. The response is concise and complete.","2026-04-01T09:35:38.5107516Z"
+"history_012","history","Which ancient wonder was located in Alexandria, Egypt?","The Lighthouse of Alexandria",True,3,3,0.77,10.0,1,True,0.76,10,"The Lighthouse of Alexandria — the Pharos of Alexandria — one of the Seven Wonders of the Ancient World.","The response correctly identifies the Lighthouse of Alexandria and even gives its alternate name, the Pharos of Alexandria. It matches the expected answer exactly by naming the same ancient wonder and noting it was one of the Seven Wonders of the Ancient World. There are no factual errors, omissions, or irrelevant details.","2026-04-01T09:35:45.9187530Z"
+"history_012","history","Which ancient wonder was located in Alexandria, Egypt?","The Lighthouse of Alexandria",True,3,3,0.77,10.0,2,True,0.78,10,"The Lighthouse of Alexandria (the Pharos of Alexandria) — one of the Seven Wonders of the Ancient World.","The actual answer correctly identifies the Lighthouse of Alexandria (Pharos of Alexandria) as the ancient wonder located in Alexandria, Egypt. It captures the same meaning as the expected answer and adds the commonly used alternate name without introducing any factual errors. The response is concise and directly answers the query.","2026-04-01T09:35:52.6428233Z"
+"history_012","history","Which ancient wonder was located in Alexandria, Egypt?","The Lighthouse of Alexandria",True,3,3,0.77,10.0,3,True,0.77,10,"The Lighthouse of Alexandria (the Pharos of Alexandria) — one of the Seven Wonders of the Ancient World — stood on the island of Pharos off Alexandria’s harbor. Built in the 3rd century BCE under the Ptolemies, it served as a major maritime landmark until ruined by earthquakes.","The actual answer correctly identifies the Lighthouse of Alexandria (the Pharos) as the ancient wonder located in Alexandria and matches the expected answer. It captures the same meaning and adds accurate, relevant context about location, date, and fate without introducing errors.","2026-04-01T09:35:59.8094908Z"
+"history_014","history","Who gave the 'I Have a Dream' speech?","Martin Luther King Jr.",True,3,3,0.59,10.0,1,True,0.59,10,"The ""I Have a Dream"" speech was given by Dr. Martin Luther King Jr. on August 28, 1963, during the March on Washington for Jobs and Freedom at the Lincoln Memorial.","The actual answer correctly identifies Martin Luther King Jr. as the speaker of the ""I Have a Dream"" speech. It captures the same meaning as the expected answer and even provides accurate, relevant context (date, event, and location). There are no factual errors or important omissions.","2026-04-01T09:36:07.4895311Z"
+"history_014","history","Who gave the 'I Have a Dream' speech?","Martin Luther King Jr.",True,3,3,0.59,10.0,2,True,0.59,10,"The ""I Have a Dream"" speech was delivered by Dr. Martin Luther King Jr. on August 28, 1963, during the March on Washington for Jobs and Freedom at the Lincoln Memorial in Washington, D.C.","The actual answer correctly identifies Martin Luther King Jr. as the speaker and directly answers the query. It captures the same meaning as the expected answer and adds accurate contextual details (date, event, and location). There are no factual errors, omissions, or irrelevant content.","2026-04-01T09:36:14.3500965Z"
+"history_014","history","Who gave the 'I Have a Dream' speech?","Martin Luther King Jr.",True,3,3,0.59,10.0,3,True,0.59,10,"The ""I Have a Dream"" speech was delivered by Dr. Martin Luther King Jr. on August 28, 1963, during the March on Washington for Jobs and Freedom at the Lincoln Memorial.","The actual answer correctly identifies Martin Luther King Jr. as the speaker and thus directly addresses the query. It captures the same meaning as the expected answer and adds accurate contextual details (date, event, and location) without introducing errors. There are no factual errors, omissions, or irrelevant content.","2026-04-01T09:36:22.3392589Z"
+"history_017","history","Who invented the telephone?","Alexander Graham Bell",True,3,3,0.63,10.0,1,True,0.64,10,"The invention is usually credited to Alexander Graham Bell. He was awarded U.S. patent 174,465 for the telephone on March 7, 1876, and famously spoke the first intelligible words over his device on March 10, 1876 (“Mr. Watson — come here — I want to see you.”)
+
+There is controversy, however. Italian inventor Antonio Meucci demonstrated voice transmission devices in the 1850s–1870s and filed a caveat in 1871 but could not afford a full patent; in 2002 the U.S. House of Representatives passed a resolution recognizing Meucci’s contributions. Other experimenters such as Johann Philipp Reis and Elisha Gray also developed early voice-transmission devices around the same time. Bell’s patent and subsequent commercialization, though, are why he is most often named as the telephone’s inventor.","The response directly answers the query by identifying Alexander Graham Bell as the person usually credited with inventing the telephone and cites his 1876 U.S. patent and first intelligible words, matching the expected answer. It also correctly and appropriately notes historically relevant controversy (Antonio Meucci, Johann Philipp Reis, Elisha Gray) without contradicting the core claim. There are no factual errors in the answer and the extra context is relevant rather than misleading.","2026-04-01T09:36:34.5230998Z"
+"history_017","history","Who invented the telephone?","Alexander Graham Bell",True,3,3,0.63,10.0,2,True,0.62,10,"The telephone is generally credited to Alexander Graham Bell, who was awarded the first US patent for the telephone (US Patent No. 174,465) in 1876 and demonstrated a practical device for transmitting speech electrically.
+
+However, the invention is disputed and built on earlier work:
+- Antonio Meucci developed a voice-transmission device in the 1850s–1870s and filed a caveat; a 2002 U.S. House resolution recognized his contributions.  
+- Elisha Gray filed a caveat for a similar device on the same day Bell filed his patent application, leading to a famous dispute.  
+- Johann Philipp Reis and others built earlier experimental “telephones” in the 1860s that could transmit sounds but were not practical speech transmitters.
+
+So, while Bell is the person most commonly named as the inventor because of his patent and demonstrations, the telephone’s development involved multiple inventors and incremental advances.","The actual answer correctly identifies Alexander Graham Bell as the person generally credited with inventing the telephone and notes his 1876 US patent and demonstrations. It also accurately and concisely acknowledges the disputed nature of the invention and the contributions of earlier inventors (Meucci, Gray, Reis), which matches the expected answer's nuance. There are no factual errors or irrelevant content.","2026-04-01T09:36:44.0461745Z"
+"history_017","history","Who invented the telephone?","Alexander Graham Bell",True,3,3,0.63,10.0,3,True,0.64,10,"The invention of the telephone is usually credited to Alexander Graham Bell. Bell was awarded U.S. Patent No. 174,465 for the ""improvement in telegraphy"" (the telephone) in March 1876 after filing his application on February 14, 1876.
+
+However, the history is disputed. Other inventors—most notably Elisha Gray (who filed a caveat the same day Bell filed his patent application) and Antonio Meucci (who filed an earlier caveat/record in the 1870s)—also developed voice-transmission devices and have been argued to have priority or important contributions. In 2002 the U.S. House of Representatives passed a resolution recognizing Meucci’s work in early voice communication.
+
+So: commonly credited inventor — Alexander Graham Bell — but the development was incremental and involved several inventors. Would you like a short timeline of the key events and people?","The actual answer correctly identifies Alexander Graham Bell as the inventor to whom the telephone is usually credited. It captures the same meaning as the expected answer while responsibly adding accurate context about competing claims (Elisha Gray, Antonio Meucci) and the 2002 U.S. House resolution. There are no factual errors and the additional details are relevant rather than distracting.","2026-04-01T09:36:58.0120594Z"
+"definition_003","definitions","What is an algorithm?","A set of step-by-step instructions or rules designed to solve a problem or complete a task",True,3,3,0.40,10.0,1,True,0.39,10,"An algorithm is a finite, well-defined sequence of steps for solving a problem or performing a task. Given some input, an algorithm produces an output and is designed so each step is unambiguous and executable.
+
+Key properties
+- Finite: it must terminate after a finite number of steps.
+- Precise/unambiguous: each step is clearly specified.
+- Input/output: it accepts zero or more inputs and produces one or more outputs.
+- Effective: each step is feasible to perform (in principle).
+- Correctness: it should produce the intended output for all valid inputs.
+
+Simple examples
+- A cooking recipe that tells you, step by step, how to make a dish.
+- Euclid’s algorithm for the greatest common divisor of two integers: repeatedly replace the larger number by its remainder when divided by the smaller until the remainder is zero.
+- A method for sorting a list (e.g., quicksort, mergesort).
+
+Algorithm vs program
+- An algorithm is the abstract procedure or plan. A program is a concrete implementation of an algorithm in a programming language.
+
+Analysis
+- Algorithms are studied for correctness and efficiency (time complexity and space complexity). Good algorithms solve problems using fewer resources or in less time.
+
+Uses
+- Algorithms power everything from search engines and maps to encryption, scheduling, data processing, and machine learning.","The actual answer correctly and fully addresses the query: it defines an algorithm as a finite, well-defined sequence of steps for solving a problem or performing a task, explicitly mentioning inputs and outputs and that steps must be unambiguous and executable. It captures the same meaning as the expected answer while adding useful, accurate details (key properties, examples, and the distinction between algorithm and program) without introducing errors or irrelevant content. The response satisfies the evaluation criteria by mentioning steps, instructions, and problem solving.","2026-04-01T09:37:09.7488954Z"
+"definition_003","definitions","What is an algorithm?","A set of step-by-step instructions or rules designed to solve a problem or complete a task",True,3,3,0.40,10.0,2,True,0.39,10,"An algorithm is a step-by-step procedure for solving a problem or performing a task. It describes a finite sequence of well-defined, unambiguous instructions that take input (possibly none) and produce output (a result or change of state).
+
+Key properties of an algorithm
+- Input: zero or more inputs are specified.
+- Output: one or more well-defined outputs are produced.
+- Finiteness: it must terminate after a finite number of steps.
+- Definiteness: each step is precisely and unambiguously defined.
+- Effectiveness: each step is simple enough to be carried out (in principle) by a person or machine.
+
+Simple examples
+- A cooking recipe: ingredients (input) -> series of steps -> finished dish (output).
+- Euclid’s algorithm for the greatest common divisor (GCD) of two integers:
+  - While b ≠ 0: set (a, b) = (b, a mod b). When b = 0, a is GCD.
+- Sorting a list of numbers (e.g., bubble sort): repeatedly compare adjacent items and swap them until the list is ordered.
+
+Types and variants
+- Deterministic vs nondeterministic: deterministic algorithms have predictable behavior; nondeterministic ones may have multiple possible choices (useful in theoretical CS).
+- Recursive vs iterative: recursive calls the algorithm itself; iterative uses loops.
+- Parallel/distributed: steps can be executed concurrently on multiple processors.
+
+Algorithm vs program
+- An algorithm is a conceptual method; a program is an implementation of an algorithm in a programming language that runs on a computer.
+
+Evaluation of algorithms
+- Correctness: does it always produce the correct output?
+- Termination: does it always finish?
+- Efficiency: measured in time (number of steps) and space (memory) — often as functions of input size (Big O notation).
+
+Why algorithms matter
+- They are the foundations of problem solving in computer science and many other fields; choosing/designing efficient algorithms can make the difference between a feasible and infeasible solution.
+
+If you want, I can show more concrete examples (like step-by-step Euclid’s algorithm on two numbers), compare two sorting algorithms, or explain how algorithm complexity is analyzed.","The actual answer correctly defines an algorithm as a step-by-step procedure or set of instructions for solving a problem or performing a task, matching the expected answer. It includes the key elements (steps/instructions, inputs and outputs, finiteness, definiteness, effectiveness) and provides relevant examples and distinctions (types, algorithm vs program, evaluation), with no factual errors or missing core points.","2026-04-01T09:37:24.6847328Z"
+"definition_003","definitions","What is an algorithm?","A set of step-by-step instructions or rules designed to solve a problem or complete a task",True,3,3,0.40,10.0,3,True,0.40,10,"An algorithm is a finite, well-defined sequence of instructions that describes how to solve a specific problem or perform a task. It takes zero or more inputs, performs a series of precise steps, and produces one or more outputs.
+
+Key properties of an algorithm
+- Finiteness: it must terminate after a finite number of steps.
+- Definiteness: each step is unambiguous and precisely defined.
+- Input: it may accept zero or more inputs from a specified set.
+- Output: it produces at least one output that solves or describes the solution to the problem instance.
+- Effectiveness: each step is simple enough to be carried out (in principle) by a person or machine.
+- Correctness: it should produce the intended result for all valid inputs.
+
+Simple examples
+- A cooking recipe (ingredients = inputs; finished dish = output).
+- Euclid’s algorithm for the greatest common divisor (GCD) of two integers:
+  - While b ≠ 0: set (a, b) := (b, a mod b). When b = 0, output a.
+- Sorting algorithms (e.g., quicksort, mergesort) that order a list of items.
+
+Categories and design techniques
+- Deterministic vs. nondeterministic
+- Divide and conquer, greedy algorithms, dynamic programming, backtracking, branch-and-bound
+- Recursive vs. iterative formulations
+
+Important concerns when evaluating algorithms
+- Correctness (does it always give the right answer?)
+- Termination (does it always finish?)
+- Complexity or efficiency (time complexity and space complexity)
+- Scalability and practicality for real-world data sizes
+
+Difference between an algorithm and a program
+- An algorithm is the abstract method/plan; a program is an implementation of that algorithm in a programming language.
+
+In short: an algorithm is a precise, finite recipe for solving a class of problems, judged by whether it is correct, terminates, and is efficient enough for the intended use.","The actual answer correctly addresses the query and captures the same meaning as the expected answer, explicitly defining an algorithm as a finite sequence of instructions/steps for solving a problem or performing a task. It includes the key properties (finiteness, definiteness, inputs/outputs, effectiveness, correctness), gives clear examples, and distinguishes algorithms from programs — no factual errors or relevant omissions. Overall it is accurate, complete, and semantically equivalent to the expected answer.","2026-04-01T09:37:39.4784274Z"
+"definition_004","definitions","Define gravity","A natural force that attracts objects with mass toward one another, pulling them together",True,3,3,0.47,10.0,1,True,0.43,10,"Short definition
+- Gravity is the physical interaction by which masses (and energy) attract one another; it governs the motions of planets, stars, and galaxies and gives weight to objects on Earth.
+
+Two main descriptions
+- Newtonian gravity (classical): gravity is an attractive force between two masses. Quantitatively, the force between point masses m1 and m2 separated by distance r is
+  F = G m1 m2 / r^2,
+  where G ≈ 6.674×10^−11 N·m^2/kg^2. For a small mass near a planet of mass M and radius R, the gravitational acceleration is g = GM / R^2 (near Earth, g ≈ 9.81 m/s^2).
+- Einstein’s general relativity (modern): gravity is not a force in the fundamental sense but the effect of mass–energy curving spacetime. Objects move along the straightest possible paths (geodesics) in that curved spacetime. The curvature is determined by the Einstein field equations:
+  G_{μν} + Λ g_{μν} = (8πG/c^4) T_{μν},
+  where T_{μν} is the stress–energy tensor. Predictions include bending of light, gravitational time dilation, precession of orbits, and gravitational waves.
+
+Key consequences and phenomena
+- Orbits of planets and satellites
+- Tides (differential gravitational pull)
+- Gravitational lensing (light deflection by mass)
+- Gravitational time dilation (clocks tick differently in different gravitational potentials)
+- Gravitational waves (ripples in spacetime detected from merging compact objects)
+
+Open issues
+- How to reconcile general relativity with quantum mechanics into a quantum theory of gravity remains unresolved; candidates include string theory, loop quantum gravity, and others.
+
+If you want, I can give derivations, historical background, examples (e.g., how gravity produces tides or keeps planets in orbit), or math details about the Einstein field equations.","The actual answer correctly defines gravity as an interaction that attracts masses, explicitly stating it is the physical interaction by which masses (and energy) attract one another and also gives weight — matching the expected meaning. It explicitly mentions gravity as a force in the Newtonian description (with the inverse-square law) and contrasts with the modern GR interpretation, which is additional but not contradictory. There are no factual errors and the required concepts of force and attraction between objects are present.","2026-04-01T09:37:54.4489840Z"
+"definition_004","definitions","Define gravity","A natural force that attracts objects with mass toward one another, pulling them together",True,3,3,0.47,10.0,2,True,0.52,10,"Gravity is the physical interaction by which masses (and more generally energy) attract one another.
+
+Short, conceptual definition
+- In everyday terms: gravity is the force that pulls objects toward each other — it makes apples fall, keeps us on Earth, and holds planets and stars in orbit.
+- More precisely: it is the interaction by which the presence of mass-energy influences the motion of other mass-energy.
+
+Two main descriptions
+
+1) Newtonian gravity (classical, good for weak fields and low speeds)
+- Force form: two point masses m1 and m2 separated by distance r attract with magnitude F = G m1 m2 / r^2, where G ≈ 6.67430×10^−11 m^3 kg^−1 s^−2 is the gravitational constant. This is an inverse-square central force.
+- Acceleration form: near the surface of a planet the gravitational acceleration is g ≈ GM/R^2 (for Earth, g ≈ 9.81 m/s^2).
+- Field/potential: gravity can be expressed by a scalar potential Φ satisfying Poisson’s equation ∇^2Φ = 4πGρ, where ρ is mass density. The force on a test mass m is m(−∇Φ).
+
+2) General relativity (modern, required for strong fields, high precision, or high speeds)
+- Gravity is not a force in the Newtonian sense but the effect of curved spacetime: mass-energy tells spacetime how to curve, and curved spacetime tells matter how to move.
+- Field equation: Einstein’s equations relate spacetime curvature (expressed by the Einstein tensor G_{μν}) to the stress-energy tensor T_{μν}: G_{μν} = (8πG/c^4) T_{μν}.
+- Predicts phenomena Newtonian gravity does not: bending of light by mass, gravitational time dilation, perihelion precession of Mercury, gravitational waves (observed), and black holes.
+
+Key properties
+- Always attractive (in classical GR, gravity attracts; exotic energy distributions can produce repulsive effects in GR).
+- Acts on mass and energy (E = mc^2 links energy to gravitational influence).
+- Long-range and (in classical theory) infinite in extent; strength falls off with distance (inverse-square in Newtonian limit).
+- Superposition approximates in weak fields (forces add), but GR is nonlinear.
+- Weakest of the four fundamental interactions but dominant at astronomical scales because it is always attractive and accumulates for large masses.
+
+Other notes
+- Gravitational potential energy between two masses is U = −G m1 m2 / r (Newtonian).
+- Quantum gravity: no complete, experimentally confirmed quantum theory of gravity exists; hypothetical quantum carrier particles are called gravitons.
+- Observational evidence: planetary orbits, free fall, tidal effects, gravitational lensing, time dilation measured by clocks at different altitudes, and direct detection of gravitational waves.
+
+Concise summary
+Gravity is the interaction by which mass-energy shapes the motion of other mass-energy; classically described by an inverse-square force (Newton) and fundamentally described by the curvature of spacetime (Einstein).","The actual answer correctly addresses the query by defining gravity as the interaction causing masses (and energy) to attract one another and then gives both everyday and precise (Newtonian and GR) descriptions. It captures the same meaning as the expected answer—emphasizing attraction/force—while adding accurate, relevant detail (mass-energy, potentials, Einstein equations, observable consequences). There are no factual errors or misleading statements; the response is complete and consistent with current physics.","2026-04-01T09:38:12.6761653Z"
+"definition_004","definitions","Define gravity","A natural force that attracts objects with mass toward one another, pulling them together",True,3,3,0.47,10.0,3,True,0.45,10,"Short definition
+- Gravity is the interaction by which masses (and energy) attract each other; in everyday terms it’s what makes objects fall and keeps planets in orbit.
+
+Two main physical descriptions
+1. Newtonian gravity (classical): gravity is a force between masses that follows an inverse-square law. For two point masses m1 and m2 separated by distance r,
+   F = G m1 m2 / r^2,
+where G ≈ 6.67430×10^−11 m^3·kg^−1·s^−2. The gravitational field (acceleration) near a mass M is g = GM/r^2 (at Earth’s surface g ≈ 9.81 m/s^2). Newtonian gravity works extremely well for many everyday and engineering problems.
+
+2. General Relativity (modern): gravity is not a force in the Newtonian sense but a manifestation of curved spacetime. Mass and energy tell spacetime how to curve, and curved spacetime tells objects how to move (they follow geodesics). The relation is given by the Einstein field equations:
+   G_{μν} + Λ g_{μν} = (8πG/c^4) T_{μν},
+where G_{μν} is the spacetime curvature (Einstein tensor), T_{μν} the stress–energy tensor, Λ the cosmological constant, and c the speed of light. GR explains phenomena Newtonian gravity cannot, such as the precession of Mercury’s perihelion, gravitational time dilation, and gravitational lensing.
+
+Other notes
+- Tidal forces arise because gravitational acceleration varies with position. They stretch and compress extended bodies.
+- Quantum description: a consistent, experimentally verified quantum theory of gravity is not yet established. In particle-physics approaches a hypothetical mediator, the graviton, would be a massless spin-2 quantum, but a full theory (quantum gravity) remains an open problem.
+- Practical consequences: governs planetary motion, formation of stars and galaxies, black holes, and the large-scale dynamics of the universe.
+
+If you want, I can give a simpler explanation, show derivations (Newtonian potential, escape velocity, orbital velocity), or explain a specific aspect like gravitational time dilation or tidal forces.","The actual answer correctly defines gravity as the interaction by which masses attract each other and gives the everyday effect (objects falling, planets orbiting), which matches the expected meaning. It accurately expands on both Newtonian (force, inverse-square law and formula) and relativistic (curved spacetime) descriptions without factual errors, and even notes tidal effects and the open problem of quantum gravity. Because it explicitly mentions force/attraction and stays accurate and relevant, it fully meets the expected answer.","2026-04-01T09:38:29.5723397Z"
+"definition_005","definitions","What is inflation in economics?","The rate at which the general level of prices for goods and services rises over time, reducing purchasing power",True,3,3,0.52,10.0,1,True,0.52,10,"Inflation is the sustained increase in the general price level of goods and services in an economy over time. In other words, when inflation occurs, each unit of currency buys fewer goods and services than before — the purchasing power of money falls.
+
+Key points
+
+- Simple measure: Inflation rate = (Price level this period − Price level previous period) / Price level previous period × 100%. Commonly reported as an annual percentage.
+- Common price indexes: Consumer Price Index (CPI), Producer Price Index (PPI), GDP deflator. These track average prices for a basket of goods and services.
+
+Main causes (types)
+- Demand-pull inflation: Aggregate demand exceeds aggregate supply (too much spending chasing too few goods).
+- Cost-push inflation: Rising costs of production (e.g., wages, raw materials, oil) push firms to raise prices.
+- Built-in (wage-price) inflation: Expectations of inflation lead workers to demand higher wages, which firms pass on as higher prices, creating a feedback loop.
+- Hyperinflation: Extremely rapid and out-of-control inflation, usually tied to large money supply growth, fiscal collapse, or loss of confidence in a currency.
+
+Effects
+- Reduces real purchasing power for people on fixed incomes.
+- Redistributes wealth: borrowers often gain (real value of debt falls) while lenders lose.
+- Creates uncertainty that can reduce investment and economic growth.
+- Causes menu costs (repeated price changes), shoe-leather costs (more frequent transactions), and distortions in tax burdens (bracket creep) if taxes are not indexed.
+- Moderate, predictable inflation can grease economic adjustments; many central banks target low positive inflation (often around 2%).
+
+How it’s managed
+- Monetary policy: Central banks use interest rates and other tools to influence money supply and demand (e.g., raising rates to cool inflation).
+- Fiscal policy and supply-side measures: Reducing budget deficits, improving productivity, removing supply bottlenecks.
+- Inflation expectations: Central banks try to anchor expectations to prevent self-fulfilling wage-price spirals.
+
+Examples
+- 1970s U.S.: High inflation partly from oil shocks and expansive policies (stagflation with slow growth and high inflation).
+- Weimar Germany (1920s) and Zimbabwe (2000s): Examples of hyperinflation.
+
+Related concept: Nominal vs. real. Nominal values (wages, interest rates) are not adjusted for inflation; real values are adjusted to reflect purchasing power (real wage = nominal wage / price level).
+
+If you want, I can explain how CPI is calculated, show a worked example of the inflation rate, or discuss how inflation affects retirement saving or mortgage borrowers.","The actual answer correctly defines inflation as a sustained rise in the general price level and explicitly states that purchasing power falls, matching the expected answer. It also adds useful details (rate formula, common price indexes, causes, effects, policy responses, and examples) with no factual errors. Coverage is accurate and thorough while staying on topic.","2026-04-01T09:38:43.9995177Z"
+"definition_005","definitions","What is inflation in economics?","The rate at which the general level of prices for goods and services rises over time, reducing purchasing power",True,3,3,0.52,10.0,2,True,0.57,10,"Inflation is the sustained increase in the general price level of goods and services in an economy over time, which means a unit of currency buys less than it did before — i.e., a fall in purchasing power.
+
+Key points
+- Measurement: Inflation is measured with price indexes such as the Consumer Price Index (CPI), Producer Price Index (PPI), or GDP deflator. The inflation rate is the percent change in an index over a period: (Pt − Pt−1)/Pt−1 × 100%.
+- Main causes:
+  - Demand-pull inflation: aggregate demand exceeds aggregate supply.
+  - Cost-push inflation: rising production costs (wages, materials) lead firms to raise prices.
+  - Built-in (wage-price) inflation: expectations of inflation lead workers to demand higher wages, which raises costs and prices.
+- Effects:
+  - Reduces real purchasing power of money.
+  - Redistributes income and wealth (e.g., debtors gain, savers lose, depending on nominal vs. real rates).
+  - Creates uncertainty, menu costs (cost of changing prices), and shoe-leather costs (more frequent transactions).
+  - Very high inflation (hyperinflation) can severely damage an economy.
+- Policy response: Central banks use monetary policy (mainly interest-rate changes and control of money supply) to keep inflation near a target (many central banks target around 2%); fiscal and supply-side policies can also help.
+
+Example: If CPI rises from 200 to 206 over a year, the inflation rate = (206 − 200)/200 × 100% = 3%. That means what cost $100 a year ago now costs about $103.","The actual answer correctly and concisely addresses the query: it defines inflation as a sustained rise in the general price level and explicitly explains that a unit of currency buys less (reduced purchasing power), matching the expected answer. It captures the same meaning with no factual errors, though it is brief and omits additional details (measurement, causes, effects, and policy responses) that were listed in the fuller expected/key-point content. Overall the core definition is accurate and complete for the basic question.","2026-04-01T09:39:01.7270870Z"
+"definition_005","definitions","What is inflation in economics?","The rate at which the general level of prices for goods and services rises over time, reducing purchasing power",True,3,3,0.52,10.0,3,True,0.47,10,"Inflation is the sustained rise in the general price level of goods and services in an economy over time. When inflation occurs, each unit of currency buys fewer goods and services — in other words, the purchasing power of money falls.
+
+Key points
+
+- How it’s measured
+  - Common measures: Consumer Price Index (CPI), Producer Price Index (PPI), and GDP deflator.
+  - Inflation rate formula (year-to-year): ((Price index this period − Price index last period) / Price index last period) × 100%.
+
+- Main types/causes
+  - Demand-pull inflation: aggregate demand grows faster than aggregate supply (too much money chasing too few goods).
+  - Cost-push inflation: higher production costs (wages, raw materials, energy) push firms to raise prices.
+  - Built-in (wage-price) inflation: workers demand higher wages to keep up with past inflation, firms pass those wages into higher prices.
+  - Monetary factors: sustained increase in the money supply can lead to inflation if it outpaces economic growth.
+
+- Related concepts
+  - Nominal vs. real: nominal values are measured in current prices; real values are adjusted for inflation (real = nominal / price index).
+  - Disinflation: a reduction in the rate of inflation (prices still rising but more slowly). Deflation: an actual fall in the general price level.
+  - Stagflation: simultaneous high inflation and high unemployment/low growth.
+
+- Effects
+  - Erodes purchasing power; hurts savers if interest rates are below inflation.
+  - Redistributes income and wealth (e.g., borrowers can benefit, fixed-income earners lose).
+  - Creates uncertainty, can reduce investment and economic growth.
+  - Menu costs and shoe-leather costs: costs of frequently changing prices and increased transactions costs.
+  - Hyperinflation (extreme cases) can collapse an economy’s monetary system.
+
+- Policy response
+  - Central banks use monetary policy (primarily interest-rate adjustments and control of money supply) to stabilize inflation. Many target a low, stable inflation rate (commonly around 2%) as desirable for predictability and modest economic growth.
+
+Example: If last year’s CPI was 200 and this year’s is 206, the inflation rate = (206 − 200)/200 × 100% = 3%.
+
+If you want, I can explain how CPI is calculated, show historical examples, or describe how inflation affects investments and wages.","The actual answer correctly defines inflation as a sustained rise in the general price level and explicitly states that each unit of currency buys fewer goods and services, matching the expected answer’s emphasis on reduced purchasing power. It also adds accurate, relevant details (measurement, types, effects, policy responses, and an example) without factual errors or misleading content. Overall it captures the same meaning as the expected answer and provides useful additional context.","2026-04-01T09:39:15.6528433Z"
+"definition_006","definitions","What is a hypothesis?","A proposed explanation for an observation that can be tested through further investigation or experimentation",True,3,3,0.47,10.0,1,True,0.48,10,"A hypothesis is a tentative, testable statement that proposes a possible explanation for an observed phenomenon or a predicted relationship between variables. It’s the question or claim you set out to test in an investigation.
+
+Key characteristics of a good hypothesis
+- Tentative: it’s a starting point, not a proven fact.  
+- Testable/operationalizable: you can design an experiment or observation to check it.  
+- Falsifiable: there must be a way to show it is false.  
+- Specific and measurable: clearly identifies variables and the expected relationship.  
+- Predictive: it leads to measurable predictions.
+
+Common types
+- Null hypothesis (H0): a statement of no effect or no difference (used in statistical testing). Example: “There is no difference in average test scores between Group A and Group B.”  
+- Alternative hypothesis (H1 or Ha): what you suspect is true (effect or difference exists). Example: “Group A scores higher than Group B.”  
+- Directional vs non-directional: directional predicts the sign/direction of an effect (A > B); non-directional predicts a difference but not the direction (A ≠ B).  
+- Explanatory vs predictive: explanatory hypotheses propose causes; predictive hypotheses forecast future observations.
+
+How hypotheses are used (scientific method, simplified)
+1. Make observations and review background information.  
+2. Formulate a clear, testable hypothesis.  
+3. Design an experiment/observation and define how you’ll measure variables.  
+4. Collect and analyze data.  
+5. Accept, reject, or refine the hypothesis based on evidence.
+
+Examples
+- Simple everyday: “If I water my houseplants twice a week instead of once, then they will grow taller.”  
+  - Null: “Watering frequency has no effect on plant height.”  
+- Scientific: “Increasing study time improves exam scores.”  
+  - Testable by measuring hours studied and exam results, analyzing correlation or causation.
+
+Hypothesis vs theory vs law
+- Hypothesis: an initial, testable proposition.  
+- Theory: a well-supported, broad explanation built from many tested hypotheses and evidence.  
+- Law: a descriptive generalization about how some aspect of the natural world behaves under stated conditions (often mathematical).
+
+Tips and common pitfalls
+- Make variables and measurements explicit.  
+- Avoid vague or untestable claims.  
+- Don’t confuse correlation with causation—design studies to address confounding factors.  
+- Be prepared to revise the hypothesis if data don’t support it.
+
+If you want, I can help you turn a specific question into a testable hypothesis and suggest ways to test it.","The actual answer correctly defines a hypothesis as a tentative, testable statement proposing an explanation or predicted relationship, which matches the expected answer’s emphasis on being a proposed explanation that can be tested. It also includes key characteristics (testable, falsifiable, specific, predictive), types, usage, examples, and distinctions from theory and law, so there are no factual errors or major omissions. Overall it captures the same meaning and adds helpful elaboration.","2026-04-01T09:39:30.4994598Z"
+"definition_006","definitions","What is a hypothesis?","A proposed explanation for an observation that can be tested through further investigation or experimentation",True,3,3,0.47,10.0,2,True,0.45,10,"A hypothesis is a clear, testable statement that proposes a possible explanation for an observation or a predicted relationship between variables. It is used as the starting point for investigation: experiments or data collection are designed to support or refute the hypothesis.
+
+Key points
+- Testable and falsifiable: there must be a way to collect evidence that could show the hypothesis is false.
+- Specific and measurable: variables should be defined so you can observe or quantify them.
+- Based on prior knowledge or theory: it should be motivated by existing research, logic, or observations.
+- Tentative: it is not proven — experiments can support or reject it.
+
+Common forms
+- Experimental/causal hypothesis: proposes cause-and-effect (e.g., “Fertilizer A increases plant growth.”)
+- Correlational/relational hypothesis: proposes a relationship without asserting causation (e.g., “Sleep duration is related to test performance.”)
+- Directional vs non-directional: directional predicts the direction of the effect (increase/decrease), non-directional only predicts that a relationship exists.
+- Statistical hypotheses: null hypothesis (H0, typically “no effect” or “no difference”) and alternative hypothesis (H1, what you aim to support).
+
+How to formulate one (brief)
+1. Ask a focused question.
+2. Review what’s known.
+3. Identify variables and operationalize them (how you will measure them).
+4. State a clear, testable hypothesis — and a corresponding null hypothesis.
+5. Design a method to test it.
+
+Example
+- Research question: Does caffeine affect reaction time?
+- Hypothesis: “Consuming 200 mg of caffeine reduces reaction time on a computerized test compared with no caffeine.”
+- Null hypothesis (H0): “Consuming 200 mg of caffeine does not change reaction time compared with no caffeine.”
+
+Distinction from a theory
+- A hypothesis is a specific, testable proposition. A theory is a broad, well-supported explanation that integrates many hypotheses and findings.
+
+If you want, I can help you write a testable hypothesis for a particular question you have.","The actual answer correctly addresses the query: it defines a hypothesis as a clear, testable statement proposing an explanation or predicted relationship and notes it as the starting point for investigation. It captures the same meaning as the expected answer and adds useful, accurate details (falsifiability, specificity, forms, how to formulate, and an example) without factual errors or irrelevant content.","2026-04-01T09:39:46.6797408Z"
+"definition_006","definitions","What is a hypothesis?","A proposed explanation for an observation that can be tested through further investigation or experimentation",True,3,3,0.47,10.0,3,True,0.47,10,"A hypothesis is a proposed explanation for an observation or a tentative answer to a scientific question. It’s a starting point for investigation that can be tested and either supported or rejected by evidence.
+
+Key points
+- Testable and falsifiable: it must make predictions that can be checked by observation or experiment; there must be a possible outcome that would show the hypothesis is false.
+- Tentative: it is not proven; it’s a working explanation to guide research.
+- Specific and clear: precise wording makes it easier to design tests.
+- Often framed so it can be compared to a null hypothesis (no effect) in statistical tests.
+
+Typical forms
+- Descriptive hypothesis: proposes a relationship (e.g., “Exposure to blue light affects sleep quality.”)
+- If… then… predictive form: states a cause-and-effect prediction (e.g., “If plants receive more light, then their growth rate will increase.”)
+- Null hypothesis (H0): states there is no effect or difference (e.g., “There is no difference in test scores between students who study with music and those who study in silence.”)
+- Alternative hypothesis (Ha): the opposite of the null (e.g., “Students who study with music have different test scores than those who study in silence.”)
+
+How to make and use one
+1. Ask a focused question based on observations.
+2. Do background research.
+3. Formulate a clear, testable hypothesis.
+4. Derive specific predictions.
+5. Test those predictions with experiments or observations.
+6. Use the results to support, refine, or reject the hypothesis.
+
+Difference from related terms
+- Hypothesis vs prediction: A hypothesis is an explanatory idea; a prediction is a specific expected outcome derived from that idea.
+- Hypothesis vs theory/law: A hypothesis is an initial, testable explanation. A theory is a well-supported, broader explanation built from many tested hypotheses. A law describes consistent relationships, often mathematically.
+
+Example
+Hypothesis: “Drinking 200 mg of caffeine improves short-term memory performance in adults.”
+Prediction: “Adults who consume 200 mg of caffeine will recall more items on a 10-word memory test than adults who consume a placebo.”
+
+Would you like help writing a hypothesis for a particular question or experiment?","The actual answer correctly defines a hypothesis as a proposed, testable explanation for an observation and captures the same core meaning as the expected answer. It explicitly notes testability/falsifiability and tentativeness, and adds relevant, accurate details (forms, steps for making/testing hypotheses, and distinctions from predictions/theories). There are no factual errors or important omissions relative to the expected answer.","2026-04-01T09:40:02.8588320Z"
+"definition_007","definitions","Define osmosis","The movement of water molecules through a semipermeable membrane from an area of lower solute concentration to higher solute concentration",True,3,3,0.71,10.0,1,True,0.71,10,"Osmosis is the net passive movement of solvent molecules (usually water) through a selectively permeable membrane from a region of lower solute concentration (higher solvent chemical potential) to a region of higher solute concentration (lower solvent chemical potential). It continues until the chemical potentials equilibrate or until opposing pressure (osmotic pressure) balances the flow. 
+
+Example: water entering a plant cell placed in a dilute solution causes the cell to become turgid; in a concentrated solution the cell loses water and plasmolyzes.","The actual answer correctly addresses the query: it explicitly mentions water (solvent), a selectively permeable membrane, and movement from lower solute concentration to higher solute concentration. It captures the same meaning as the expected answer while adding accurate thermodynamic context (chemical potential) and the role of osmotic pressure, and the example about plant cells is relevant. There are no factual errors or key omissions.","2026-04-01T09:40:11.4634054Z"
+"definition_007","definitions","Define osmosis","The movement of water molecules through a semipermeable membrane from an area of lower solute concentration to higher solute concentration",True,3,3,0.71,10.0,2,True,0.69,10,"Osmosis is the net movement of a solvent (usually water) through a semipermeable membrane from a region of lower solute concentration (higher solvent chemical potential) to a region of higher solute concentration (lower solvent chemical potential). It is a passive process driven by differences in chemical potential and proceeds until the chemical potentials are equal or until an opposing hydraulic pressure (osmotic pressure) balances the flow.
+
+Key points:
+- The membrane is permeable to the solvent but not (or much less) to the solute.  
+- Osmosis is not the diffusion of solute but of solvent.  
+- Osmotic pressure is the pressure difference required to stop net solvent flow; for dilute ideal solutions, π ≈ iCRT (van ’t Hoff law).  
+- Biological relevance: water movement across cell membranes affects cell volume and turgor; in plants it produces turgor pressure, in animal cells it can cause swelling or shrinkage.","The actual answer correctly addresses the query and captures the same meaning as the expected answer, explicitly stating that osmosis is the net movement of a solvent (usually water) through a semipermeable membrane from lower solute concentration to higher solute concentration. It adds accurate, relevant detail about chemical potential, osmotic pressure (including van ’t Hoff's law for dilute solutions), and biological relevance without introducing errors. All required elements—water, membrane, and concentration—are present and accurately described.","2026-04-01T09:40:20.4724095Z"
+"definition_007","definitions","Define osmosis","The movement of water molecules through a semipermeable membrane from an area of lower solute concentration to higher solute concentration",True,3,3,0.71,10.0,3,True,0.72,10,"Osmosis is the passive, net movement of solvent molecules (usually water) across a semipermeable membrane from a region of lower solute concentration (higher water potential) to a region of higher solute concentration (lower water potential). It continues until the solute concentrations on the two sides are balanced or until opposing pressure (osmotic pressure) prevents further net flow. Osmosis is driven by differences in chemical potential, does not require metabolic energy, and is fundamental in biological processes (e.g., cells swelling in hypotonic solutions or shrinking in hypertonic solutions).","The actual answer correctly and clearly defines osmosis, specifying movement of solvent (water), across a semipermeable membrane, and the direction from lower solute concentration to higher solute concentration. It captures the same meaning as the expected answer and adds accurate, relevant details (osmotic pressure, chemical potential, biological examples) without introducing errors. There are no key omissions relative to the evaluation criteria.","2026-04-01T09:40:29.6884709Z"
+"definition_008","definitions","What is artificial intelligence?","The simulation of human intelligence processes by computer systems, including learning, reasoning, and problem-solving",True,3,3,0.52,10.0,1,True,0.54,10,"Artificial intelligence (AI) is the branch of computer science that builds systems able to perform tasks that normally require human intelligence. In practice that means designing algorithms and models that can perceive, reason, learn from data, make decisions, and sometimes produce human-like outputs (text, images, speech).
+
+Key ideas (high level)
+- How it works: AI systems use algorithms and data. They ""learn"" patterns from examples (training) and apply the learned rules to new situations (inference). Learning generally involves optimizing a model so it makes accurate predictions or choices.
+- Data and models: Data (images, text, sensor readings, etc.) feed models (statistical formulas, neural networks, decision trees). More and better data usually improves performance.
+- Evaluation: Performance is measured with tests or benchmarks appropriate to the task (accuracy, error rates, reward achieved, human evaluation).
+
+Main categories
+- Narrow (or weak) AI: Systems specialized for one task (spam filters, voice assistants, image classifiers). This is what exists today in practice.
+- General (AGI): A hypothetical system that can understand, learn, and apply intelligence across many domains at human-like levels. Not yet achieved.
+- Superintelligence: A speculative idea of intelligence far beyond human capability.
+
+Common approaches
+- Symbolic/logic-based AI: Uses explicit rules and symbolic reasoning.
+- Machine learning (ML): Algorithms that learn patterns from data rather than being explicitly programmed for each case.
+- Deep learning: A type of ML using multi-layer neural networks, very effective for images, speech, and text.
+- Reinforcement learning: Systems learn by trial and error to maximize a reward signal (used for games, robotics).
+
+Examples of applications
+- Language: machine translation, chatbots, summarization, question answering.
+- Vision: facial recognition, medical image analysis, autonomous vehicles.
+- Recommendations: product, content, and ad recommendations.
+- Robotics and control: drones, industrial robots, self-driving cars.
+- Predictive tasks: demand forecasting, fraud detection, diagnostics.
+
+Capabilities and limitations
+- Strengths: Can detect subtle patterns in large datasets, automate repetitive tasks, scale decision-making, and operate continuously.
+- Limitations: Can fail unpredictably, require lots of data, struggle with common-sense reasoning, can reflect biases in training data, and often lack transparent explanations for decisions.
+
+Ethical and societal issues
+- Bias and fairness, privacy, job displacement, safety and robustness, misuse (deepfakes, surveillance), and accountability. Responsible development involves testing, transparency, human oversight, and regulation.
+
+If you want, I can:
+- Explain one of the techniques (deep learning, reinforcement learning) in more detail.
+- Give examples in a specific sector (healthcare, finance, education).
+- Recommend beginner resources or courses. Which would you like?","The actual answer correctly addresses the query: it defines AI as a branch of computer science that builds systems to perform tasks requiring human intelligence and explicitly mentions perceiving, reasoning, learning, decision-making, and producing human-like outputs. It captures the same meaning as the expected answer (simulation of human intelligence processes by computer systems, including learning, reasoning, and problem-solving) and expands usefully on how AI works, categories, approaches, applications, limitations, and ethical issues. There are no factual errors or misleading statements, and the additional details are relevant rather than extraneous.","2026-04-01T09:40:44.7414373Z"
+"definition_008","definitions","What is artificial intelligence?","The simulation of human intelligence processes by computer systems, including learning, reasoning, and problem-solving",True,3,3,0.52,10.0,2,True,0.52,10,"Artificial intelligence (AI) is the field of computer science concerned with creating systems that can perform tasks that normally require human intelligence. These tasks include perceiving the environment, learning from data or experience, reasoning and making decisions, understanding and generating language, and planning actions.
+
+Key points, concisely:
+
+- Core idea: Build algorithms and models that can sense, learn patterns, make predictions or decisions, and sometimes act autonomously.
+- Common approaches:
+  - Symbolic/logic-based AI: explicit rules and knowledge representations.
+  - Machine learning (ML): systems learn patterns from data. Includes supervised, unsupervised, and reinforcement learning.
+  - Deep learning: ML using multi-layer neural networks especially effective for images, speech, and language.
+  - Hybrid approaches: combine symbolic reasoning and statistical learning.
+- Types of AI by capability:
+  - Narrow (or specialized) AI: systems designed for a specific task (e.g., image recognition, language translation). This is what exists today.
+  - General AI (AGI): a hypothetical system with broad, human-level cognitive abilities across many domains (not yet achieved).
+  - Superintelligence: theoretical systems that outperform humans across nearly all tasks.
+- Typical applications: virtual assistants (Siri, Alexa), recommendation systems (Netflix, Amazon), search ranking, fraud detection, medical image analysis, autonomous vehicles, language models and chatbots.
+- Important concepts: training vs. inference, models and datasets, feature extraction, overfitting/underfitting, evaluation metrics, explainability, fairness and bias, robustness and safety.
+- Limitations and risks: dependence on data quality, biases in training data, lack of common-sense reasoning, brittleness outside trained scenarios, privacy concerns, misuse, and economic/social impacts.
+- Short history highlights: theoretical foundations (Turing), 1956 Dartmouth workshop naming AI, symbolic AI era, rise of statistical ML, and the deep learning breakthroughs in the 2010s that greatly expanded practical capabilities.
+
+If you want, I can:
+- Explain a specific subfield (e.g., deep learning, reinforcement learning, NLP).
+- Show simple examples or diagrams of how a model is trained.
+- Discuss ethical, legal, and social implications in more detail. Which would you like?","The actual answer correctly defines AI as the computer-based creation of systems that perform tasks normally requiring human intelligence, which matches the expected concept of computers simulating human intelligence. It covers the same core processes (learning, reasoning, problem-solving) and expands with accurate details on approaches, types, applications, important concepts, limitations, and history without factual errors. Overall it captures the expected meaning and provides useful, accurate elaboration.","2026-04-01T09:41:01.2392062Z"
+"definition_008","definitions","What is artificial intelligence?","The simulation of human intelligence processes by computer systems, including learning, reasoning, and problem-solving",True,3,3,0.52,10.0,3,True,0.50,10,"Artificial intelligence (AI) is the field of computer science that builds systems capable of performing tasks that normally require human intelligence. These tasks include perceiving the world (vision, speech), learning from data, reasoning and planning, understanding and generating language, and making decisions.
+
+Key ideas and categories
+- Narrow (or weak) AI: systems designed for specific tasks (e.g., spam filters, voice assistants, image classifiers). This is what exists today at large scale.
+- General (or strong) AI: a hypothetical system that can perform any intellectual task a human can across many domains. Researchers have not achieved this.
+- Superintelligent AI: a speculative stage where an AI would exceed human intelligence in most respects.
+
+Common approaches
+- Symbolic AI: logic- and rule-based systems that manipulate symbols and explicit rules.
+- Machine learning (ML): systems that learn patterns from data rather than being explicitly programmed.
+  - Supervised learning (learn from labeled examples)
+  - Unsupervised learning (find structure in unlabeled data)
+  - Reinforcement learning (learn by trial and reward)
+- Deep learning: neural-network-based models (including transformers) that excel at perception and language tasks.
+
+Typical components of an AI system
+- Perception (e.g., computer vision, speech recognition)
+- Learning (model training from data)
+- Reasoning/decision-making (planning, inference)
+- Natural language processing (understanding/generating text or speech)
+- Actuation (taking actions in the real world, as in robots)
+
+Examples of real-world uses
+- Search engines and recommendation systems
+- Virtual assistants (Siri, Alexa)
+- Medical image analysis and diagnostic support
+- Autonomous vehicles and robotics
+- Fraud detection and financial forecasting
+- Language models and chatbots
+
+Limitations and risks
+- Requires large amounts of data and compute for many methods
+- Can reproduce or amplify biases present in training data
+- Often lacks transparency/interpretability (“black box” models)
+- Can fail unpredictably on inputs unlike its training data
+- Social and ethical concerns: privacy, job displacement, misuse, safety, and fairness
+
+If you want to learn more
+- Intro course: Andrew Ng’s ""Machine Learning"" (Coursera)
+- Book: ""Artificial Intelligence: A Modern Approach"" by Russell & Norvig
+- Follow developments in deep learning and NLP (papers, blogs, and reputable news sources)
+
+If you’d like, I can give a shorter plain definition, explain a particular subfield (like deep learning or reinforcement learning), or show concrete examples relevant to your interests. Which would you prefer?","The actual answer correctly addresses the query by defining AI as computer systems that perform tasks requiring human-like intelligence and explicitly mentions simulating perception, learning, reasoning, language, and decision-making. It captures the same meaning as the expected answer (simulation of human intelligence processes by computer systems) and expands usefully with categories, approaches, components, examples, and limitations without factual errors. No key omissions relative to the expected answer; the additional material improves clarity and usefulness.","2026-04-01T09:41:18.2249480Z"
+"definition_009","definitions","What is a synonym?","A word that has the same or nearly the same meaning as another word",True,3,3,0.64,10.0,1,True,0.64,10,"A synonym is a word (or phrase) that has the same or very similar meaning as another word. 
+
+- Examples: big and large; begin and start; happy and joyful.  
+- Note: Perfect synonyms are rare — many synonyms differ slightly in connotation, formality, or typical usage (e.g., kid vs. child).  
+- Use: Choose a synonym that fits the context, tone, and collocations of the sentence. A thesaurus or dictionary can help you find appropriate synonyms.","The actual answer directly and accurately defines a synonym as a word or phrase having the same or very similar meaning as another word, matching the expected answer. It also provides appropriate examples and useful clarifications (that perfect synonyms are rare and to consider context), with no factual errors or irrelevant content. This is semantically identical to the expected answer and adds helpful detail.","2026-04-01T09:41:26.6229545Z"
+"definition_009","definitions","What is a synonym?","A word that has the same or nearly the same meaning as another word",True,3,3,0.64,10.0,2,True,0.63,10,"A synonym is a word (or phrase) that has the same or nearly the same meaning as another word in the same language. 
+
+Examples:
+- big and large
+- start and begin
+- happy and joyful
+
+Notes:
+- Perfect synonyms are rare; words often differ in connotation, formality, region, or typical usage (e.g., ask vs. inquire—both mean to request information, but inquire is more formal).
+- Context matters: a synonym in one sentence might not work in another because of collocations or nuance.
+- A thesaurus lists synonyms, but always check examples to make sure a substitute fits your sentence.","The actual answer correctly addresses the query by defining a synonym as a word or phrase with the same or nearly the same meaning as another word in the same language. It captures the same core meaning as the expected answer and adds useful examples and caveats about connotation, formality, and context without introducing errors. There are no factual inaccuracies or relevant omissions; the additional notes are informative and appropriate.","2026-04-01T09:41:35.7349940Z"
+"definition_009","definitions","What is a synonym?","A word that has the same or nearly the same meaning as another word",True,3,3,0.64,10.0,3,True,0.65,10,"A synonym is a word (or phrase) that has the same or very nearly the same meaning as another word in a particular context. 
+
+Examples:
+- big and large
+- happy and joyful
+- begin and start
+
+Notes:
+- Perfect synonyms are rare; words often differ in connotation, formality, regional use, or collocation (e.g., ""ask"" vs. ""inquire"").
+- A thesaurus lists synonyms; a dictionary shows subtle differences.
+- Antonym = opposite meaning (e.g., hot vs. cold).
+
+Would you like synonyms for a particular word?","The actual answer correctly addresses the query by defining a synonym as a word or phrase with the same or very nearly the same meaning as another word, matching the expected answer. It captures the core meaning and adds useful examples and caveats (context, connotation, antonyms, thesaurus vs. dictionary) without factual errors. The extra details are relevant and improve understanding.","2026-04-01T09:41:43.9288002Z"
+"definition_010","definitions","Define metabolism","The set of chemical processes that occur in living organisms to maintain life, including converting food to energy",True,3,3,0.63,10.0,1,True,0.62,10,"Metabolism is the sum of all chemical reactions in a living organism that convert nutrients into energy and the molecular building blocks needed for growth, maintenance, repair, and waste elimination.
+
+Key points
+- Two broad types: catabolism (breakdown of molecules to release energy) and anabolism (synthesis of complex molecules from simpler ones, consuming energy).
+- Energy released by catabolic reactions is often stored and transferred as ATP, which fuels anabolic processes and cellular work.
+- Metabolic reactions occur in pathways catalyzed and regulated by enzymes and controlled by hormones and signaling networks.
+- Metabolism determines an organism’s metabolic rate (how fast it converts energy) and underlies processes like growth, movement, thermoregulation, and detoxification.","The actual answer correctly defines metabolism as the chemical reactions in living organisms that convert nutrients into energy and building blocks, matching the expected answer's focus on chemical processes and energy. It also captures additional key aspects (catabolism/anabolism, ATP, enzymatic and hormonal regulation, and physiological roles), which are accurate and relevant rather than extraneous. There are no factual errors or misleading statements.","2026-04-01T09:41:53.4512609Z"
+"definition_010","definitions","Define metabolism","The set of chemical processes that occur in living organisms to maintain life, including converting food to energy",True,3,3,0.63,10.0,2,True,0.62,10,"Metabolism is the sum of all chemical reactions that occur in living organisms to convert nutrients into energy and the molecular building blocks needed for growth, maintenance, repair and response to the environment. 
+
+Two complementary parts:
+- Catabolism: breaking down molecules (e.g., glucose, fats) to release energy and produce small metabolites; energy is often captured as ATP.
+- Anabolism: using energy and small molecules to build complex molecules (e.g., proteins, nucleic acids, lipids).
+
+Metabolic reactions are organized into pathways (glycolysis, the citric acid cycle, oxidative phosphorylation, photosynthesis in plants), are catalyzed by enzymes, and are tightly regulated to meet an organism’s needs. Metabolic rate refers to the speed of these processes (e.g., basal metabolic rate).","The actual answer correctly defines metabolism as the set/sum of chemical reactions in living organisms that convert nutrients into energy and produce molecular building blocks, matching the expected answer. It adds accurate, relevant detail (catabolism vs. anabolism, examples of pathways, enzyme catalysis, regulation, and metabolic rate) without introducing errors. The response therefore conveys the same core meaning as the expected answer and is more comprehensive.","2026-04-01T09:42:03.1796482Z"
+"definition_010","definitions","Define metabolism","The set of chemical processes that occur in living organisms to maintain life, including converting food to energy",True,3,3,0.63,10.0,3,True,0.65,10,"Metabolism is the sum of all chemical reactions that occur in a living organism (or cell) to maintain life. These reactions transform nutrients and energy into forms the organism can use, build and repair molecules, and eliminate waste.
+
+Key components:
+- Catabolism: pathways that break down molecules (food, stored fuels) to release energy (often captured as ATP, NADH).
+- Anabolism: pathways that use energy to build complex molecules (proteins, nucleic acids, lipids, carbohydrates).
+- Regulation: enzymes, cofactors, and hormones control the rate and direction of metabolic pathways so cells meet changing needs.
+
+In short, metabolism is how organisms obtain, convert, and use chemical energy and materials to grow, reproduce, and maintain their structure and function.","The actual answer correctly defines metabolism as the sum of chemical reactions in living organisms that maintain life and explicitly mentions transforming nutrients and energy, so it addresses the query. It captures the same meaning as the expected answer and appropriately expands on catabolism, anabolism, and regulatory mechanisms without factual errors or irrelevant content. The response therefore meets the evaluation criteria fully.","2026-04-01T09:42:13.9315704Z"
+"science_002","science","What is Newton's first law of motion?","An object at rest stays at rest, and an object in motion stays in motion, unless acted upon by an external force",True,3,3,0.70,10.0,1,True,0.72,10,"Newton's first law (the law of inertia):
+An object at rest stays at rest, and an object in motion continues to move at constant velocity (constant speed in a straight line), unless acted on by a net external force.
+
+Notes:
+- ""Constant velocity"" means unchanging speed and direction.
+- ""Net external force"" is the vector sum of all forces from outside the object; if that sum is zero the object's motion doesn't change.
+- This law defines inertial reference frames and expresses the property called inertia (resistance to changes in motion).
+
+Examples: a book on a table stays put until you push it; a puck on nearly frictionless ice keeps sliding unless friction or a bump changes its motion.","The actual answer correctly and clearly states Newton's first law: objects maintain their state of rest or uniform motion unless a net external force acts. It captures the same meaning as the expected answer and adds helpful clarifications (definition of ""constant velocity"", ""net external force"", and mention of inertial frames) without introducing errors. There are no factual errors or relevant omissions.","2026-04-01T09:42:26.3216107Z"
+"science_002","science","What is Newton's first law of motion?","An object at rest stays at rest, and an object in motion stays in motion, unless acted upon by an external force",True,3,3,0.70,10.0,2,True,0.69,10,"Newton's first law (the law of inertia):
+
+- A body at rest stays at rest, and a body in motion continues to move with constant velocity in a straight line, unless acted on by a net external force.
+
+Explanation:
+- ""Constant velocity"" means unchanging speed and direction (so being at rest is just a special case).
+- The law introduces inertia: the tendency of mass to resist changes in its state of motion. Larger mass → more inertia.
+- It holds in an inertial (non-accelerating) reference frame. Apparent violations (e.g., a ball seeming to slow on a table) are due to external forces like friction or air resistance.
+
+Examples:
+- A book on a table stays at rest because the net force is zero (gravity balanced by the table’s support).
+- A puck sliding on a nearly frictionless ice rink keeps moving nearly forever unless friction or a bump (an external force) slows it.","The actual answer correctly and fully addresses the query by stating that a body at rest stays at rest and a body in motion continues with constant velocity unless acted on by a net external force. It captures the same meaning as the expected answer, adds helpful clarifications about constant velocity, inertia, reference frames, and real-world forces like friction without introducing errors. There are no factual errors or key omissions relative to the expected answer.","2026-04-01T09:42:34.8212292Z"
+"science_002","science","What is Newton's first law of motion?","An object at rest stays at rest, and an object in motion stays in motion, unless acted upon by an external force",True,3,3,0.70,10.0,3,True,0.70,10,"Newton’s first law (the law of inertia):
+
+- An object at rest stays at rest, and an object in motion continues in straight-line motion at constant speed, unless acted on by a net external force.
+
+Equivalently: if the net external force on an object is zero, its acceleration is zero (its velocity is constant). This law defines inertia and distinguishes inertial reference frames. 
+
+Examples: a puck gliding nearly frictionless keeps moving; a book on a table stays at rest until you push it; passengers lurch forward in a braking car because no force yet acted on them to change their motion.","The actual answer correctly and fully addresses the query by stating that objects remain at rest or continue in straight-line constant-speed motion unless acted on by a net external force. It captures the same meaning as the expected answer and adds useful, accurate clarifications (net force = zero implies zero acceleration, definition of inertia, and examples). There are no factual errors or misleading content.","2026-04-01T09:42:43.6268941Z"
+"science_001","science","What is the speed of light in a vacuum?","approximately 299,792,458 metres per second",True,3,3,0.61,10.0,1,True,0.66,10,"The speed of light in vacuum is exactly 299,792,458 metres per second (by definition). That's about 299,792.458 km/s or ≈186,282.397 miles/s.","The actual answer correctly and directly addresses the query by giving the defined exact value 299,792,458 m/s and appropriate approximate conversions. It captures the same meaning as the expected answer (≈300,000 km/s) with no factual errors or irrelevant content. The additional conversions to km/s and miles/s are accurate and acceptable.","2026-04-01T09:42:53.6624626Z"
+"science_001","science","What is the speed of light in a vacuum?","approximately 299,792,458 metres per second",True,3,3,0.61,10.0,2,True,0.59,10,"The speed of light in vacuum (symbol c) is exactly 299,792,458 meters per second — about 3.00 × 10^8 m/s. 
+
+That is also 299,792.458 km/s (≈186,282.4 miles/s).","The response correctly gives the exact SI value 299,792,458 m/s and the common approximation 3.00 × 10^8 m/s, so it addresses the query. It captures the same meaning as the expected answer and appropriately adds equivalent values in km/s and miles/s that are correctly converted. There are no factual errors or relevant omissions.","2026-04-01T09:43:02.6743576Z"
+"science_001","science","What is the speed of light in a vacuum?","approximately 299,792,458 metres per second",True,3,3,0.61,10.0,3,True,0.58,10,"The speed of light in vacuum (symbol c) is exactly 299,792,458 meters per second. 
+That's about 299,792.458 km/s or ≈186,282 miles per second.","The actual answer correctly and directly addresses the query by giving the exact defined value of the speed of light in vacuum as 299,792,458 m/s and provides equivalent approximate values in km/s and miles/s. This matches the expected answer (approximately 299,792,458 m/s or ~300,000 km/s) with no factual errors or omissions. The content is accurate and semantically identical to the expected response.","2026-04-01T09:43:10.7626335Z"
+"science_004","science","What gas do plants absorb during photosynthesis?","Carbon dioxide",True,3,3,0.45,10.0,1,True,0.46,10,"Plants absorb carbon dioxide (CO2) during photosynthesis. They take it in through openings called stomata and use the carbon to build sugars, releasing oxygen as a byproduct.","Yes — the actual answer correctly identifies carbon dioxide (CO2) as the gas plants absorb during photosynthesis. It conveys the same meaning as the expected answer and adds accurate, relevant details about stomata, sugar formation, and oxygen release. There are no factual errors or omissions.","2026-04-01T09:43:18.4428151Z"
+"science_004","science","What gas do plants absorb during photosynthesis?","Carbon dioxide",True,3,3,0.45,10.0,2,True,0.44,10,"Plants absorb carbon dioxide (CO2) from the air during photosynthesis. They use CO2, water, and sunlight to make sugars and release oxygen (O2) as a byproduct.","The response correctly identifies carbon dioxide (CO2) as the gas plants absorb during photosynthesis and exactly matches the expected answer. It adds accurate, relevant context about how CO2, water, and sunlight are used to make sugars and that oxygen is released, with no factual errors.","2026-04-01T09:43:24.8940183Z"
+"science_004","science","What gas do plants absorb during photosynthesis?","Carbon dioxide",True,3,3,0.45,10.0,3,True,0.44,10,"Plants absorb carbon dioxide (CO2) from the air during photosynthesis, taking it in through stomata on their leaves and using it (with water and light energy) to make sugars and release oxygen.","The actual answer correctly identifies carbon dioxide (CO2) as the gas plants absorb during photosynthesis and matches the expected answer. It captures the same meaning and adds accurate, relevant details about stomata and the role of water and light in making sugars and releasing oxygen. There are no factual errors or omissions that affect the correctness of the response.","2026-04-01T09:43:31.8581690Z"
+"science_005","science","What is the powerhouse of the cell?","The mitochondria",True,3,3,0.68,10.0,1,True,0.69,10,"The mitochondrion (plural: mitochondria). It generates most of a cell’s ATP by cellular respiration, so it's often called the cell's ""powerhouse.""","The actual answer correctly identifies the mitochondrion (plural: mitochondria) as the cell's ""powerhouse."" It captures the same meaning as the expected answer and appropriately explains why—by noting mitochondria generate most of a cell's ATP via cellular respiration. There are no factual errors or relevant omissions.","2026-04-01T09:43:38.7191347Z"
+"science_005","science","What is the powerhouse of the cell?","The mitochondria",True,3,3,0.68,10.0,2,True,0.68,10,"The mitochondrion (plural: mitochondria). It produces ATP through cellular respiration, supplying most of the cell’s usable energy.","The actual answer directly identifies the mitochondrion (plural mitochondria) as the cell's powerhouse, matching the expected answer. It also accurately explains the mechanism—production of ATP via cellular respiration—without adding any incorrect or irrelevant information. There are no factual errors or key omissions.","2026-04-01T09:43:46.0906815Z"
+"science_005","science","What is the powerhouse of the cell?","The mitochondria",True,3,3,0.68,10.0,3,True,0.67,10,"The mitochondrion (plural: mitochondria). It generates most of a cell’s usable energy (ATP) by cellular respiration; plant cells also use chloroplasts to capture light energy.","The actual answer correctly identifies the mitochondrion (plural: mitochondria) as the powerhouse of the cell and explains its role in generating ATP via cellular respiration, matching the expected answer. The added note about chloroplasts in plant cells is relevant and accurate background information, not an error or omission. Overall the response is semantically identical to the expected answer.","2026-04-01T09:43:53.2578694Z"
+"science_012","science","What type of energy does the Sun primarily produce?","Nuclear energy through fusion",True,3,3,0.59,10.0,1,True,0.61,10,"Primarily electromagnetic (radiant) energy — i.e., light and heat — produced by nuclear fusion in the Sun’s core. Hydrogen fuses into helium, releasing energy (initially as gamma rays and neutrinos) that is converted and escapes as visible light, infrared, ultraviolet, etc.","The actual answer correctly addresses the query by stating the Sun’s primary output (electromagnetic/radiant energy) and explicitly attributing it to nuclear fusion in the core. It captures the same meaning as the expected answer — that the Sun’s energy comes from nuclear fusion — while adding the useful detail that the fusion energy is emitted as light and heat after being reprocessed. There are no significant factual errors; the brief description of initial gamma-ray and neutrino production and subsequent conversion to visible/IR/UV is appropriate.","2026-04-01T09:44:05.1384280Z"
+"science_012","science","What type of energy does the Sun primarily produce?","Nuclear energy through fusion",True,3,3,0.59,10.0,2,True,0.59,10,"The Sun primarily produces energy by nuclear fusion in its core (mainly the proton–proton chain converting hydrogen to helium). That fusion energy is released mainly as electromagnetic radiation (radiant energy — light and heat) and as neutrinos; the photons produced as high‑energy gamma rays are gradually down‑converted to the visible and infrared light we receive.","The actual answer correctly addresses the query by stating the Sun’s energy source is nuclear fusion in its core, specifically the proton–proton chain converting hydrogen to helium. It captures the same meaning as the expected answer and adds accurate, relevant detail about how that fusion energy is emitted (photons and neutrinos) and the down-conversion of photons to visible/IR light. There are no factual errors or misleading statements.","2026-04-01T09:44:15.3779268Z"
+"science_012","science","What type of energy does the Sun primarily produce?","Nuclear energy through fusion",True,3,3,0.59,10.0,3,True,0.58,10,"The Sun’s energy comes from nuclear fusion in its core (primarily the proton–proton chain converting hydrogen into helium). That fusion releases energy mostly as electromagnetic radiation — i.e., light and heat (across visible, infrared, ultraviolet, etc.). It also emits neutrinos and energetic particles, but the primary form we receive is electromagnetic (solar) radiation.","The actual answer correctly states that the Sun’s energy comes from nuclear fusion in its core, specifically the proton–proton chain converting hydrogen into helium. It captures the expected answer’s meaning and correctly adds that the released energy appears mainly as electromagnetic radiation (light and heat) and also as neutrinos and energetic particles. There are no factual errors or significant omissions; the response is accurate and complete.","2026-04-01T09:44:25.6171258Z"
+"science_013","science","What is the boiling point of water at standard atmospheric pressure?","100 degrees Celsius",True,3,3,0.49,10.0,1,True,0.49,10,"At standard atmospheric pressure (1 atm = 101.325 kPa), pure water boils at 100.00 °C, which is 212.00 °F or 373.15 K.  
+
+(Boiling point changes with pressure and dissolved substances.)","The actual answer correctly and directly states that pure water boils at 100.00 °C at standard atmospheric pressure and also gives equivalent values in °F and K. It matches the expected answer exactly while appropriately noting the dependence on pressure and solutes. There are no factual errors or relevant omissions.","2026-04-01T09:44:32.6835443Z"
+"science_013","science","What is the boiling point of water at standard atmospheric pressure?","100 degrees Celsius",True,3,3,0.49,10.0,2,True,0.53,10,"Pure water boils at 100.00 °C (212.00 °F), which is 373.15 K, at standard atmospheric pressure (1 atm = 101.325 kPa).","The actual answer directly states that pure water boils at 100.00 °C and 212.00 °F at standard atmospheric pressure, so it correctly and fully addresses the query. It conveys the same meaning as the expected answer and adds correct, relevant extra information (the Kelvin value and the pressure in kPa). There are no factual errors or omissions.","2026-04-01T09:44:40.7725104Z"
+"science_013","science","What is the boiling point of water at standard atmospheric pressure?","100 degrees Celsius",True,3,3,0.49,10.0,3,True,0.46,10,"The boiling point of pure water at standard atmospheric pressure (1 atm = 101.325 kPa) is 100.00 °C, which is 212.00 °F or 373.15 K.","The actual answer correctly addresses the query by stating the boiling point of pure water at standard atmospheric pressure as 100.00 °C. It captures the same meaning as the expected answer and also provides equivalent values in Fahrenheit and Kelvin with no factual errors or irrelevant content.","2026-04-01T09:44:47.1215839Z"
+"science_014","science","What organ pumps blood through the human body?","The heart",True,3,3,0.65,10.0,1,True,0.63,10,"The heart. It's a muscular organ that pumps blood through the circulatory system, delivering oxygen and nutrients to tissues and removing waste.","The actual answer correctly identifies ""the heart"" as the organ that pumps blood and expands on that with accurate, relevant detail about its role in the circulatory system. It captures the same meaning as the expected answer and contains no factual errors or omissions.","2026-04-01T09:44:51.9891036Z"
+"science_014","science","What organ pumps blood through the human body?","The heart",True,3,3,0.65,10.0,2,True,0.65,10,"The heart — a muscular organ in the chest that pumps blood through the body via the circulatory system.","The actual answer correctly identifies the organ that pumps blood as the heart and adds a brief, accurate description of its nature and location. It captures the same meaning as the expected answer and contains no factual errors or irrelevant information. This is a complete and precise reply.","2026-04-01T09:44:57.6686816Z"
+"science_014","science","What organ pumps blood through the human body?","The heart",True,3,3,0.65,10.0,3,True,0.68,10,"The heart. 
+
+It's a muscular organ with four chambers (two atria and two ventricles) that contracts to pump blood through the pulmonary (lungs) and systemic (body) circulatory circuits.","The actual answer correctly identifies the heart as the organ that pumps blood and therefore directly addresses the query. The additional detail about it being a muscular four-chambered organ that pumps blood through the pulmonary and systemic circuits is accurate and relevant. There are no factual errors or missing key points for this question.","2026-04-01T09:45:04.4268050Z"
+"science_016","science","What are the three states of matter?","Solid, liquid, and gas",True,3,3,0.71,10.0,1,True,0.71,10,"The three classical states of matter are:
+
+- Solid — particles packed closely in a fixed structure; definite shape and volume (e.g., ice, wood).  
+- Liquid — particles close but able to move past each other; definite volume but no fixed shape (e.g., water, oil).  
+- Gas — particles far apart and moving freely; no fixed shape or volume (e.g., oxygen, steam).
+
+(At very high energies or low temperatures there are additional states such as plasma and Bose–Einstein condensates.)","The actual answer correctly lists the three classical states of matter—solid, liquid, and gas—and provides accurate, concise descriptions and examples that match the expected answer. It also appropriately notes additional states at extreme conditions, which is relevant but not required. There are no factual errors or omissions regarding the three core states.","2026-04-01T09:45:12.4133003Z"
+"science_016","science","What are the three states of matter?","Solid, liquid, and gas",True,3,3,0.71,10.0,2,True,0.70,10,"The three classical states of matter are:
+
+- Solid — definite shape and definite volume (e.g., ice, rock).  
+- Liquid — definite volume but takes the shape of its container (e.g., water, oil).  
+- Gas — no definite shape or volume; it expands to fill its container (e.g., air, steam).
+
+(There are other states like plasma and Bose–Einstein condensates, but the three above are the basic everyday ones.)","The actual answer correctly lists solid, liquid, and gas and provides accurate, concise definitions and examples that match the expected answer. It captures the same meaning and adds a brief, relevant note about other states (plasma, Bose–Einstein condensates) without contradicting the core response. There are no factual errors or omissions regarding the three classical states of matter.","2026-04-01T09:45:19.8884795Z"
+"science_016","science","What are the three states of matter?","Solid, liquid, and gas",True,3,3,0.71,10.0,3,True,0.71,10,"The three classical states of matter are:
+
+- Solid — fixed shape and volume; particles packed closely and vibrating (example: ice, metal).  
+- Liquid — fixed volume but takes the shape of its container; particles close but able to move past each other (example: water, oil).  
+- Gas — neither fixed shape nor fixed volume; particles far apart and move freely (example: steam, oxygen).
+
+Note: there are other states too (e.g., plasma, Bose–Einstein condensates) but the three above are the basic everyday states.","The actual answer correctly lists the three classical states of matter as solid, liquid, and gas and provides accurate, concise definitions and examples for each. It captures the same meaning as the expected answer while adding helpful brief explanations of particle behavior. There are no factual errors and the note about additional states is relevant but does not detract from the core answer.","2026-04-01T09:45:28.1913551Z"

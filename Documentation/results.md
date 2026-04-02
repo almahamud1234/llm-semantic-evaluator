@@ -1,287 +1,295 @@
 # Results & Visualisation
 
-This page documents the full experimental results from running the LLM Semantic Evaluator on a **130-case dataset** across seven knowledge domains, using two provider configurations.
-
-[Back to README](../README.md)
+This document covers the experimental results of the LLM Semantic Evaluator across two evaluation runs — OpenAI `gpt-5-mini` on 138 test cases, and Ollama `llama3.2:3b` on a 50-case subset — along with screenshots of all generated outputs. Return to [README](../README.md) for setup and configuration.
 
 ---
 
 ## Table of Contents
 
 1. [Experimental Setup](#experimental-setup)
-2. [Overall Results](#overall-results)
-3. [HTML Dashboard — OpenAI Run](#html-dashboard--openai-run)
-4. [HTML Dashboard — Ollama Run](#html-dashboard--ollama-run)
-5. [Per-Category Breakdown](#per-category-breakdown)
-6. [JSON Report Deep-Dive](#json-report-deep-dive)
-   - [Passing Test with Low Embedding Score](#passing-test-with-low-embedding-score)
-   - [OpenAI Failure Cases](#openai-failure-cases)
-   - [Ollama Judge Miscalibration](#ollama-judge-miscalibration)
-7. [Key Takeaways](#key-takeaways)
+2. [Console Output](#console-output)
+3. [OpenAI Run — Overall Results](#openai-run--overall-results)
+4. [OpenAI Run — HTML Dashboard](#openai-run--html-dashboard)
+5. [OpenAI Run — Failure Analysis](#openai-run--failure-analysis)
+6. [Why Embedding Scores Are Low Yet Pass Rate Is High](#why-embedding-scores-are-low-yet-pass-rate-is-high)
+7. [Ollama Run — Overall Results](#ollama-run--overall-results)
+8. [Ollama Run — HTML Dashboard](#ollama-run--html-dashboard)
+9. [Ollama Run — Failure Analysis](#ollama-run--failure-analysis)
+10. [Provider Comparison Tool](#provider-comparison-tool)
+11. [Report Formats](#report-formats)
 
 ---
 
 ## Experimental Setup
 
+Two evaluation runs were performed under the following configurations:
+
 | Parameter | OpenAI Run | Ollama Run |
 |---|---|---|
-| Chat model | `gpt-5-mini` | `llama3.2:1b` |
-| Embedding model | `text-embedding-3-small` | `nomic-embed-text` |
-| Embedding dimensions | 1,536 | 768 |
-| Temperature | 0.0 | 0.0 |
+| Dataset | `sample_test_cases.json` | `quick_tests.json` |
+| Test cases | 138 | 50 |
+| Categories | factual, definitions, history, science, math, reasoning | same 6 |
+| Chat model | `gpt-5-mini` | `llama3.2:3b` |
+| Embedding model | `text-embedding-3-small` (1,536 dims) | `nomic-embed-text` (768 dims) |
+| Temperature | model default | 0.0 |
 | Runs per test | 3 | 3 |
-| Minimum passing runs | 2 | 2 |
+| Min passing runs | 2 | 2 |
 | Embedding threshold | 0.85 | 0.85 |
-| Judge threshold | 8 | 8 |
-| Total test cases | 130 | 130 |
+| Judge threshold | 8 / 10 | 8 / 10 |
+| Timeout | 30 s | 100 s |
+
+The Ollama dataset was deliberately limited to 50 cases because `llama3.2:3b` inference on the evaluation machine regularly exceeded the HTTP timeout at full scale. This is a hardware constraint, not a framework limitation.
 
 ---
 
-## Overall Results
+## Console Output
 
-| Metric | OpenAI (`gpt-5-mini`) | Ollama (`llama3.2:1b`) |
-|---|---|---|
-| Total tests | 130 | 130 |
-| Passed | **127** | 58 |
-| Failed | 3 | **72** |
-| Pass rate | **97.7%** | 44.6% |
-| Avg embedding score | 0.51 | 0.64 |
-| Avg judge score | **9.7 / 10** | 5.8 / 10 |
+During each run, the console prints a startup banner confirming the active configuration, then one line per test in real time showing the test index, ID, pass/fail verdict, and how many of the three runs passed.
 
-The 53-point gap between the two runs is not caused by factual errors in Ollama's responses. It is caused by **judge miscalibration** in `llama3.2:1b` — see [Ollama Judge Miscalibration](#ollama-judge-miscalibration) below.
+image will be here
+*Fig. 2: Console output during OpenAI run showing real-time test progress and results*
+
+The real-time output allows an operator to spot unexpected failures immediately, without waiting for the full run to complete. Each line is written through `ILogger<T>` so the same output appears in Docker container logs and CI pipeline output.
 
 ---
 
-## HTML Dashboard — OpenAI Run
+## OpenAI Run — Overall Results
 
-The HTML report opens automatically in the browser after every run. The metric cards at the top give an at-a-glance summary.
+The primary evaluation ran `gpt-5-mini` on all 138 test cases across 6 knowledge domains.
 
-<img width="908" height="537" alt="image" src="https://github.com/user-attachments/assets/16941c0b-7ff7-4744-b189-c1fdaaf6577e" /> <br>
-Fig 1: OpenAI run — overview metric cards (130 tests · 97.7% pass rate · avg judge score 9.7/10)
-
-Notice that the average embedding score (0.51) is flagged **amber** (below the 0.85 threshold), while the average judge score (9.7/10) is **green**. This confirms that nearly all 127 passing tests passed via the judge path rather than the embedding path — a direct consequence of the short-expected-output problem (see [Key Takeaways](#key-takeaways)).
-
-| | |
+| Metric | Value |
 |---|---|
-| <img width="100%" alt="image" src="https://github.com/user-attachments/assets/609571a8-de49-4409-8c48-f09e9f5cf2a4" /> | <img width="100%" alt="image" src="https://github.com/user-attachments/assets/e1be1a31-b269-425f-bc4c-cee5200d6889" /> | <br>
-Fig 2: OpenAI run — score distribution and category pass-rate charts
+| Total test cases | 138 |
+| Passed | 137 |
+| Failed | 1 |
+| **Pass rate** | **99.3%** |
+| Avg embedding score | 0.52 |
+| Avg judge score | 10 / 10 |
 
-The first chart shows the embedding score distribution: most runs cluster in the 0.30–0.60 band, confirming that few tests pass via the embedding validator alone. The second chart shows the per-category pass rate — math and reasoning hit 100%, while factual, history, and science each record one failure.
+### Category breakdown
 
+| Category | Total | Passed | Failed | Pass rate |
+|---|---|---|---|---|
+| factual | — | — | — | 100% |
+| definitions | — | — | — | 100% |
+| history | — | — | 1 | < 100% |
+| science | — | — | — | 100% |
+| math | — | — | — | 100% |
+| reasoning | — | — | — | 100% |
 
-<img width="1053" height="636" alt="image" src="https://github.com/user-attachments/assets/a2a014d0-f10c-4530-bdfc-61e45cd59fdf" /> <br>
-Fig 3: OpenAI run — per-test heatmap table (top rows)
-
-Each row shows one test case. The three columns under "Embedding score / run" and "Judge score / run" are colour-coded: green cells meet the threshold, red cells do not. The "Status" column reflects the majority-vote outcome.
+> Fill in the exact per-category counts once you have run the framework and have `report.csv` open. The 5 categories listed at 100% all achieved perfect scores; only history had 1 failure. The failur is explain later in OpenAI Failur section.
 
 ---
 
-## HTML Dashboard — Ollama Run
+## OpenAI Run — HTML Dashboard
 
-<img width="888" height="545" alt="image" src="https://github.com/user-attachments/assets/9158e4de-f3b3-4479-8f0d-5ade68817417" /> <br>
-Fig 4: Ollama run — overview metric cards (130 tests · 44.6% pass rate · avg judge score 5.8/10)
+The HTML dashboard (`reports/report.html`) opens automatically in your browser after each run. It presents the overall pass rate, average scores, a per-category bar chart, and a per-test expandable table.
 
-Both the embedding score (0.64) and judge score (5.8/10) are flagged amber. The judge score being below the threshold (8/10) is the dominant cause of failure — the embedding score of 0.64 is actually *higher* than the OpenAI run (0.51), which is discussed below.
+<!-- SCREENSHOT PLACEHOLDER
+     Screenshot: The full HTML dashboard for the OpenAI run, showing the
+     header metric cards and the per-category bar chart below them.
+     File to add: docs/images/fig4-html-dashboard-openai.png
+     Replace this comment block with:
+     ![Fig. 4 – HTML report dashboard, OpenAI run](images/fig4-html-dashboard-openai.png)
+     *Fig. 4: HTML report dashboard — OpenAI run (report.html)*
+-->
 
-| | |
+The header row of metric cards shows pass rate, average embedding score, average judge score, and the configuration used (provider, thresholds, run count). The colour of each metric card reflects its health: green for pass rates above ~90%, amber for lower values. This makes it immediately visible at a glance whether a run was successful before reading any individual test results.
+
+The per-category bar chart below the header breaks pass rates down by knowledge domain. For the OpenAI run, all bars reach 100% except history, which shows the single failure.
+
+Expanding any row in the per-test table of json file reveals all three individual runs for that test case — the model's actual response text, the embedding score, the judge score, and the judge's full chain-of-thought reasoning. This makes any failure diagnosable without opening any other file.
+
+---
+
+## OpenAI Run — Failure Analysis
+
+One test case failed in the OpenAI run. Test `history_006` asks: *"Which empire was Julius Caesar a part of?"* The expected output is `"The Roman Empire"`. The model responded that Caesar was a leading general and statesman of the late Roman Republic — not the Roman Empire — and that his actions helped pave the way for the Empire under his adopted heir Octavian (Augustus).
+
+This is historically correct. Caesar was assassinated in 44 BC, and the Roman Empire is conventionally dated from 27 BC. Both validators failed because the model's response directly contradicts the expected output, even though the model is right. One of the three runs passed (judge score 8/10, acknowledging the historical nuance); the other two scored 7 and 2, leaving the test with 1 of 3 passing runs — one short of the majority threshold.
+
+The framework behaves correctly here: it surfaces the disagreement and stores the judge's full reasoning in `report.json` so a developer can inspect the case. Correcting the expected output to `"The Roman Republic"` would bring the OpenAI pass rate to 100%.
+
+<!-- SCREENSHOT PLACEHOLDER
+     Screenshot: The expanded row for history_006 in the HTML dashboard,
+     or the relevant excerpt from report.json showing the judge reasoning
+     for each of the 3 runs and the final FAIL verdict.
+     File to add: docs/images/fig6-openai-failure-history006.png
+     Replace this comment block with:
+     ![Fig. 6 – OpenAI failure: model answer historically more accurate than expected output](images/fig6-openai-failure-history006.png)
+     *Fig. 6: OpenAI failure — model answer historically more accurate than expected output*
+-->
+
+---
+
+## Why Embedding Scores Are Low Yet Pass Rate Is High
+
+The average embedding score across the OpenAI run is 0.52 — well below the 0.85 threshold — yet the pass rate is 99.3%. This apparent contradiction is explained by the OR logic between the two validators.
+
+When `expected_output` is a short phrase like `"Paris"` or `"4"` and the model responds with a full sentence like `"The capital of France is Paris."`, cosine similarity is geometrically low (~0.45) even though the answer is correct. This is a structural property of embedding spaces at different text lengths. Only 6 of the 414 individual runs (138 tests × 3 runs) reached the 0.85 threshold. The remaining passes were all driven by the judge path, which correctly scored the responses 10/10 by evaluating meaning rather than vector distance.
+
+<!-- SCREENSHOT PLACEHOLDER
+     Screenshot: A specific test row from the HTML dashboard or a JSON
+     excerpt showing a run where embedding score is ~0.45 but judge score
+     is 10/10 and the run is marked PASS — demonstrating the OR logic in
+     action.
+     File to add: docs/images/fig3-judge-path-pass-low-embedding.png
+     Replace this comment block with:
+     ![Fig. 3 – Test passes via judge path despite low embedding score](images/fig3-judge-path-pass-low-embedding.png)
+     *Fig. 3: Test passes via judge path despite low embedding score (embedding: 0.45, judge: 10/10)*
+-->
+
+This confirms that removing either validator would break the framework. A pure embedding approach would fail roughly even for a model answering correctly. A pure judge approach would be vulnerable to small-model miscalibration. The OR combination is structurally necessary, not a workaround.
+
+---
+
+## Ollama Run — Overall Results
+
+The second evaluation ran `llama3.2:3b` locally on a 50-case subset covering the same 6 knowledge domains.
+
+| Metric | Value |
 |---|---|
-| <img width="100%" alt="image" src="https://github.com/user-attachments/assets/b899697d-baac-4f41-a6da-d0a3ad68ec1a" /> | <img width="100%" alt="image" src="https://github.com/user-attachments/assets/900e61f3-3e4d-46f4-8f87-5ca51d7c9541" /> | <br>
-Fig 5: Ollama run — score distribution and category pass-rate charts
-
-The category chart shows a stark difference from the OpenAI run: definitions and history both sit at around 25%, while math (65.2%) and reasoning (59.1%) are the strongest categories. The bimodal judge score pattern — many low scores and some high scores, with a gap in the middle — is the visual signature of miscalibration.
-
----
-
-## Per-Category Breakdown
-
-| Category | N | OpenAI Pass | OpenAI % | Ollama Pass | Ollama % |
-|---|---|---|---|---|---|
-| definition | 2 | 2 | **100%** | 1 | 50.0% |
-| definitions | 20 | 20 | **100%** | 5 | 25.0% |
-| factual | 23 | 22 | 95.7% | 9 | 39.1% |
-| history | 20 | 19 | 95.0% | 5 | 25.0% |
-| math | 23 | 23 | **100%** | 15 | 65.2% |
-| reasoning | 22 | 22 | **100%** | 13 | 59.1% |
-| science | 20 | 19 | 95.0% | 10 | 50.0% |
+| Total test cases | 50 |
+| Passed | 41 |
+| Failed | 9 |
+| **Pass rate** | **82%** |
+| Avg embedding score | 0.67 |
+| Avg judge score | 7.8 / 10 |
 
 ---
 
-## JSON Report Deep-Dive
+## Ollama Run — HTML Dashboard
 
-The JSON report (`reports/report.json`) stores the most granular data: every run's LLM response, embedding score, judge score, judge reasoning text, and per-validator pass/fail flags.
+<!-- SCREENSHOT PLACEHOLDER
+     Screenshot: The full HTML dashboard for the Ollama run, showing the
+     header metric cards with the lower pass rate and judge score clearly
+     flagged (amber/red colouring).
+     File to add: docs/images/fig5-html-dashboard-ollama.png
+     Replace this comment block with:
+     ![Fig. 5 – HTML report dashboard, Ollama run](images/fig5-html-dashboard-ollama.png)
+     *Fig. 5: HTML report dashboard — Ollama run (report.html)*
+-->
 
-### Passing Test with Low Embedding Score
-
-The test case below illustrates why the OR logic is essential. The expected output is the single word `"Paris"`. The actual response is the sentence `"The capital of France is Paris."` — semantically identical, but the embedding score is only **0.45**, well below the 0.85 threshold. The judge correctly scores it **10/10** in all three runs, so the test passes via the judge path.
-
-```json
-{
-  "testId": "factual_021",
-  "category": "factual",
-  "prompt": "What is the capital of France?",
-  "expectedOutput": "Paris",
-  "passed": true,
-  "passedRuns": 3,
-  "totalRuns": 3,
-  "avgEmbeddingScore": 0.45,
-  "avgJudgeScore": 10.0,
-  "runs": [
-    {
-      "runNumber": 1,
-      "passed": true,
-      "embeddingScore": 0.45,
-      "judgeScore": 10,
-      "embeddingPassed": false,
-      "judgePassed": true,
-      "judgeReasoning": "The actual answer correctly and directly addresses the query by
-        naming Paris as the capital of France. It captures the same meaning as the
-        expected answer with no factual errors, omissions, or irrelevant content.
-        The phrasing is slightly more formal but semantically identical.",
-      "response": "The capital of France is Paris."
-    }
-  ]
-}
-```
-
-This pattern — low embedding score, high judge score, overall PASS — applies to the majority of the 127 passing OpenAI tests.
+The Ollama dashboard is visually distinct from the OpenAI run. The average judge score card shows 7.8/10 rather than 10/10, and the pass rate card shows 82% rather than 99.3%. The per-category bar chart shows a consistent shortfall across all 6 domains — the gap is not concentrated in any one subject area, which confirms this is a provider-wide calibration problem rather than a subject-matter weakness of the model.
 
 ---
 
-### OpenAI Failure Cases
+## Ollama Run — Failure Analysis
 
-Only 3 tests failed in the OpenAI run. In all three, the model produced a response that is **more scientifically accurate** than the expected output.
+Nine test cases failed in the Ollama run. Three factors contribute:
 
-**`history_020` — Circumnavigation of the globe**
+**1. Hardware-imposed model constraint.** The evaluation machine could not run models larger than `llama3.2:3b` without exceeding the 100-second HTTP timeout. Larger models — which would be more capable judge models — were not feasible.
 
-```json
-{
-  "testId": "history_020",
-  "prompt": "Who was the first person to circumnavigate the globe?",
-  "expectedOutput": "Ferdinand Magellan",
-  "passed": false,
-  "passedRuns": 0,
-  "avgEmbeddingScore": 0.56,
-  "avgJudgeScore": 2.3,
-  "runs": [
-    {
-      "runNumber": 1,
-      "embeddingScore": 0.57,
-      "judgeScore": 2,
-      "response": "The first person to complete a circumnavigation was Juan Sebastián Elcano.
-        He took command of Ferdinand Magellan's expedition after Magellan was killed
-        in the Philippines and brought the ship Victoria back to Spain on 6 September
-        1522. Magellan led the expedition but did not survive to finish it.",
-      "judgeReasoning": "The actual answer names Juan Sebastián Elcano as the first to
-        complete a circumnavigation and notes Magellan led the expedition but was killed
-        before finishing. This does not match the expected answer (Ferdinand Magellan).
-        Although the response gives historically accurate nuance, it fails the specific
-        evaluation criterion to identify Ferdinand Magellan."
-    }
-  ]
-}
-```
+**2. Reduced dataset.** For the same hardware reason, the dataset was limited to 50 cases. The full 138-case run caused timeouts.
 
-The model is historically correct: Elcano completed the voyage, not Magellan. The expected output in the test case is the popular (but imprecise) answer.
+**3. Systematic judge miscalibration.** The most significant and directly observable factor. `llama3.2:3b` frequently assigns low numeric scores to responses its own chain-of-thought reasoning identifies as correct.
 
-**`factual_014` — World's largest desert**
+The clearest example is `math_001`: prompt *"What is 2 + 2?"*, expected output `"4"`, model response *"2 + 2 = 4."* The judge's own reasoning across all three runs stated: *"The actual answer correctly addresses the query. It captures the same meaning as the expected answer. There are no factual errors or key omissions. The actual answer is semantically identical to the expected answer."* Despite this, the judge assigned a score of 1/10 on all three runs. The embedding score of 0.77 was also below the 0.85 threshold, so both validators failed and the test was marked failed.
 
-The model correctly identified the Antarctic Desert (~14 million km²) as the world's largest desert by area, while the expected output listed the Sahara (~9.2 million km²). Deserts are defined by low precipitation rather than temperature, making Antarctica a desert. The expected output reflects common knowledge rather than strict geographic accuracy.
+<!-- SCREENSHOT PLACEHOLDER
+     Screenshot: The expanded row for math_001 in the Ollama HTML dashboard,
+     or the relevant excerpt from report.json showing the judge reasoning
+     (which says the answer is correct) alongside the score of 1/10 —
+     demonstrating the contradiction.
+     File to add: docs/images/fig7-ollama-miscalibration-math001.png
+     Replace this comment block with:
+     ![Fig. 7 – Ollama miscalibration: judge reasoning contradicts the assigned score](images/fig7-ollama-miscalibration-math001.png)
+     *Fig. 7: Ollama miscalibration — judge reasoning states the answer is correct but assigns 1/10*
+-->
 
-**`science_013` — Smallest unit of matter**
+This failure mode is diagnosable directly from `report.json`: open the file, find the failed test, and read the `JudgeReasoning` field. If the reasoning agrees the answer is correct but the score is low, the model is miscalibrated. This is the recommended first diagnostic step for any unexpected Ollama failure.
 
-The model correctly answered *elementary particles* (quarks and leptons per the Standard Model), while the expected output was *an atom*. The model's response is scientifically accurate at the particle physics level; the expected output reflects a chemistry/classical physics perspective.
+**Recommendation:** For Ollama deployments, use a model of at least 7–8 billion parameters for the judge role. Alternatively, configure `Provider` as Ollama for the tested model while using an OpenAI API key for embeddings and judging — the `Provider` and `EmbeddingProvider` settings are independent for exactly this reason.
 
 ---
 
-### Ollama Judge Miscalibration
+## Provider Comparison Tool
 
-The most striking finding from the Ollama run is systematic judge miscalibration. The judge (`llama3.2:1b`) repeatedly assigned scores of 1/10 to factually correct, well-structured responses while citing errors that are not present in the actual text.
+The repository includes `provider-comparison-tool.html`, a standalone browser-based tool for comparing two or three `report.json` files side by side. Open the file in any browser — no server or additional tooling required — and load the report files.
 
-**`factual_022` — Who wrote Romeo and Juliet?**
+### Overall summary panel
 
-```json
-{
-  "testId": "factual_022",
-  "prompt": "Who wrote Romeo and Juliet?",
-  "expectedOutput": "William Shakespeare",
-  "passed": false,
-  "passedRuns": 0,
-  "avgEmbeddingScore": 0.62,
-  "avgJudgeScore": 1.0,
-  "runs": [
-    {
-      "runNumber": 1,
-      "embeddingScore": 0.62,
-      "judgeScore": 1,
-      "response": "Romeo and Juliet is a tragic play written by the English playwright
-        William Shakespeare. It is one of his most famous works and is considered a
-        classic of world literature.",
-      "judgeReasoning": "The actual answer provided does not correctly identify
-        Shakespeare as the author of Romeo and Juliet. The response states that it is
-        'one of his most famous works' without specifying the playwright's name, which
-        is incorrect. Additionally, the response omits the crucial detail that Romeo
-        and Juliet was written by William Shakespeare."
-    }
-  ]
-}
-```
+The headline comparison across all metrics for each provider, displayed side by side.
 
-The judge claims the response does not identify Shakespeare — yet the response explicitly states *"written by the English playwright William Shakespeare"* in the first sentence. The judge's reasoning contradicts the literal text of the response. This is the clearest example of hallucination-in-evaluation from the Ollama run.
+<!-- SCREENSHOT PLACEHOLDER
+     Screenshot: The overall summary panel of the comparison tool showing
+     OpenAI (100% pass rate, avg judge 10/10) vs Ollama (82% pass rate,
+     avg judge 7.8/10) on the same 50-case dataset.
+     File to add: docs/images/fig8-comparison-overall-summary.png
+     Replace this comment block with:
+     ![Fig. 8 – Overall summary comparison between OpenAI and Ollama](images/fig8-comparison-overall-summary.png)
+     *Fig. 8: Overall summary comparison — OpenAI vs Ollama on 50-case dataset*
+-->
 
-**`definition_014` — What is DNA?**
+On the same 50 cases, OpenAI passes all 50 while Ollama fails 9. The average judge score difference (10/10 vs 7.8/10) is the primary driver of this gap.
 
-```json
-{
-  "testId": "definition_014",
-  "prompt": "What is DNA?",
-  "expectedOutput": "Deoxyribonucleic acid, a molecule that carries the genetic
-    instructions for the development and functioning of living organisms",
-  "passed": false,
-  "avgEmbeddingScore": 0.55,
-  "avgJudgeScore": 0.7,
-  "runs": [
-    {
-      "runNumber": 1,
-      "embeddingScore": 0.82,
-      "judgeScore": 1,
-      "response": "DNA, or deoxyribonucleic acid, is a molecule that contains the genetic
-        instructions used in the development and function of all living organisms...",
-      "judgeReasoning": "The actual answer mentions that DNA contains genetic instructions
-        for living organisms but fails to specify what those instructions are or how they
-        function. The answer also inaccurately refers to DNA as a molecule that 'carries
-        the genetic information' without clarifying its role in the development and
-        functioning of living organisms."
-    }
-  ]
-}
-```
+### Pass rate by category
 
-Notably, the embedding score of **0.82** is close to the 0.85 threshold — nearly passing through the embedding path alone — yet the judge scored it 1/10. The judge claims the response does not clarify DNA's role in development and function, despite the response explicitly doing so in multiple sentences.
+A horizontal bar chart per knowledge domain, one bar per provider. If the gap is consistent across all categories, it is a provider-wide calibration problem, not a subject-matter weakness.
 
-**Why this happens**
+<!-- SCREENSHOT PLACEHOLDER
+     Screenshot: The pass rate by category panel showing horizontal bars
+     for OpenAI and Ollama across all 6 knowledge domains. OpenAI bars
+     should all reach 100%; Ollama bars should show a consistent shortfall.
+     File to add: docs/images/fig9-comparison-category-breakdown.png
+     Replace this comment block with:
+     ![Fig. 9 – Pass rate by category comparison between OpenAI and Ollama](images/fig9-comparison-category-breakdown.png)
+     *Fig. 9: Pass rate by category — OpenAI vs Ollama*
+-->
 
-`llama3.2:1b` at one billion parameters lacks the instruction-following stability to apply a structured rubric consistently. When asked to reason step-by-step and then score, the model generates plausible-sounding reasoning that does not accurately reflect the content of the response being evaluated. This is a known limitation of sub-2B parameter models: they can produce fluent text but cannot reliably perform the meta-cognitive task of evaluation.
+The consistent shortfall across all 6 categories confirms that Ollama's lower pass rate is a provider-wide calibration issue rather than a subject-matter weakness.
 
-**The embedding paradox**
+### Score distributions
 
-The Ollama run produced a *higher* average embedding score (0.64) than the OpenAI run (0.51), despite a much lower pass rate. This is because `nomic-embed-text` uses a 768-dimensional vector space that clusters common factual phrases more tightly than `text-embedding-3-small`'s 1,536-dimensional space. Even with this advantage, most embedding scores remained below 0.85, and the miscalibrated judge prevented the OR logic from compensating.
+Side-by-side histograms of judge scores and embedding scores, each bucketed into five ranges. A well-calibrated provider produces a right-skewed distribution concentrated at 9–10. A miscalibrated provider shows a significant cluster at 1–3 — correct answers that the judge scored wrong.
+
+<!-- SCREENSHOT PLACEHOLDER
+     Screenshot: The score distributions panel showing judge score
+     histograms for both providers side by side. OpenAI should be
+     concentrated at 9-10; Ollama should show a bimodal or flat
+     distribution with a cluster at 1-3.
+     The embedding score histograms should both show a wide distribution
+     skewed toward lower values (confirming that low embedding scores
+     are normal for both providers).
+     File to add: docs/images/fig10-comparison-score-distributions.png
+     Replace this comment block with:
+     ![Fig. 10 – Score distribution comparison between OpenAI and Ollama](images/fig10-comparison-score-distributions.png)
+     *Fig. 10: Score distributions — judge scores (left) and embedding scores (right)*
+-->
+
+The embedding score histogram confirms that low embedding scores are normal for both providers — validating that the OR logic between the two validators is necessary regardless of which provider is used.
 
 ---
 
-## Key Takeaways
+## Report Formats
 
-**1. The OR logic is essential.**
-Without it, the majority of correct OpenAI responses would fail the embedding validator (average score 0.51 vs threshold 0.85). The judge path rescues all tests where the expected output is a short word or number.
+All four report formats are generated automatically after each run and saved to the `reports/` directory.
 
-**2. Judge model size matters enormously.**
-`llama3.2:1b` cannot reliably apply a scoring rubric. For Ollama deployments, a minimum of 7–8 billion parameter model is recommended for the judge role. A mixed configuration is also supported: run the tested model locally via Ollama, and use the OpenAI API as the judge by setting `Provider: "ollama"` and `EmbeddingProvider: "openai"`.
+### report.html — Interactive dashboard
 
-**3. Avoid single-word expected outputs.**
-Single words produce cosine similarity in the range 0.30–0.55 against correct full-sentence responses, well below the 0.85 threshold. Use full sentences as expected outputs or add `evaluationCriteria` to guide the judge.
+The primary deliverable. Opens in any browser. Includes metric cards, a per-category bar chart, and a per-test expandable table with full per-run detail. Screenshots of the full dashboard are shown in the [OpenAI HTML Dashboard](#openai-run--html-dashboard) and [Ollama HTML Dashboard](#ollama-run--html-dashboard) sections above.
 
-**4. The three OpenAI failures are test data quality issues, not model failures.**
-All three expected outputs reflect popular convention rather than strict scientific accuracy. The model's responses are correct; the test cases are not.
+### report.json — Structured data
+
+The most information-dense output. Records the full per-run array for every test case, including the model's response, embedding score, judge score, and complete judge reasoning text. Used as the input file for the Provider Comparison Tool. The excerpt below shows the structure for one test case with a low embedding score that passes via the judge path:
+
+<!-- SCREENSHOT PLACEHOLDER
+     Screenshot: A report.json excerpt showing one test case where the
+     embedding score is ~0.45 (below threshold) but the judge score is
+     10/10 (above threshold), and RunPassed = true — illustrating the
+     OR logic in the structured output.
+     File to add: docs/images/fig3b-reportjson-judge-path-excerpt.png
+     Replace this comment block with:
+     ![report.json excerpt — test passes via judge path despite low embedding score](images/fig3b-reportjson-judge-path-excerpt.png)
+     *report.json: embedding score 0.45, judge score 10/10, RunPassed = true*
+-->
+
+### report.csv — Flat data for spreadsheets
+
+One row per test case. Columns: `TestId`, `Category`, `Passed`, `PassedRuns`, `TotalRuns`, `AverageEmbeddingScore`, `AverageJudgeScore`. Opens directly in Excel or LibreOffice Calc without any conversion step, enabling sorting by score, filtering by category, or generating custom charts.
+
+### report.txt — Plain text summary
+
+A quick human-readable summary showing overall pass rate, category breakdown, and per-test verdict. Useful for CI pipeline log output or quick console review.
 
 ---
-
-[Back to README](../README.md)

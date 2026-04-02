@@ -1,6 +1,9 @@
 using System.Text;
 using System.Text.Json;
+using LLMSemanticEvaluator.Configuration;
 using LLMSemanticEvaluator.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace LLMSemanticEvaluator;
 
@@ -32,6 +35,14 @@ namespace LLMSemanticEvaluator;
 public class ReportGenerator
 {
     private readonly string _reportFolder;
+    private readonly ILogger<ReportGenerator>  _logger;
+
+    // Config values read once at construction time and reused across all
+    // report-writing methods — avoids threading the same parameters everywhere.
+    private readonly double _embeddingThreshold;
+    private readonly int    _judgeThreshold;
+    private readonly int    _numberOfRuns;
+    private readonly int    _minimumPassingRuns;
 
     // ── Token names matching %%PLACEHOLDER%% markers in ReportTemplate.html ──
     // Using constants avoids typos when calling Replace().
@@ -50,11 +61,35 @@ public class ReportGenerator
     private const string T_JudgeColor  = "%%JUDGE_COLOR%%";
     private const string T_JudgeNote   = "%%JUDGE_NOTE%%";
     private const string T_JsonData    = "%%JSON_DATA%%";
+    private const string T_RunsPerTest  = "%%RUNS_PER_TEST%%";
+    private const string T_EmbThresh   = "%%EMB_THRESHOLD%%";
+    private const string T_JudgeThresh = "%%JUDGE_THRESHOLD%%";
+    private const string T_MinPassRuns = "%%MIN_PASS_RUNS%%";
+    private const string T_Insights    = "%%INSIGHTS_HTML%%";
+    private const string T_Failures    = "%%FAILURES_HTML%%";
 
-    /// <param name="reportFolder">Folder where all report files will be saved (default: reports).</param>
-    public ReportGenerator(string reportFolder = "reports")
+    /// <summary>
+    /// Constructs the generator, reading threshold and run-count settings from
+    /// configuration so the HTML report reflects the exact values that were used
+    /// during the test run — not hard-coded defaults.
+    /// </summary>
+    /// <param name="options">Bound configuration from appsettings.json via IOptions.</param>
+    /// <param name="logger">Logger injected by the DI container.</param>
+    /// <param name="reportFolder">Output folder; defaults to "reports".</param>
+    public ReportGenerator(
+        IOptions<TestConfiguration>  options,
+        ILogger<ReportGenerator>     logger,
+        string reportFolder = "reports")
     {
+        _logger       = logger;
         _reportFolder = reportFolder;
+        
+        // repeating options.Value.EmbeddingThreshold throughout.
+        var cfg             = options.Value;
+        _embeddingThreshold = cfg.EmbeddingThreshold;
+        _judgeThreshold     = cfg.JudgeThreshold;
+        _numberOfRuns       = cfg.NumberOfRuns;
+        _minimumPassingRuns = cfg.MinimumPassingRuns;
     }
 
     // =========================================================================
@@ -68,7 +103,7 @@ public class ReportGenerator
     {
         if (results.Count == 0)
         {
-            Console.WriteLine("[ReportGenerator] No results to report.");
+            _logger.LogWarning("No results to report.");
             return;
         }
 
@@ -81,19 +116,20 @@ public class ReportGenerator
             await WriteCsvReportAsync(results);
             await WriteHtmlReportAsync(results);
 
-            PrintConsoleSummary(results);
+            LogSummary(results);
 
-            Console.WriteLine($"\nReports saved to: {Path.GetFullPath(_reportFolder)}/");
-            Console.WriteLine("  report.txt  — human-readable summary");
-            Console.WriteLine("  report.json — full data for visualization");
-            Console.WriteLine("  report.csv  — flat data for Excel/charts");
-            Console.WriteLine("  report.html — interactive visual dashboard");
+            string folder = Path.GetFullPath(_reportFolder);
+            _logger.LogInformation("Reports saved to: {Folder}/", folder);
+            _logger.LogInformation("  report.txt  — human-readable summary");
+            _logger.LogInformation("  report.json — full data for visualization");
+            _logger.LogInformation("  report.csv  — flat data for Excel/charts");
+            _logger.LogInformation("  report.html — interactive visual dashboard");
 
             OpenInBrowser(Path.Combine(_reportFolder, "report.html"));
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[ReportGenerator Error] Could not write reports: {ex.Message}");
+            _logger.LogError(ex, "Could not write reports.");
         }
     }
 
@@ -241,21 +277,34 @@ public class ReportGenerator
         string path = Path.Combine(_reportFolder, "report.csv");
         var    sb   = new StringBuilder();
 
-        sb.AppendLine("TestId,Category,Passed,PassedRuns,TotalRuns,AvgEmbeddingScore,AvgJudgeScore,Prompt,ExpectedOutput");
+        sb.AppendLine("TestId,Category,Prompt,ExpectedOutput,TestPassed,PassedRuns,TotalRuns," +
+              "AvgEmbeddingScore,AvgJudgeScore,RunNumber,RunPassed,EmbeddingScore," +
+              "JudgeScore,LLMResponse,JudgeReasoning,ExecutedAt");
 
-        foreach (var r in results)
+        foreach (var result in results)
         {
-            sb.AppendLine(string.Join(",",
-                CsvEscape(r.TestId),
-                CsvEscape(r.Category),
-                r.Passed,
-                r.PassedRunsCount,
-                r.TotalRunsCount,
-                r.AverageEmbeddingScore.ToString("F2"),
-                r.AverageJudgeScore.ToString("F1"),
-                CsvEscape(r.Prompt),
-                CsvEscape(r.ExpectedOutput)
-            ));
+            for (int i = 0; i < result.Runs.Count; i++)
+            {
+                var run = result.Runs[i];
+                sb.AppendLine(string.Join(",",
+                    CsvEscape(result.TestId),
+                    CsvEscape(result.Category),
+                    CsvEscape(result.Prompt),
+                    CsvEscape(result.ExpectedOutput),
+                    result.Passed,
+                    result.PassedRunsCount,
+                    result.TotalRunsCount,
+                    result.AverageEmbeddingScore.ToString("F2"),
+                    result.AverageJudgeScore.ToString("F1"),
+                    i + 1, // run number
+                    run.Passed,
+                    run.EmbeddingScore.ToString("F2"),
+                    run.JudgeScore,
+                    CsvEscape(run.Response),
+                    CsvEscape(run.JudgeReasoning),
+                    CsvEscape(run.ExecutedAt.ToString("o"))
+                ));
+            }
         }
 
         await File.WriteAllTextAsync(path, sb.ToString());
@@ -286,10 +335,16 @@ public class ReportGenerator
                                                      .OrderBy(c => c));
 
         string passBadge  = passRate >= 100 ? "badge-pass" : passRate >= 80 ? "badge-warn" : "badge-fail";
-        string embColor   = avgEmb   >= 0.85 ? "#3B6D11" : "#BA7517";
-        string embNote    = avgEmb   >= 0.85 ? "Above 0.85 threshold" : "Below 0.85 threshold";
-        string judgeColor = avgJudge >= 8    ? "#3B6D11" : "#BA7517";
-        string judgeNote  = avgJudge >= 8    ? "Above threshold (>=8)" : "Below threshold (>=8)";
+        string embColor   = avgEmb   >= _embeddingThreshold ? "#3B6D11" : "#BA7517";
+        string embNote    = avgEmb   >= _embeddingThreshold
+                            ? $"Above {_embeddingThreshold:F2} threshold"
+                            : $"Below {_embeddingThreshold:F2} threshold";
+        string judgeColor = avgJudge >= _judgeThreshold ? "#3B6D11" : "#BA7517";
+        string judgeNote  = avgJudge >= _judgeThreshold
+                            ? $"Above threshold (>={_judgeThreshold})"
+                            : $"Below threshold (>={_judgeThreshold})";
+        string insightsHtml = BuildInsightsHtml(results, _embeddingThreshold, _judgeThreshold, _numberOfRuns, _minimumPassingRuns);
+        string failuresHtml = BuildFailuresHtml(results);
 
         // ── Serialize results into compact JSON for the dashboard JS ──────────
         string jsonData = JsonSerializer.Serialize(results.Select(r => new
@@ -321,10 +376,90 @@ public class ReportGenerator
             .Replace(T_AvgJudge,    avgJudge.ToString("F1"))
             .Replace(T_JudgeColor,  judgeColor)
             .Replace(T_JudgeNote,   judgeNote)
-            .Replace(T_JsonData,    jsonData);
+            .Replace(T_JsonData,    jsonData)
+            .Replace(T_RunsPerTest,  _numberOfRuns.ToString())
+            .Replace(T_EmbThresh,    _embeddingThreshold.ToString("F2"))
+            .Replace(T_JudgeThresh,  _judgeThreshold.ToString())
+            .Replace(T_MinPassRuns,  _minimumPassingRuns.ToString())
+            .Replace(T_Insights,     insightsHtml)
+            .Replace(T_Failures,     failuresHtml);
+
 
         await File.WriteAllTextAsync(Path.Combine(_reportFolder, "report.html"), html);
     }
+    
+    private static string BuildInsightsHtml(
+        List<TestResult> results,
+        double embeddingThreshold,
+        int    judgeThreshold,
+        int    numberOfRuns,
+        int    minimumPassingRuns)
+    {
+        int    total      = results.Count;
+        double avgEmb     = Math.Round(results.Average(r => r.AverageEmbeddingScore), 2);
+        double passRate   = Math.Round((double)results.Count(r => r.Passed) / total * 100, 1);
+
+        // Count how many tests are rescued by the judge (pass via judge, not embedding)
+        int judgeRescued = results.Count(r =>
+            r.Passed &&
+            r.AverageEmbeddingScore < embeddingThreshold &&
+            r.AverageJudgeScore     >= judgeThreshold);
+
+        var sb = new StringBuilder();
+
+        sb.Append($"""
+            <div class="insight-box">
+              <strong>Why is the average embedding score low ({avgEmb:F2}) yet the pass rate is {passRate:F1}%?</strong><br>
+              Short expected outputs produce low cosine similarity against full-sentence LLM responses because the vector spaces do not overlap well at different lengths. This is a known limitation of embedding-based evaluation. The LLM judge correctly scores these as high quality, and the OR logic ensures they still pass. {judgeRescued} of {total} tests passed via the judge validator alone, confirming the dual-validator design is essential.
+            </div>
+            """);
+
+        sb.Append($"""
+            <div class="insight-box" style="margin-bottom:0;">
+              <strong>Why run each test {numberOfRuns} times?</strong><br>
+              LLMs are non-deterministic — the same prompt can produce different wording across runs. Running {numberOfRuns} times and requiring {minimumPassingRuns}/{numberOfRuns} to pass (majority vote) eliminates single-run flukes without being too strict. Consistent results across all runs indicate a stable, reliable model for that task type.
+            </div>
+            """);
+
+        return sb.ToString();
+    }
+
+    private static string BuildFailuresHtml(List<TestResult> results)
+    {
+        var failures = results.Where(r => !r.Passed).ToList();
+
+        if (failures.Count == 0)
+        {
+            return """
+                <div class="insight-box" style="margin-bottom:0;background:#f0faf4;border-left-color:#1D9E75;">
+                  <strong style="color:#1D9E75;">No failures detected.</strong><br>
+                  All test cases passed. The model is performing reliably across all categories and runs.
+                </div>
+                """;
+        }
+
+        var sb = new StringBuilder();
+        foreach (var r in failures)
+        {
+            string prompt   = Truncate(r.Prompt,         120);
+            string expected = Truncate(r.ExpectedOutput,  80);
+            double avgJudge = Math.Round(r.AverageJudgeScore, 1);
+
+            sb.Append($"""
+                <div class="failure-box" style="margin-bottom:0.8rem;">
+                  <strong>Test: {r.TestId}</strong> &nbsp;<span style="font-size:11px;color:#888780;">({r.Category})</span><br>
+                  <strong>Prompt:</strong> &ldquo;{HtmlEncode(prompt)}&rdquo;<br>
+                  <strong>Expected:</strong> &ldquo;{HtmlEncode(expected)}&rdquo;<br>
+                  <strong>Result:</strong> {r.PassedRunsCount}/{r.TotalRunsCount} runs passed &nbsp;|&nbsp; Avg Judge: {avgJudge}/10<br>
+                </div>
+                """);
+        }
+
+        return sb.ToString();
+    }
+
+    private static string HtmlEncode(string text)
+        => System.Web.HttpUtility.HtmlEncode(text ?? string.Empty);
 
     /// <summary>
     /// Loads the HTML template string from either an embedded resource or a
@@ -370,7 +505,7 @@ public class ReportGenerator
     /// Works on Windows, macOS, and Linux.
     /// Silently skips if the browser cannot be launched (e.g. headless CI).
     /// </summary>
-    private static void OpenInBrowser(string filePath)
+    private void OpenInBrowser(string filePath)
     {
         try
         {
@@ -380,27 +515,34 @@ public class ReportGenerator
                 UseShellExecute = true
             });
         }
-        catch
+        catch (Exception ex)
         {
-            Console.WriteLine("  (Could not auto-open browser — open report.html manually)");
+            _logger.LogWarning(ex, "Could not auto-open browser — open report.html manually.");
         }
     }
 
     // =========================================================================
     // Shared helpers
     // =========================================================================
-
-    private static void PrintConsoleSummary(List<TestResult> results)
+    /// <summary>
+    
+    /// Logs the overall pass/fail summary through the logging infrastructure
+    /// so it appears in any hosting environment (console, Docker, CI pipeline).
+    /// </summary>
+    private void LogSummary(List<TestResult> results)
     {
         int    total  = results.Count;
         int    passed = results.Count(r => r.Passed);
         double rate   = (double)passed / total * 100;
 
-        Console.WriteLine("\n=== Report Summary ===");
-        Console.WriteLine($"Total  : {total}");
-        Console.WriteLine($"Passed : {passed}");
-        Console.WriteLine($"Failed : {total - passed}");
-        Console.WriteLine($"Rate   : {rate:F1}%");
+        _logger.LogInformation("══════════════════════════════════════════");
+        _logger.LogInformation("  Report Summary");
+        _logger.LogInformation("══════════════════════════════════════════");
+        _logger.LogInformation("  Total  : {Total}",          total);
+        _logger.LogInformation("  Passed : {Passed}",         passed);
+        _logger.LogInformation("  Failed : {Failed}",         total - passed);
+        _logger.LogInformation("  Rate   : {Rate:F1}%",       rate);
+        _logger.LogInformation("══════════════════════════════════════════");
     }
 
     private static string Truncate(string text, int maxLength)

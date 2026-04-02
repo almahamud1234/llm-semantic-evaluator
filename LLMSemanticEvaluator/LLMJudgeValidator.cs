@@ -1,99 +1,107 @@
-using LLMSemanticEvaluator.Models;
-using LLMSemanticEvaluator.Interfaces;
 using System.Text.RegularExpressions;
+using LLMSemanticEvaluator.Configuration;
+using LLMSemanticEvaluator.Models;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace LLMSemanticEvaluator;
 
 /// <summary>
-/// Validates LLM responses using a second LLM as a judge (G-Eval style).
+/// Validates an LLM response using a second LLM as a judge (G-Eval style).
 ///
-/// HOW IT WORKS:
-///   1. Sends a structured prompt asking the judge to reason step-by-step first,
-///      then output a score on the final line in the format "SCORE: N".
-///   2. The reasoning and score are extracted separately from the response.
-///   3. Reasoning is stored in ValidationResult.Reasoning for use in reports.
-///   4. Passes if the score meets or exceeds the configured threshold (default: 8/10).
+/// How it works:
+///   1. A structured prompt is built asking the judge to reason step-by-step,
+///      then output a score in the format "SCORE: N" on the final line.
+///   2. The score and reasoning are extracted separately from the judge's response.
+///   3. The run passes if score >= JudgeThreshold (default 8/10).
 ///
-/// WHY G-EVAL STYLE:
-///   Asking the judge to reason before scoring produces more accurate and consistent
-///   scores than asking for a number directly. The chain-of-thought forces the judge
-///   to actually evaluate the answer rather than pattern-matching to a number.
+/// IChatClient is the standard Microsoft.Extensions.AI interface. The concrete
+/// implementation (OpenAI or Ollama) is resolved by LLMClientFactory and injected
+/// here — this class never knows which provider is used.
+///
+/// Why G-Eval style:
+///   Asking the judge to reason before scoring produces more accurate and
+///   consistent scores than requesting a number directly. Chain-of-thought
+///   forces the judge to evaluate the content rather than pattern-match to a digit.
+///   The reasoning text is stored in reports, making every judge decision auditable.
+///
+/// Known limitation: models smaller than ~3B parameters cannot reliably apply a
+/// structured scoring rubric. See results documentation for evidence.
 /// </summary>
 public class LLMJudgeValidator
 {
-    private readonly ILLMClient _llmClient;
-    private readonly int        _threshold;
+    private readonly IChatClient                 _chatClient;
+    private readonly ChatOptions                 _chatOptions;
+    private readonly int                         _threshold;
+    private readonly ILogger<LLMJudgeValidator>  _logger;
 
-    // Matches "SCORE: N" or "SCORE:N" (our structured output format).
+    // Matches "SCORE: N" — the structured output format requested in the judge prompt.
     private static readonly Regex ScoreLinePattern = new(
         @"SCORE:\s*([1-9]|10)\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-    // Fallback: matches the first standalone integer between 1 and 10.
-    // \b word boundaries prevent matching "10" inside "100" etc.
+    // Fallback: first standalone integer 1–10 anywhere in the response.
+    // Word boundaries prevent matching "10" inside "100".
     private static readonly Regex ScoreFallbackPattern = new(
         @"\b([1-9]|10)\b", RegexOptions.Compiled);
 
-    public LLMJudgeValidator(ILLMClient llmClient, int threshold = 8)
+    public LLMJudgeValidator(
+        IChatClient                 chatClient,
+        IOptions<TestConfiguration> options,
+        ILogger<LLMJudgeValidator>  logger)
     {
-        _llmClient = llmClient ?? throw new ArgumentNullException(nameof(llmClient));
-        _threshold = threshold;
-    }
+        _chatClient = chatClient ?? throw new ArgumentNullException(nameof(chatClient));
+        _threshold  = options.Value.JudgeThreshold;
+        _logger     = logger;
 
-    // =========================================================================
-    // Public entry point
-    // =========================================================================
+        // Some models (gpt-5-mini, o1, o3 etc.) do not accept a temperature parameter
+        // and will return HTTP 400 if it is set. For those models ChatOptions is left
+        // empty so the provider uses its own default. For all other models, Temperature
+        // is read from appsettings.json and applied on every call.
+        _chatOptions = SupportsTemperature(options.Value.ChatModel)
+            ? new ChatOptions { Temperature = (float)options.Value.Temperature }
+            : new ChatOptions();
+    }
 
     /// <summary>
     /// Asks the judge LLM to score how well <paramref name="actual"/> answers
-    /// the <paramref name="prompt"/> compared to <paramref name="expected"/>.
+    /// <paramref name="prompt"/> relative to the <paramref name="expected"/> answer.
     /// </summary>
     /// <param name="prompt">The original test question sent to the LLM under test.</param>
-    /// <param name="expected">The correct/expected answer from the test case JSON.</param>
-    /// <param name="actual">The actual response returned by the LLM under test.</param>
-    /// <param name="criteria">
-    ///     Optional evaluation criteria from the test case (e.g. "Must demonstrate
-    ///     logical deduction"). Injected into the judge prompt for more targeted scoring.
-    /// </param>
-    /// <returns>
-    ///     A <see cref="ValidationResult"/> with:
-    ///     - Score: 1–10
-    ///     - Passed: true if Score >= threshold
-    ///     - Reasoning: the judge's step-by-step reasoning (valuable for reports)
-    /// </returns>
+    /// <param name="expected">Reference answer from the test case JSON.</param>
+    /// <param name="actual">Response returned by the LLM under test.</param>
+    /// <param name="criteria">Optional per-test evaluation guidance injected into the prompt.</param>
     public async Task<ValidationResult> ValidateAsync(
         string prompt,
         string expected,
         string actual,
         string criteria = "")
     {
-        // Treat empty/null LLM response as an automatic fail — nothing to judge
         if (string.IsNullOrWhiteSpace(actual))
-        {
-            return FailResult("LLM returned an empty response");
-        }
+            return Fail("LLM returned an empty response.");
 
         try
         {
             string judgePrompt = BuildJudgePrompt(prompt, expected, actual, criteria);
-            string response    = await _llmClient.SendPromptAsync(judgePrompt);
 
-            if (string.IsNullOrWhiteSpace(response))
-                return FailResult("Judge returned an empty response");
+            // GetResponseAsync is the Microsoft.Extensions.AI standard method.
+            // ChatOptions carries Temperature from appsettings.json.
+            ChatResponse response = await _chatClient.GetResponseAsync(
+                judgePrompt, _chatOptions);
 
-            // Extract score and reasoning from the structured response
-            int    score     = ParseScore(response);
-            string reasoning = ExtractReasoning(response);
+            string responseText = response.Text;
+
+            if (string.IsNullOrWhiteSpace(responseText))
+                return Fail("Judge returned an empty response.");
+
+            int    score     = ParseScore(responseText);
+            string reasoning = ExtractReasoning(responseText);
+
+            _logger.LogDebug(
+                "Judge score: {Score}/10 (threshold {Threshold})", score, _threshold);
 
             if (score == 0)
-            {
-                return new ValidationResult
-                {
-                    ValidatorName = "LLMJudge",
-                    Score         = 0,
-                    Passed        = false,
-                    Reasoning     = $"Could not parse a score from judge response: '{response.Trim()}'"
-                };
-            }
+                return Fail($"Could not parse a valid score from judge response: '{responseText.Trim()}'");
 
             return new ValidationResult
             {
@@ -105,28 +113,19 @@ public class LLMJudgeValidator
         }
         catch (Exception ex)
         {
-            return FailResult($"Error: {ex.Message}");
+            _logger.LogWarning("Judge validation error: {Error}", ex.Message);
+            return Fail($"Error: {ex.Message}");
         }
     }
 
-    // =========================================================================
-    // Prompt builder (G-Eval style)
-    // =========================================================================
-
     /// <summary>
-    /// Builds a G-Eval style judge prompt: reason step-by-step first, then score.
-    /// The structured "SCORE: N" format on the final line makes parsing reliable
-    /// while preserving the full reasoning text for reports.
-    /// If <paramref name="criteria"/> is provided, it is injected to give the judge
-    /// targeted guidance specific to that test case.
+    /// Builds a structured judge prompt: reason first, then score on the final line.
+    /// The "SCORE: N" format makes parsing reliable while keeping the full reasoning
+    /// available for reports. Optional criteria is injected when present.
     /// </summary>
     private static string BuildJudgePrompt(
-        string prompt,
-        string expected,
-        string actual,
-        string criteria)
+        string prompt, string expected, string actual, string criteria)
     {
-        // Only include the criteria line if the test case actually has one
         string criteriaSection = string.IsNullOrWhiteSpace(criteria)
             ? string.Empty
             : $"\nEvaluation Criteria: {criteria}";
@@ -138,16 +137,16 @@ public class LLMJudgeValidator
             Expected Answer: {expected}
             Actual Answer: {actual}{criteriaSection}
 
-            Step 1 — Reason step by step (write 2–4 sentences):
+            Step 1 — Reason step by step (2–4 sentences):
             - Does the actual answer correctly address the query?
             - Does it capture the same meaning as the expected answer?
             - Are there factual errors, key omissions, or irrelevant content?
 
-            Step 2 — Assign a score using this scale:
+            Step 2 — Assign a score:
             10 = Perfect: semantically identical to the expected answer
             8–9 = Very good: same core meaning, minor wording differences
-            6–7 = Acceptable: mostly correct but incomplete or awkwardly worded
-            4–5 = Partially correct: some relevant content but missing key points
+            6–7 = Acceptable: mostly correct but incomplete or awkward
+            4–5 = Partially correct: some relevant content, missing key points
             1–3 = Wrong, irrelevant, or significantly misleading
 
             Write your reasoning first, then on the very last line write ONLY:
@@ -155,81 +154,64 @@ public class LLMJudgeValidator
             """;
     }
 
-    // =========================================================================
-    // Score parser
-    // =========================================================================
-
     /// <summary>
-    /// Extracts a 1–10 score from the judge's response.
-    ///
-    /// Strategy (in order):
-    ///   1. Look for "SCORE: N" anywhere in the text (our structured format).
-    ///   2. Fallback: find the first standalone integer 1–10 (handles non-compliant responses).
-    ///   3. Return 0 if nothing valid is found (caller treats this as a parse failure).
+    /// Extracts a 1–10 integer score from the judge response.
+    /// Tries "SCORE: N" format first, then falls back to the first standalone
+    /// integer 1–10. Returns 0 if no valid score is found.
     /// </summary>
     private static int ParseScore(string response)
     {
-        if (string.IsNullOrWhiteSpace(response))
-            return 0;
+        if (string.IsNullOrWhiteSpace(response)) return 0;
 
         string trimmed = response.Trim();
 
-        // Primary: structured "SCORE: N" format
-        Match scoreLine = ScoreLinePattern.Match(trimmed);
-        if (scoreLine.Success &&
-            int.TryParse(scoreLine.Groups[1].Value, out int structured) &&
-            structured >= 1 && structured <= 10)
-            return structured;
+        Match primary = ScoreLinePattern.Match(trimmed);
+        if (primary.Success &&
+            int.TryParse(primary.Groups[1].Value, out int s1) &&
+            s1 is >= 1 and <= 10)
+            return s1;
 
-        // Fallback: first standalone integer 1–10 anywhere in the text.
-        // Handles edge cases like "I give it an 8/10" or a plain "9" response.
         Match fallback = ScoreFallbackPattern.Match(trimmed);
         if (fallback.Success &&
-            int.TryParse(fallback.Groups[1].Value, out int fallbackScore) &&
-            fallbackScore >= 1 && fallbackScore <= 10)
-            return fallbackScore;
+            int.TryParse(fallback.Groups[1].Value, out int s2) &&
+            s2 is >= 1 and <= 10)
+            return s2;
 
         return 0;
     }
 
-    // =========================================================================
-    // Reasoning extractor
-    // =========================================================================
-
     /// <summary>
-    /// Extracts just the reasoning portion of the judge's response (everything
-    /// before the "SCORE: N" line). This is stored separately in reports so that
-    /// the reasoning is human-readable without the score line cluttering it.
-    ///
-    /// Falls back to returning the full response if no "SCORE:" line is found
-    /// (e.g. when the judge did not follow the structured format).
+    /// Returns everything before the "SCORE: N" line as the reasoning text.
+    /// Falls back to the full response if no score line is found.
     /// </summary>
     private static string ExtractReasoning(string response)
     {
-        if (string.IsNullOrWhiteSpace(response))
-            return string.Empty;
+        if (string.IsNullOrWhiteSpace(response)) return string.Empty;
 
-        // Find the index of the SCORE: line and take everything before it
         Match match = ScoreLinePattern.Match(response);
-        if (match.Success && match.Index > 0)
-        {
-            // Trim trailing whitespace/newlines from the reasoning portion
-            return response[..match.Index].Trim();
-        }
-
-        // No structured SCORE: line — return the whole response as reasoning
-        return response.Trim();
+        return match.Success && match.Index > 0
+            ? response[..match.Index].Trim()
+            : response.Trim();
     }
 
-    // =========================================================================
-    // Helper
-    // =========================================================================
-
-    private static ValidationResult FailResult(string reason) => new()
+    private static ValidationResult Fail(string reason) => new()
     {
         ValidatorName = "LLMJudge",
         Score         = 0,
         Passed        = false,
         Reasoning     = reason
     };
+
+    /// <summary>
+    /// Returns false for models that reject the temperature parameter entirely.
+    /// gpt-5 and OpenAI reasoning models (o1, o3) only accept the default value
+    /// and return HTTP 400 if temperature is set explicitly.
+    /// </summary>
+    private static bool SupportsTemperature(string modelName)
+    {
+        string m = modelName.ToLowerInvariant();
+        return !m.StartsWith("gpt-5")
+            && !m.StartsWith("o1")
+            && !m.StartsWith("o3");
+    }
 }

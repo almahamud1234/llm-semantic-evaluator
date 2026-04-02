@@ -1,222 +1,331 @@
 using LLMSemanticEvaluator;
-using LLMSemanticEvaluator.Interfaces;
-using Moq;
+using LLMSemanticEvaluator.Configuration;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LLMSemanticEvaluatorTests;
 
 /// <summary>
 /// Unit tests for <see cref="LLMJudgeValidator"/>.
 ///
-/// ILLMClient is mocked with Moq so tests run without real API calls.
-/// The most important thing to test here is score parsing — the regex and
-/// fallback logic that extracts a 1-10 integer from free-form judge responses.
+/// <para>
+/// <see cref="LLMJudgeValidator"/> uses a second LLM (the "judge") to score how
+/// well the tested LLM answered a question. The judge responds in free-form text,
+/// so the validator must extract a numeric score using regex. Score parsing is the
+/// most fragile and business-critical logic in this class — a misread "9" as "0"
+/// falsely rejects a correct answer; accepting "11" corrupts threshold logic.
+/// </para>
 ///
-/// Run with: dotnet test
+/// <para>
+/// <strong>Why FakeChatClient instead of Mock&lt;IChatClient&gt;:</strong><br/>
+/// <c>GetResponseAsync</c> in some versions of <c>Microsoft.Extensions.AI</c> is
+/// defined directly on the interface, but Moq requires the type to be mockable
+/// (virtual or interface). Using a hand-written <see cref="FakeChatClient"/> that
+/// implements every interface member explicitly is the safest, version-independent
+/// approach — it compiles against whatever interface shape is installed.
+/// </para>
+///
+/// <para>Run with: <c>dotnet test --filter TestCategory!=Integration</c></para>
 /// </summary>
+[TestClass]
 public class LLMJudgeValidatorTests
 {
-    private readonly Mock<ILLMClient> _llmClientMock = new();
+    // =========================================================================
+    // FakeChatClient — lightweight test double for IChatClient
+    // =========================================================================
 
     /// <summary>
-    /// Convenience: builds the validator with the shared mock and given threshold.
+    /// Minimal in-memory implementation of <see cref="IChatClient"/>.
+    ///
+    /// <para>
+    /// Responses are queued in the constructor and dequeued in order.
+    /// Each call to <c>GetResponseAsync</c> returns the next queued string wrapped
+    /// in a <see cref="ChatResponse"/>. Passing an <see cref="Exception"/> in the
+    /// queue causes that call to throw, simulating infrastructure failures.
+    /// </para>
+    /// <para>
+    /// If the queue is exhausted unexpectedly, <see cref="InvalidOperationException"/>
+    /// is thrown immediately so the test fails with a clear "too many calls" message.
+    /// </para>
     /// </summary>
-    private LLMJudgeValidator Build(int threshold = 8)
-        => new(_llmClientMock.Object, threshold);
-
-    /// <summary>
-    /// Sets up the mock LLM client to return the given judge response string.
-    /// </summary>
-    private void SetupJudgeResponse(string response)
+    private sealed class FakeChatClient : IChatClient
     {
-        _llmClientMock
-            .Setup(c => c.SendPromptAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(response);
+        private readonly Queue<object> _responses; // string or Exception
+
+        /// <summary>
+        /// Pass strings for successful responses, or <see cref="Exception"/> instances
+        /// for positions that should simulate an API failure.
+        /// Pass nothing to create a client whose first call will throw —
+        /// used to assert a code path does NOT call the API.
+        /// </summary>
+        public FakeChatClient(params object[] responses)
+            => _responses = new Queue<object>(responses);
+
+        /// <inheritdoc />
+        public Task<ChatResponse> GetResponseAsync(
+            IEnumerable<ChatMessage> messages,
+            ChatOptions?             options           = null,
+            CancellationToken        cancellationToken = default)
+        {
+            if (_responses.Count == 0)
+                throw new InvalidOperationException(
+                    "FakeChatClient: no more queued responses. " +
+                    "Add more items to the constructor for additional expected calls.");
+
+            object next = _responses.Dequeue();
+
+            if (next is Exception ex)
+                throw ex;
+
+            var message  = new ChatMessage(ChatRole.Assistant, (string)next);
+            var response = new ChatResponse(message);
+            return Task.FromResult(response);
+        }
+
+        /// <inheritdoc />
+        public IAsyncEnumerable<ChatResponseUpdate> GetStreamingResponseAsync(
+            IEnumerable<ChatMessage> messages,
+            ChatOptions?             options           = null,
+            CancellationToken        cancellationToken = default)
+            => throw new NotSupportedException("Streaming is not used in unit tests.");
+
+        /// <inheritdoc />
+        public object? GetService(Type serviceType, object? key = null) => null;
+
+        /// <inheritdoc />
+        public void Dispose() { }
     }
+
+    /// <summary>
+    /// Fake client that always throws a given exception — used to verify that the
+    /// validator catches infrastructure failures gracefully instead of crashing.
+    /// </summary>
+    private sealed class ThrowingChatClient(Exception exception) : IChatClient
+    {
+        public Task<ChatResponse> GetResponseAsync(
+            IEnumerable<ChatMessage> messages,
+            ChatOptions?             options           = null,
+            CancellationToken        cancellationToken = default)
+            => throw exception;
+
+        public IAsyncEnumerable<ChatResponseUpdate> GetStreamingResponseAsync(
+            IEnumerable<ChatMessage> messages,
+            ChatOptions?             options           = null,
+            CancellationToken        cancellationToken = default)
+            => throw new NotSupportedException();
+
+        public object? GetService(Type serviceType, object? key = null) => null;
+        public void Dispose() { }
+    }
+
+    // =========================================================================
+    // Builder helper
+    // =========================================================================
+
+    /// <summary>
+    /// Builds the validator under test with the given client and threshold.
+    /// A factory method keeps each test's Arrange section focused on what varies.
+    /// </summary>
+    private static LLMJudgeValidator Build(IChatClient client, int threshold = 8)
+        => new(
+            client,
+            Options.Create(new TestConfiguration
+            {
+                JudgeThreshold = threshold,
+                ChatModel      = "gpt-4o-mini",
+                Temperature    = 0.0
+            }),
+            NullLogger<LLMJudgeValidator>.Instance);
 
     // =========================================================================
     // Happy Path — Pass / Fail based on score vs threshold
     // =========================================================================
 
     /// <summary>
-    /// Judge returns a score above the threshold → Passed = true.
+    /// A judge score above the threshold means the LLM response is deemed correct.
+    /// <see cref="ValidationResult.Passed"/> must be true and the exact score stored
+    /// so the TestRunner can include it in the final report.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public async Task ValidateAsync_ScoreAboveThreshold_ReturnsPassed()
     {
-        // Arrange
-        SetupJudgeResponse("9");
-        var validator = Build(threshold: 8);
+        var validator = Build(new FakeChatClient("SCORE: 9"), threshold: 8);
 
-        // Act
         var result = await validator.ValidateAsync("Q", "Expected", "Actual");
 
-        // Assert
-        Assert.True(result.Passed);
-        Assert.Equal(9, result.Score);
-        Assert.Equal("LLMJudge", result.ValidatorName);
+        // Score 9 ≥ threshold 8 → the response quality bar is met.
+        Assert.IsTrue(result.Passed,
+            "A judge score above the threshold must produce a passing verdict.");
+        Assert.AreEqual(9, (int)result.Score,
+            "The parsed score must be stored in the result for the report.");
+        Assert.AreEqual("LLMJudge", result.ValidatorName,
+            "ValidatorName identifies which validator produced this result in the report.");
     }
 
     /// <summary>
-    /// Judge returns a score below the threshold → Passed = false.
+    /// A judge score below the threshold means the response does not meet the quality
+    /// bar. The TestRunner will count this run as failed.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public async Task ValidateAsync_ScoreBelowThreshold_ReturnsFailed()
     {
-        // Arrange
-        SetupJudgeResponse("5");
-        var validator = Build(threshold: 8);
+        var validator = Build(new FakeChatClient("SCORE: 5"), threshold: 8);
 
-        // Act
         var result = await validator.ValidateAsync("Q", "Expected", "Actual");
 
-        // Assert
-        Assert.False(result.Passed);
-        Assert.Equal(5, result.Score);
+        // Score 5 < threshold 8 → the LLM answer does not meet the quality bar.
+        Assert.IsFalse(result.Passed,
+            "A judge score below the threshold must produce a failing verdict.");
+        Assert.AreEqual(5, (int)result.Score,
+            "The score must still be stored so the report can show how close it was.");
     }
 
     /// <summary>
-    /// Score exactly at the threshold must pass (boundary is inclusive).
+    /// The threshold is an inclusive lower bound: a score exactly equal to it must pass.
+    /// An off-by-one error here causes responses that just meet the quality bar
+    /// to appear as failures, skewing pass-rate statistics.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public async Task ValidateAsync_ScoreExactlyAtThreshold_ReturnsPassed()
     {
-        // Arrange
-        SetupJudgeResponse("8");
-        var validator = Build(threshold: 8);
+        var validator = Build(new FakeChatClient("SCORE: 8"), threshold: 8);
 
-        // Act
         var result = await validator.ValidateAsync("Q", "Expected", "Actual");
 
-        // Assert
-        Assert.True(result.Passed);
-        Assert.Equal(8, result.Score);
+        // Inclusive boundary: score == threshold must pass, not fail.
+        Assert.IsTrue(result.Passed,
+            "A score exactly equal to the threshold must pass (inclusive lower bound).");
+        Assert.AreEqual(8, (int)result.Score,
+            "The boundary score must be stored correctly.");
     }
 
     // =========================================================================
-    // Score Parsing — the core logic unique to this class
+    // Score Parsing — the most critical logic unique to this class
     // =========================================================================
 
     /// <summary>
-    /// Judges don't always return a bare number — they often add context.
-    /// The validator must correctly extract the score from each common format.
+    /// Judges write responses in many styles. The validator must extract the correct
+    /// integer from each format because prompt engineering cannot fully control a real
+    /// LLM's output style. Failing any case silently misclassifies LLM responses.
     /// </summary>
-    [Theory]
-    [InlineData("9",                 9)]  // Ideal: bare number
-    [InlineData("Score: 9",          9)]  // With label
-    [InlineData("I'd give it 8/10",  8)]  // Natural language
-    [InlineData("9.",                9)]  // Trailing punctuation
-    [InlineData("  10  ",           10)]  // Surrounding whitespace
-    [InlineData("Rating: 7 out of 10", 7)] // Verbose format — first valid match wins
+    [TestMethod]
+    [DataRow("SCORE: 9",             9,  "Primary format: labelled score on its own line")]
+    [DataRow("9",                    9,  "Minimal format: bare number")]
+    [DataRow("Score: 9",             9,  "Label with different capitalisation")]
+    [DataRow("I'd give it 8/10",     8,  "Natural language with fractional notation")]
+    [DataRow("9.",                   9,  "Trailing full stop after the digit")]
+    [DataRow("  10  ",              10,  "Leading and trailing whitespace")]
+    [DataRow("Rating: 7 out of 10",  7,  "Verbose format — first valid 1–10 match wins")]
     public async Task ValidateAsync_VariousJudgeResponseFormats_ParsesScoreCorrectly(
-        string judgeResponse, int expectedScore)
+        string judgeResponse, int expectedScore, string scenario)
     {
-        // Arrange
-        SetupJudgeResponse(judgeResponse);
-        var validator = Build(threshold: 1); // Low threshold so we can isolate parsing
+        // Threshold 1 isolates score parsing from the pass/fail decision.
+        var validator = Build(new FakeChatClient(judgeResponse), threshold: 1);
 
-        // Act
         var result = await validator.ValidateAsync("Q", "Expected", "Actual");
 
-        // Assert
-        Assert.Equal(expectedScore, result.Score);
+        Assert.AreEqual(expectedScore, (int)result.Score,
+            $"Scenario '{scenario}': expected score {expectedScore} from '{judgeResponse}'.");
     }
 
     /// <summary>
-    /// If the judge response contains no parseable 1-10 number, the validator
-    /// must return Score = 0, Passed = false, and include a useful Reasoning message.
+    /// When no valid 1–10 integer appears in the judge's response the validator must
+    /// return Score = 0 and Passed = false. Returning a non-zero score would mean a
+    /// hallucinated response was accepted as a passing evaluation.
     /// </summary>
-    [Theory]
-    [InlineData("Great answer!")]    // No number at all
-    [InlineData("11")]               // Out of valid range
-    [InlineData("0")]                // Below valid range
-    [InlineData("zero")]             // Written-out number
-    public async Task ValidateAsync_UnparsableJudgeResponse_ReturnsFailed(string judgeResponse)
+    [TestMethod]
+    [DataRow("Great answer!",  "No number at all")]
+    [DataRow("11",             "Out of valid range (above 10)")]
+    [DataRow("0",              "Out of valid range (below 1)")]
+    [DataRow("zero",           "Written-out number, not a digit")]
+    public async Task ValidateAsync_UnparsableJudgeResponse_ReturnsFailed(
+        string judgeResponse, string scenario)
     {
-        // Arrange
-        SetupJudgeResponse(judgeResponse);
-        var validator = Build();
+        var validator = Build(new FakeChatClient(judgeResponse));
 
-        // Act
         var result = await validator.ValidateAsync("Q", "Expected", "Actual");
 
-        // Assert
-        Assert.False(result.Passed);
-        Assert.Equal(0, result.Score);
-        Assert.False(string.IsNullOrWhiteSpace(result.Reasoning));
+        Assert.IsFalse(result.Passed,
+            $"Scenario '{scenario}': unparseable response must produce a failing verdict.");
+        Assert.AreEqual(0, (int)result.Score,
+            $"Scenario '{scenario}': score must be 0 when parsing fails.");
+        Assert.IsFalse(string.IsNullOrWhiteSpace(result.Reasoning),
+            $"Scenario '{scenario}': Reasoning must explain why parsing failed.");
     }
 
     // =========================================================================
-    // Empty / Null Actual Response
+    // Empty / Null Actual Response — short-circuit before calling the judge
     // =========================================================================
 
     /// <summary>
-    /// An empty actual response must fail immediately — the judge LLM must NOT be called.
+    /// An empty, whitespace-only, or null actual response means the LLM produced no
+    /// output. The validator must fail immediately without calling the judge LLM —
+    /// calling it would waste tokens while returning a meaningless score.
+    /// The empty FakeChatClient queue ensures any unexpected API call throws instantly.
     /// </summary>
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    [InlineData(null)]
+    [TestMethod]
+    [DataRow("")]
+    [DataRow("   ")]
+    [DataRow(null)]
     public async Task ValidateAsync_EmptyOrNullActual_ReturnsFailedWithoutCallingApi(string? actual)
     {
-        // Arrange — mock not set up; any call would throw
-        var validator = Build();
+        // Empty queue — any call to GetResponseAsync would throw InvalidOperationException,
+        // surfacing the unexpected call as a clear test failure.
+        var validator = Build(new FakeChatClient());
 
-        // Act
         var result = await validator.ValidateAsync("Q", "Expected", actual!);
 
-        // Assert
-        Assert.False(result.Passed);
-        Assert.Equal(0, result.Score);
-
-        // Judge API must NOT have been called
-        _llmClientMock.Verify(
-            c => c.SendPromptAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        Assert.IsFalse(result.Passed,
+            "An empty LLM response has nothing to judge — must fail immediately.");
+        Assert.AreEqual(0, (int)result.Score,
+            "Score must be 0 when the LLM produced no response.");
     }
 
     // =========================================================================
-    // API / Infrastructure Failures
+    // API / Infrastructure Failures — graceful degradation
     // =========================================================================
 
     /// <summary>
-    /// If the judge LLM itself returns an empty string, treat as a safe fail
-    /// with a clear Reasoning message.
+    /// If the judge LLM returns an empty string the validator must fail safely with
+    /// a descriptive Reasoning message rather than propagating a null-reference error.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public async Task ValidateAsync_JudgeReturnsEmptyString_ReturnsFailed()
     {
-        // Arrange
-        SetupJudgeResponse(string.Empty);
-        var validator = Build();
+        var validator = Build(new FakeChatClient(string.Empty));
 
-        // Act
         var result = await validator.ValidateAsync("Q", "Expected", "Actual");
 
-        // Assert
-        Assert.False(result.Passed);
-        Assert.Equal(0, result.Score);
-        Assert.False(string.IsNullOrWhiteSpace(result.Reasoning));
+        Assert.IsFalse(result.Passed,
+            "An empty judge response means scoring failed — must produce a failing verdict.");
+        Assert.AreEqual(0, (int)result.Score,
+            "Score must be 0 when the judge produced no usable output.");
+        Assert.IsFalse(string.IsNullOrWhiteSpace(result.Reasoning),
+            "Reasoning must explain the empty response so operators can investigate.");
     }
 
     /// <summary>
-    /// If the LLM client throws (network error, rate limit, etc.),
-    /// the validator must catch it and return a failed result — not crash the test run.
+    /// If the LLM client throws (network error, rate-limit, bad API key) the validator
+    /// must catch the exception and return a failed result — not re-throw.
+    /// Re-throwing would propagate to TestRunner and abort the entire test run,
+    /// discarding all results collected so far.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public async Task ValidateAsync_LlmClientThrows_ReturnsFailedWithErrorReasoning()
     {
-        // Arrange
-        _llmClientMock
-            .Setup(c => c.SendPromptAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new HttpRequestException("Rate limit exceeded"));
+        var validator = Build(
+            new ThrowingChatClient(new HttpRequestException("Rate limit exceeded")));
 
-        var validator = Build();
-
-        // Act
+        // Must NOT throw — exceptions inside a run must be caught by the validator.
         var result = await validator.ValidateAsync("Q", "Expected", "Actual");
 
-        // Assert
-        Assert.False(result.Passed);
-        Assert.Equal(0, result.Score);
-        Assert.Contains("Rate limit exceeded", result.Reasoning);
+        Assert.IsFalse(result.Passed,
+            "A judge API exception must produce a failing result, not crash the evaluation.");
+        Assert.AreEqual(0, (int)result.Score,
+            "Score must be 0 when the judge could not be reached.");
+        Assert.IsTrue((result.Reasoning ?? string.Empty).Contains("Rate limit exceeded"),
+            "The error message must appear in Reasoning so operators can diagnose the outage.");
     }
 }

@@ -1,6 +1,11 @@
 using LLMSemanticEvaluator;
+using LLMSemanticEvaluator.Configuration;
 using LLMSemanticEvaluator.Interfaces;
 using LLMSemanticEvaluator.Models;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace LLMSemanticEvaluatorTests;
@@ -8,53 +13,172 @@ namespace LLMSemanticEvaluatorTests;
 /// <summary>
 /// Unit tests for <see cref="TestRunner"/>.
 ///
-/// TestRunner takes concrete EmbeddingValidator and LLMJudgeValidator (not interfaces),
-/// so we control their behaviour by mocking their upstream dependencies:
-///   - ILLMClient          → controls what the tested LLM responds
-///   - IEmbeddingProvider  → controls embedding vectors returned
-///   - ISimilarityCalculator → controls cosine similarity scores
+/// <para>
+/// <see cref="TestRunner"/> orchestrates the full evaluation pipeline: calls the LLM,
+/// invokes both validators, applies majority-vote logic, and aggregates scores.
+/// A bug here could silently pass failing LLMs, fail passing ones, or miscount runs —
+/// invalidating every metric in the report.
+/// </para>
 ///
-/// To keep tests fast, runsPerTest is set to 1 wherever the majority-vote
-/// logic itself is not under test (avoids 3 × Task.Delay(500) per test).
+/// <para>
+/// <strong>Why FakeChatClient instead of Mock&lt;IChatClient&gt;:</strong><br/>
+/// Moq requires the mocked member to be virtual or a true interface method.
+/// In this version of <c>Microsoft.Extensions.AI</c>, the interface methods are
+/// <c>GetResponseAsync</c>, <c>GetStreamingResponseAsync</c>, and
+/// <c>GetService(Type, object?)</c>. The hand-written <see cref="FakeChatClient"/>
+/// implements exactly these members, so it compiles and works regardless of which
+/// minor version of the package is installed.
+/// </para>
 ///
-/// Run with: dotnet test
+/// <para>
+/// <see cref="IEmbeddingGenerator{TInput,TEmbedding}"/> and
+/// <see cref="ISimilarityCalculator"/> are still mocked with Moq because their
+/// methods are straightforward interface methods with no extension-method complications.
+/// </para>
+///
+/// <para>Run with: <c>dotnet test --filter TestCategory!=Integration</c></para>
 /// </summary>
+[TestClass]
 public class TestRunnerTests
 {
-    // ── Shared mocks ──────────────────────────────────────────────────────────
-    private readonly Mock<ILLMClient>            _llmClientMock    = new();
-    private readonly Mock<IEmbeddingProvider>    _embeddingsMock   = new();
-    private readonly Mock<ISimilarityCalculator> _calculatorMock   = new();
-
-    // Dummy embedding vector — content doesn't matter, calculator is mocked
-    private static readonly float[] DummyVec = { 0.1f, 0.2f, 0.3f };
-
-    // ── Builder helpers ───────────────────────────────────────────────────────
+    // =========================================================================
+    // FakeChatClient — lightweight test double for IChatClient
+    // =========================================================================
 
     /// <summary>
-    /// Builds a TestRunner wired to all shared mocks.
-    /// minPassRun defaults to 1 for single-run tests, matching runsPerTest: 1.
-    /// Pass minPassRun: 2 explicitly for majority-vote (3-run) tests.
+    /// In-memory <see cref="IChatClient"/> that returns pre-staged responses from a queue.
+    ///
+    /// <para>
+    /// In <see cref="TestRunner"/> the chat client is called twice per run:
+    /// once for the prompt (returns the LLM's answer) and once for the judge prompt
+    /// (returns the judge's score string). The queue handles both calls — just enqueue
+    /// the answer first, then the judge response.
+    /// </para>
+    ///
+    /// <para>
+    /// Pass an <see cref="Exception"/> instance in the queue to simulate an API failure
+    /// at that call position. If the queue empties unexpectedly,
+    /// <see cref="InvalidOperationException"/> is thrown immediately so the test fails
+    /// with a clear "too many calls" message rather than a silent null result.
+    /// </para>
     /// </summary>
-    private TestRunner BuildRunner(int runsPerTest = 1, int minPassRun = 1)
+    private sealed class FakeChatClient : IChatClient
     {
-        var embeddingValidator = new EmbeddingValidator(
-            _embeddingsMock.Object, _calculatorMock.Object, threshold: 0.85);
+        private readonly Queue<object> _responses; // string or Exception
 
-        var judgeValidator = new LLMJudgeValidator(
-            _llmClientMock.Object, threshold: 8);
+        /// <summary>
+        /// Pass strings for successful responses and/or <see cref="Exception"/> instances
+        /// for positions that should simulate an API failure.
+        /// </summary>
+        public FakeChatClient(params object[] responses)
+            => _responses = new Queue<object>(responses);
 
-        return new TestRunner(
-            _llmClientMock.Object,
-            embeddingValidator,
-            judgeValidator,
-            runsPerTest,
-            minPassRun);
+        /// <inheritdoc />
+        public Task<ChatResponse> GetResponseAsync(
+            IEnumerable<ChatMessage> messages,
+            ChatOptions?             options           = null,
+            CancellationToken        cancellationToken = default)
+        {
+            if (_responses.Count == 0)
+                throw new InvalidOperationException(
+                    "FakeChatClient: no more queued responses. " +
+                    "Add more items to the constructor for additional expected calls.");
+
+            object next = _responses.Dequeue();
+
+            if (next is Exception ex)
+                throw ex;
+
+            var message  = new ChatMessage(ChatRole.Assistant, (string)next);
+            var response = new ChatResponse(message);
+            return Task.FromResult(response);
+        }
+
+        /// <inheritdoc />
+        public IAsyncEnumerable<ChatResponseUpdate> GetStreamingResponseAsync(
+            IEnumerable<ChatMessage> messages,
+            ChatOptions?             options           = null,
+            CancellationToken        cancellationToken = default)
+            => throw new NotSupportedException("Streaming is not used in unit tests.");
+
+        /// <inheritdoc />
+        public object? GetService(Type serviceType, object? key = null) => null;
+
+        /// <inheritdoc />
+        public void Dispose() { }
     }
 
+    // =========================================================================
+    // Shared mocks for embedding dependencies
+    // =========================================================================
+
     /// <summary>
-    /// Returns a minimal valid TestCase.
+    /// Mock for IEmbeddingGenerator — its methods are real interface methods,
+    /// so Moq handles them correctly.
     /// </summary>
+    private readonly Mock<IEmbeddingGenerator<string, Embedding<float>>> _embeddingsMock = new();
+
+    /// <summary>Mock for ISimilarityCalculator — controls cosine similarity scores.</summary>
+    private readonly Mock<ISimilarityCalculator> _calculatorMock = new();
+
+    /// <summary>
+    /// Dummy embedding vector — content is irrelevant because the calculator is mocked.
+    /// Non-empty to avoid the "empty vector" short-circuit inside EmbeddingValidator.
+    /// </summary>
+    private static readonly float[] DummyVec = { 0.1f, 0.2f, 0.3f };
+
+    // =========================================================================
+    // Builder helpers
+    // =========================================================================
+
+    /// <summary>
+    /// Builds <see cref="IOptions{TestConfiguration}"/> with the given run settings.
+    /// <c>RequestDelayMs = 0</c> so unit tests run without artificial sleeps.
+    /// </summary>
+    private static IOptions<TestConfiguration> BuildOptions(
+        int numberOfRuns = 1, int minPassRun = 1)
+        => Options.Create(new TestConfiguration
+        {
+            NumberOfRuns       = numberOfRuns,
+            MinimumPassingRuns = minPassRun,
+            EmbeddingThreshold = 0.85,
+            JudgeThreshold     = 8,
+            ChatModel          = "gpt-4o-mini",
+            Temperature        = 0.0,
+            RequestDelayMs     = 0
+        });
+
+    /// <summary>
+    /// Builds a <see cref="TestRunner"/> wired to the given fake chat client and
+    /// the shared embedding mocks.
+    /// </summary>
+    private TestRunner BuildRunner(
+        FakeChatClient fakeClient,
+        int            numberOfRuns = 1,
+        int            minPassRun   = 1)
+    {
+        var options = BuildOptions(numberOfRuns, minPassRun);
+
+        var embeddingValidator = new EmbeddingValidator(
+            _embeddingsMock.Object,
+            _calculatorMock.Object,
+            options,
+            NullLogger<EmbeddingValidator>.Instance);
+
+        var judgeValidator = new LLMJudgeValidator(
+            fakeClient,
+            options,
+            NullLogger<LLMJudgeValidator>.Instance);
+
+        return new TestRunner(
+            fakeClient,
+            embeddingValidator,
+            judgeValidator,
+            options,
+            NullLogger<TestRunner>.Instance);
+    }
+
+    /// <summary>Returns a minimal valid <see cref="TestCase"/>.</summary>
     private static TestCase MakeTestCase(string id = "t1", string category = "factual") => new()
     {
         Id             = id,
@@ -64,27 +188,49 @@ public class TestRunnerTests
     };
 
     /// <summary>
-    /// Sets up mocks so one full run succeeds with the given similarity score
-    /// and judge score string (e.g. "9").
-    /// The LLM is called twice per run: once for the prompt, once for the judge.
-    /// We use SetupSequence so the first call returns the answer and the second
-    /// returns the judge score.
+    /// Sets up the embedding mocks so every input returns <see cref="DummyVec"/>
+    /// and the calculator always returns <paramref name="similarity"/>.
     /// </summary>
-    private void SetupPassingRun(double similarity, string judgeResponse = "9")
+    private void SetupEmbeddings(double similarity)
     {
-        // First SendPromptAsync call → LLM answer; second → judge response
-        _llmClientMock
-            .SetupSequence(c => c.SendPromptAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync("Paris")       // LLM answer
-            .ReturnsAsync(judgeResponse); // Judge score
+        var embedding = new Embedding<float>(DummyVec);
+        var generated = new GeneratedEmbeddings<Embedding<float>>([embedding]);
 
         _embeddingsMock
-            .Setup(e => e.GenerateEmbeddingAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(DummyVec);
+            .Setup(e => e.GenerateAsync(
+                It.IsAny<IEnumerable<string>>(),
+                It.IsAny<EmbeddingGenerationOptions?>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(generated);
 
         _calculatorMock
-            .Setup(c => c.CalculateCosineSimilarity(It.IsAny<float[]>(), It.IsAny<float[]>()))
+            .Setup(c => c.CalculateCosineSimilarity(
+                It.IsAny<float[]>(), It.IsAny<float[]>()))
             .Returns(similarity);
+    }
+
+    /// <summary>
+    /// Sets up the embedding mocks to return different similarity scores on successive
+    /// calls — used for majority-vote tests where some runs pass and some fail.
+    /// </summary>
+    private void SetupEmbeddingsSequence(params double[] similarities)
+    {
+        var embedding = new Embedding<float>(DummyVec);
+        var generated = new GeneratedEmbeddings<Embedding<float>>([embedding]);
+
+        _embeddingsMock
+            .Setup(e => e.GenerateAsync(
+                It.IsAny<IEnumerable<string>>(),
+                It.IsAny<EmbeddingGenerationOptions?>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(generated);
+
+        var seq = _calculatorMock.SetupSequence(
+            c => c.CalculateCosineSimilarity(
+                It.IsAny<float[]>(), It.IsAny<float[]>()));
+
+        foreach (double s in similarities)
+            seq.Returns(s);
     }
 
     // =========================================================================
@@ -92,186 +238,169 @@ public class TestRunnerTests
     // =========================================================================
 
     /// <summary>
-    /// RunAllAsync must return exactly one TestResult per TestCase.
+    /// <see cref="TestRunner.RunAllAsync"/> must return exactly one
+    /// <see cref="TestResult"/> per <see cref="TestCase"/> input.
+    /// A mismatch means tests were silently dropped or duplicated, corrupting the
+    /// pass-rate percentage in the report.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public async Task RunAllAsync_SingleTestCase_ReturnsOneResult()
     {
-        // Arrange
-        SetupPassingRun(similarity: 0.92);
-        var runner = BuildRunner(runsPerTest: 1, minPassRun: 1);
+        SetupEmbeddings(0.92);
+        var runner = BuildRunner(new FakeChatClient("Paris", "SCORE: 9"));
 
-        // Act
         var results = await runner.RunAllAsync(new List<TestCase> { MakeTestCase() });
 
-        // Assert
-        Assert.Single(results);
+        // One input test case must produce exactly one output result.
+        Assert.AreEqual(1, results.Count,
+            "RunAllAsync must return exactly one TestResult per TestCase input.");
     }
 
     /// <summary>
-    /// TestResult fields must be populated from the original TestCase.
+    /// Each <see cref="TestResult"/> must be populated with the metadata from its
+    /// corresponding <see cref="TestCase"/>. If ID or Category are wrong, every
+    /// report entry and log line references the wrong test.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public async Task RunAllAsync_ResultFields_MappedFromTestCase()
     {
-        // Arrange
-        SetupPassingRun(similarity: 0.92);
-        var runner   = BuildRunner(runsPerTest: 1, minPassRun: 1);
+        SetupEmbeddings(0.92);
         var testCase = MakeTestCase(id: "factual_001", category: "factual");
+        var runner   = BuildRunner(new FakeChatClient("Paris", "SCORE: 9"));
 
-        // Act
         var results = await runner.RunAllAsync(new List<TestCase> { testCase });
 
-        // Assert
-        Assert.Equal("factual_001", results[0].TestId);
-        Assert.Equal("factual",     results[0].Category);
-        Assert.Equal(testCase.Prompt,         results[0].Prompt);
-        Assert.Equal(testCase.ExpectedOutput, results[0].ExpectedOutput);
+        // Metadata must be copied verbatim from the input TestCase.
+        Assert.AreEqual("factual_001",           results[0].TestId,
+            "TestId must be copied from TestCase.Id.");
+        Assert.AreEqual("factual",               results[0].Category,
+            "Category must be copied from TestCase.Category.");
+        Assert.AreEqual(testCase.Prompt,         results[0].Prompt,
+            "Prompt must be copied from TestCase.Prompt.");
+        Assert.AreEqual(testCase.ExpectedOutput, results[0].ExpectedOutput,
+            "ExpectedOutput must be copied from TestCase.ExpectedOutput.");
     }
 
     /// <summary>
-    /// RunAllAsync must return one result per test case when given multiple cases.
+    /// Multiple test cases must each produce a result in the correct order.
+    /// Order matters because the report lists tests sequentially and operators
+    /// cross-reference log output with the report.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public async Task RunAllAsync_MultipleTestCases_ReturnsResultForEach()
     {
-        // Arrange — LLM alternates answer/judge for each test case
-        _llmClientMock
-            .SetupSequence(c => c.SendPromptAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync("Paris")   // test 1 answer
-            .ReturnsAsync("9")       // test 1 judge
-            .ReturnsAsync("Berlin")  // test 2 answer
-            .ReturnsAsync("9");      // test 2 judge
+        // Two test cases × (1 LLM answer + 1 judge score) = 4 queued strings
+        SetupEmbeddings(0.92);
+        var runner = BuildRunner(new FakeChatClient(
+            "Paris",  "SCORE: 9",   // test case 1
+            "Berlin", "SCORE: 9")); // test case 2
 
-        _embeddingsMock
-            .Setup(e => e.GenerateEmbeddingAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(DummyVec);
+        var results = await runner.RunAllAsync(
+            new List<TestCase> { MakeTestCase("t1"), MakeTestCase("t2") });
 
-        _calculatorMock
-            .Setup(c => c.CalculateCosineSimilarity(It.IsAny<float[]>(), It.IsAny<float[]>()))
-            .Returns(0.92);
-
-        var runner = BuildRunner(runsPerTest: 1, minPassRun: 1);
-        var cases  = new List<TestCase> { MakeTestCase("t1"), MakeTestCase("t2") };
-
-        // Act
-        var results = await runner.RunAllAsync(cases);
-
-        // Assert
-        Assert.Equal(2, results.Count);
-        Assert.Equal("t1", results[0].TestId);
-        Assert.Equal("t2", results[1].TestId);
+        Assert.AreEqual(2, results.Count,
+            "Two test cases must produce two results.");
+        Assert.AreEqual("t1", results[0].TestId,
+            "First result must correspond to the first test case.");
+        Assert.AreEqual("t2", results[1].TestId,
+            "Second result must correspond to the second test case.");
     }
 
     // =========================================================================
-    // Pass / Fail — embedding validator path
+    // Pass / Fail — OR logic between the two validators
     // =========================================================================
 
     /// <summary>
-    /// When embedding similarity exceeds threshold, the test must pass.
+    /// When embedding similarity exceeds the threshold the run passes regardless of
+    /// the judge score (OR logic). This is critical: embedding similarity is unreliable
+    /// for short expected outputs, so either validator passing is sufficient.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public async Task RunAllAsync_EmbeddingSimilarityAboveThreshold_TestPasses()
     {
-        // Arrange — high similarity, judge score irrelevant (OR logic)
-        SetupPassingRun(similarity: 0.92, judgeResponse: "5");
-        var runner = BuildRunner(runsPerTest: 1, minPassRun: 1);
+        // High similarity (passes embedding), low judge score (would alone fail)
+        SetupEmbeddings(0.92);
+        var runner = BuildRunner(new FakeChatClient("Paris", "SCORE: 5"));
 
-        // Act
         var results = await runner.RunAllAsync(new List<TestCase> { MakeTestCase() });
 
-        // Assert
-        Assert.True(results[0].Passed);
+        // Embedding pass triggers the OR — test must pass despite low judge score.
+        Assert.IsTrue(results[0].Passed,
+            "High embedding similarity must pass the run even if judge score is below threshold.");
     }
 
     /// <summary>
-    /// When both validators fail, the test must fail.
+    /// When both validators fail, the run must fail. Verifies the OR logic does not
+    /// become AND — if neither validator passes there is no safety net.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public async Task RunAllAsync_BothValidatorsFail_TestFails()
     {
-        // Arrange — low similarity AND low judge score
-        SetupPassingRun(similarity: 0.60, judgeResponse: "3");
-        var runner = BuildRunner(runsPerTest: 1, minPassRun: 1);
+        SetupEmbeddings(0.60);
+        var runner = BuildRunner(new FakeChatClient("Wrong", "SCORE: 3"));
 
-        // Act
         var results = await runner.RunAllAsync(new List<TestCase> { MakeTestCase() });
 
-        // Assert
-        Assert.False(results[0].Passed);
+        // Both validators failed — OR produces false → test fails.
+        Assert.IsFalse(results[0].Passed,
+            "When both embedding and judge validators fail, the test must fail.");
     }
 
     // =========================================================================
-    // Majority Vote (requires runsPerTest: 3, minPassRun: 2)
+    // Majority Vote — requires 3 runs, minPassRun = 2
     // =========================================================================
 
     /// <summary>
-    /// 2 out of 3 runs passing must result in overall Passed = true (majority vote).
+    /// With 3 runs and a 2-of-3 threshold, 2 passing runs must produce
+    /// <c>Passed = true</c>. This is the standard majority-vote configuration for
+    /// handling LLM non-determinism — one bad run is tolerated.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public async Task RunAllAsync_TwoOfThreeRunsPass_TestPasses()
     {
-        // Arrange — runs: pass, pass, fail
-        // Each run = 1 LLM answer + 1 judge response → 6 calls total for 3 runs
-        _llmClientMock
-            .SetupSequence(c => c.SendPromptAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync("Paris") .ReturnsAsync("9")  // run 1: pass
-            .ReturnsAsync("Paris") .ReturnsAsync("9")  // run 2: pass
-            .ReturnsAsync("Wrong") .ReturnsAsync("2"); // run 3: fail
+        // Runs: pass, pass, fail
+        // Each run = 1 LLM answer + 1 judge call → 6 queued strings for 3 runs
+        SetupEmbeddingsSequence(0.92, 0.92, 0.50);
 
-        _embeddingsMock
-            .Setup(e => e.GenerateEmbeddingAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(DummyVec);
+        var runner = BuildRunner(new FakeChatClient(
+            "Paris", "SCORE: 9",   // run 1: pass
+            "Paris", "SCORE: 9",   // run 2: pass
+            "Wrong", "SCORE: 2"),  // run 3: fail
+            numberOfRuns: 3, minPassRun: 2);
 
-        // Similarity: high for first two calls, low for the third
-        _calculatorMock
-            .SetupSequence(c => c.CalculateCosineSimilarity(It.IsAny<float[]>(), It.IsAny<float[]>()))
-            .Returns(0.92)   // run 1
-            .Returns(0.92)   // run 2
-            .Returns(0.50);  // run 3
-
-        var runner = BuildRunner(runsPerTest: 3, minPassRun: 2);
-
-        // Act
         var results = await runner.RunAllAsync(new List<TestCase> { MakeTestCase() });
 
-        // Assert
-        Assert.True(results[0].Passed);
-        Assert.Equal(2, results[0].PassedRunsCount);
-        Assert.Equal(3, results[0].TotalRunsCount);
+        // 2 of 3 runs passed → majority vote → overall pass.
+        Assert.IsTrue(results[0].Passed,
+            "2 of 3 runs passing must satisfy the majority-vote threshold of 2.");
+        Assert.AreEqual(2, results[0].PassedRunsCount,
+            "PassedRunsCount must reflect exactly 2 passing runs.");
+        Assert.AreEqual(3, results[0].TotalRunsCount,
+            "TotalRunsCount must reflect all 3 runs regardless of outcome.");
     }
 
     /// <summary>
-    /// Only 1 out of 3 runs passing must result in overall Passed = false.
+    /// Only 1 of 3 runs passing is insufficient. Verifies the majority-vote threshold
+    /// is correctly enforced — a single lucky pass must not elevate an unreliable LLM.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public async Task RunAllAsync_OneOfThreeRunsPass_TestFails()
     {
-        // Arrange — runs: pass, fail, fail
-        _llmClientMock
-            .SetupSequence(c => c.SendPromptAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync("Paris") .ReturnsAsync("9")  // run 1: pass
-            .ReturnsAsync("Wrong") .ReturnsAsync("2")  // run 2: fail
-            .ReturnsAsync("Wrong") .ReturnsAsync("2"); // run 3: fail
+        SetupEmbeddingsSequence(0.92, 0.50, 0.50);
 
-        _embeddingsMock
-            .Setup(e => e.GenerateEmbeddingAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(DummyVec);
+        var runner = BuildRunner(new FakeChatClient(
+            "Paris", "SCORE: 9",   // run 1: pass
+            "Wrong", "SCORE: 2",   // run 2: fail
+            "Wrong", "SCORE: 2"),  // run 3: fail
+            numberOfRuns: 3, minPassRun: 2);
 
-        _calculatorMock
-            .SetupSequence(c => c.CalculateCosineSimilarity(It.IsAny<float[]>(), It.IsAny<float[]>()))
-            .Returns(0.92)
-            .Returns(0.50)
-            .Returns(0.50);
-
-        var runner = BuildRunner(runsPerTest: 3, minPassRun: 2);
-
-        // Act
         var results = await runner.RunAllAsync(new List<TestCase> { MakeTestCase() });
 
-        // Assert
-        Assert.False(results[0].Passed);
-        Assert.Equal(1, results[0].PassedRunsCount);
+        // Only 1 of 3 passed — below threshold of 2 → overall fail.
+        Assert.IsFalse(results[0].Passed,
+            "Only 1 of 3 runs passing must not reach the majority-vote threshold of 2.");
+        Assert.AreEqual(1, results[0].PassedRunsCount,
+            "PassedRunsCount must reflect exactly 1 passing run.");
     }
 
     // =========================================================================
@@ -279,22 +408,23 @@ public class TestRunnerTests
     // =========================================================================
 
     /// <summary>
-    /// AverageEmbeddingScore and AverageJudgeScore must be correctly computed
-    /// across all runs.
+    /// Average embedding and judge scores must be computed across all runs.
+    /// These averages appear in the report to show how close the LLM was to passing
+    /// even when the test failed. Wrong averages misrepresent LLM performance.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public async Task RunAllAsync_AverageScores_CalculatedCorrectly()
     {
-        // Arrange — single run, known scores
-        SetupPassingRun(similarity: 0.90, judgeResponse: "8");
-        var runner = BuildRunner(runsPerTest: 1, minPassRun: 1);
+        SetupEmbeddings(0.90);
+        var runner = BuildRunner(new FakeChatClient("Paris", "SCORE: 8"));
 
-        // Act
         var results = await runner.RunAllAsync(new List<TestCase> { MakeTestCase() });
 
-        // Assert
-        Assert.Equal(0.90, results[0].AverageEmbeddingScore, precision: 2);
-        Assert.Equal(8.0,  results[0].AverageJudgeScore,     precision: 1);
+        // With one run, average == that run's score.
+        Assert.AreEqual(0.90, results[0].AverageEmbeddingScore, delta: 0.01,
+            "AverageEmbeddingScore must equal the similarity score from the single run.");
+        Assert.AreEqual(8.0, results[0].AverageJudgeScore, delta: 0.1,
+            "AverageJudgeScore must equal the judge score from the single run.");
     }
 
     // =========================================================================
@@ -302,60 +432,57 @@ public class TestRunnerTests
     // =========================================================================
 
     /// <summary>
-    /// If the LLM throws on every run, all runs are counted as failed
-    /// and the test must fail — without crashing the test suite.
+    /// If the LLM API throws on every run, all runs are marked failed and the result
+    /// must be returned without throwing. An unhandled exception here would crash the
+    /// entire evaluation, discarding all results collected so far.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public async Task RunAllAsync_LlmThrowsEveryRun_TestFailsGracefully()
     {
-        // Arrange
-        _llmClientMock
-            .Setup(c => c.SendPromptAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new HttpRequestException("API unavailable"));
+        // Queue a single exception — no embedding setup needed (exception happens first)
+        var runner = BuildRunner(
+            new FakeChatClient(new HttpRequestException("API unavailable")));
 
-        var runner = BuildRunner(runsPerTest: 1, minPassRun: 1);
-
-        // Act
+        // Must NOT throw — exceptions inside a run must be caught by TestRunner.
         var results = await runner.RunAllAsync(new List<TestCase> { MakeTestCase() });
 
-        // Assert — must not throw; result must exist and be failed
-        Assert.Single(results);
-        Assert.False(results[0].Passed);
-        Assert.Equal(0, results[0].PassedRunsCount);
-        Assert.Equal(1, results[0].TotalRunsCount);
+        Assert.AreEqual(1, results.Count,
+            "A result must be returned even when the LLM API threw on every run.");
+        Assert.IsFalse(results[0].Passed,
+            "All runs failing must produce an overall failing result.");
+        Assert.AreEqual(0, results[0].PassedRunsCount,
+            "PassedRunsCount must be 0 when every run encountered an API error.");
+        Assert.AreEqual(1, results[0].TotalRunsCount,
+            "TotalRunsCount must still reflect the attempted number of runs.");
     }
 
     /// <summary>
-    /// A failed run (API error) must be recorded in Runs list with an error response,
-    /// and the other successful runs must still be counted correctly.
+    /// When one run fails (API error) but the others succeed, the error is recorded
+    /// in that run's Response and the passing runs still count towards the majority vote.
+    /// A single transient error must not corrupt the surrounding successful runs.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public async Task RunAllAsync_OneRunFails_OtherRunsStillCounted()
     {
-        // Arrange — run 1 throws, run 2 succeeds, run 3 succeeds → 2/3 pass
-        _llmClientMock
-            .SetupSequence(c => c.SendPromptAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new HttpRequestException("Timeout")) // run 1 fails
-            .ReturnsAsync("Paris").ReturnsAsync("9")          // run 2 passes
-            .ReturnsAsync("Paris").ReturnsAsync("9");         // run 3 passes
+        // Run 1: throws. Runs 2 and 3: succeed → 2/3 pass (majority).
+        SetupEmbeddings(0.92);
 
-        _embeddingsMock
-            .Setup(e => e.GenerateEmbeddingAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(DummyVec);
+        var runner = BuildRunner(new FakeChatClient(
+            new HttpRequestException("Timeout"),  // run 1: API error
+            "Paris", "SCORE: 9",                  // run 2: pass
+            "Paris", "SCORE: 9"),                 // run 3: pass
+            numberOfRuns: 3, minPassRun: 2);
 
-        _calculatorMock
-            .Setup(c => c.CalculateCosineSimilarity(It.IsAny<float[]>(), It.IsAny<float[]>()))
-            .Returns(0.92);
-
-        var runner = BuildRunner(runsPerTest: 3, minPassRun: 2);
-
-        // Act
         var results = await runner.RunAllAsync(new List<TestCase> { MakeTestCase() });
 
-        // Assert
-        Assert.True(results[0].Passed);       // 2/3 majority
-        Assert.Equal(3, results[0].TotalRunsCount);
-        Assert.Equal(2, results[0].PassedRunsCount);
-        Assert.Contains("ERROR", results[0].Runs[0].Response); // first run logged error
+        // 2 of 3 runs passed despite run 1 throwing — majority vote must hold.
+        Assert.IsTrue(results[0].Passed,
+            "2 of 3 runs passing must satisfy the majority vote even when one run errored.");
+        Assert.AreEqual(3, results[0].TotalRunsCount,
+            "TotalRunsCount must include the failed run — it was still attempted.");
+        Assert.AreEqual(2, results[0].PassedRunsCount,
+            "PassedRunsCount must reflect only the 2 runs that actually passed.");
+        Assert.IsTrue(results[0].Runs[0].Response.Contains("ERROR"),
+            "The failed run's Response must contain 'ERROR' so the report shows which run errored.");
     }
 }

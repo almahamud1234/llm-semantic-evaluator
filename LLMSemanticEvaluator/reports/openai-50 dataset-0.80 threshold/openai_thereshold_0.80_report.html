@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LLM Evaluation Report</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f5f4;
+    color: #1c1c1a;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .page { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  h1 { font-size: 22px; font-weight: 500; }
+  h2 { font-size: 13px; font-weight: 500; color: #888780;
+       text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+  .subtitle { font-size: 12px; color: #888780; margin-top: 4px; }
+  .header { display: flex; align-items: flex-start;
+            justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 8px; }
+  .badge { display: inline-block; font-size: 12px; font-weight: 500;
+           padding: 4px 12px; border-radius: 6px; }
+  .badge-pass { background: #EAF3DE; color: #3B6D11; }
+  .badge-fail { background: #FCEBEB; color: #A32D2D; }
+  .badge-warn { background: #FAEEDA; color: #854F0B; }
+
+  .metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr));
+             gap: 12px; margin-bottom: 1.5rem; }
+  .metric-card { background: #ebebea; border-radius: 8px; padding: 1rem; }
+  .metric-val { font-size: 28px; font-weight: 500; line-height: 1.2; }
+  .metric-lbl { font-size: 12px; color: #5f5e5a; margin-bottom: 6px; }
+  .metric-sub { font-size: 11px; margin-top: 4px; }
+
+  .card { background: #fff; border: 0.5px solid rgba(0,0,0,0.1);
+          border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { text-align: left; padding: 6px 8px; font-weight: 500; color: #5f5e5a; }
+  td { padding: 7px 6px; border-top: 0.5px solid rgba(0,0,0,0.07); }
+  td.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; white-space: nowrap; }
+  .score-chip { display: inline-block; min-width: 46px; text-align: center;
+                padding: 3px 6px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+  .cat-chip { display: inline-block; font-size: 11px; padding: 2px 7px;
+              border-radius: 20px; font-weight: 500; }
+
+  .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 1.5rem; }
+  .chart-wrap { position: relative; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px;
+            font-size: 12px; color: #5f5e5a; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .legend-item { display: flex; align-items: center; gap: 4px; }
+
+  .scale-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .chip { display: inline-block; font-size: 11px; padding: 3px 8px;
+          border-radius: 20px; font-weight: 500; }
+
+  @media (max-width: 680px) {
+    .metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .charts-row { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+
+  .reliability-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .reliability-table th { text-align:left; padding:8px 10px; font-weight:500; color:#5f5e5a; border-bottom:1px solid rgba(0,0,0,0.08); }
+  .reliability-table td { padding:9px 10px; border-bottom:0.5px solid rgba(0,0,0,0.06); }
+  .verdict-reliable   { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; background:#EAF3DE; color:#3B6D11; }
+  .verdict-borderline { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; background:#FAEEDA; color:#854F0B; }
+  .verdict-unreliable { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; background:#FCEBEB; color:#A32D2D; }
+  .insight-box { background:#f0f4ff; border-left:3px solid #534AB7; border-radius:0 8px 8px 0; padding:1rem 1.2rem; margin-bottom:0.8rem; font-size:13px; line-height:1.6; }
+  .insight-box strong { color:#534AB7; }
+  .failure-box { background:#fff8f0; border-left:3px solid #D85A30; border-radius:0 8px 8px 0; padding:1rem 1.2rem; font-size:13px; line-height:1.6; }
+  .failure-box strong { color:#D85A30; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:1.5rem; }
+
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h1>LLM evaluation report</h1>
+      <div class="subtitle">50 tests &middot; 150 total runs &middot; definitions, factual, history, math, reasoning, science &middot; 01 Apr 2026 11:19</div>
+    </div>
+    <span class="badge badge-pass">100.0% pass rate</span>
+  </div>
+
+  <!-- Section 0: Problem & Goal -->
+  <div class="card" style="background:#fafaf9;border-left:3px solid #534AB7;border-radius:0 12px 12px 0;margin-bottom:1.5rem;">
+    <h2 style="margin-bottom:10px;">Problem &amp; Goal</h2>
+    <div style="font-size:13px;line-height:1.7;color:#3a3a38;">
+      <p style="margin-bottom:8px;">
+        <strong>Problem:</strong> When a software team builds a product on top of an LLM (e.g. a customer-support chatbot or a document-summarisation service), they cannot manually verify thousands of outputs to check whether the model is reliable. Traditional <code>assert output == expected</code> testing fails because LLMs are <em>non-deterministic</em> &mdash; the same prompt can return semantically correct but differently-worded answers on every run.
+      </p>
+      <p style="margin-bottom:8px;">
+        <strong>Goal:</strong> Automatically evaluate whether an LLM answers correctly across 50 test cases and 150 total runs, using two independent semantic validators &mdash; embedding cosine similarity and an LLM-as-a-judge (G-Eval style) &mdash; and produce an actionable reliability verdict per category that tells the customer which task types are safe to deploy.
+      </p>
+      <p style="margin-bottom:0;">
+        <strong>Strategy:</strong> Each test case is executed 3 times to account for non-determinism. A run passes if <em>either</em> the embedding similarity &ge; 0.80 <em>or</em> the judge score &ge; 7/10 (OR logic). A test case passes if at least 2 of 3 runs pass (majority vote). This tolerates one outlier run without masking a genuinely unreliable model.
+      </p>
+    </div>
+  </div>
+
+  <!-- Section 1: Metric cards -->
+  <div class="metrics">
+    <div class="metric-card">
+      <div class="metric-lbl">Total tests</div>
+      <div class="metric-val">50</div>
+      <div class="metric-sub" style="color:#5f5e5a;">6 categories</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-lbl">Pass rate</div>
+      <div class="metric-val" style="color:#3B6D11;">100.0%</div>
+      <div class="metric-sub" style="color:#5f5e5a;">50 / 50 passed</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-lbl">Avg embedding score</div>
+      <div class="metric-val">0.58</div>
+      <div class="metric-sub" style="color:#BA7517;">Below 0.80 threshold</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-lbl">Avg judge score</div>
+      <div class="metric-val">10.0<span style="font-size:14px;color:#888780;">/10</span></div>
+      <div class="metric-sub" style="color:#3B6D11;">Above threshold (>=7)</div>
+    </div>
+  </div>
+  
+  <!-- Section 1b: Category Reliability Assessment -->
+  <div class="card" style="margin-bottom:1.5rem;">
+    <h2>Category Reliability Assessment</h2>
+    <p style="font-size:12px;color:#5f5e5a;margin-bottom:12px;">
+      Verdict is based on pass rate: &ge; 90% = RELIABLE &nbsp;|&nbsp; 75&ndash;89% = BORDERLINE &nbsp;|&nbsp; &lt; 75% = UNRELIABLE.
+      This tells the customer which task types are safe to deploy in production.
+    </p>
+    <table class="reliability-table">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th style="text-align:center;">Tests</th>
+          <th style="text-align:center;">Passed</th>
+          <th style="text-align:center;">Pass Rate</th>
+          <th style="text-align:center;">Avg Embedding</th>
+          <th style="text-align:center;">Avg Judge</th>
+          <th>Verdict</th>
+          <th>Recommendation</th>
+        </tr>
+      </thead>
+      <tbody id="reliabilityBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Section 2: Heatmap table -->
+  <div class="card">
+    <h2>Test results &mdash; embedding score &middot; judge score &middot; per run</h2>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Test ID</th>
+            <th>Category</th>
+            <th colspan="3" style="text-align:center;">Embedding score / run</th>
+            <th colspan="3" style="text-align:center;">Judge score / run</th>
+            <th style="text-align:center;">Runs passed</th>
+            <th style="text-align:center;">Status</th>
+          </tr>
+          <tr style="font-size:11px;color:#888780;">
+            <td colspan="2"></td>
+            <td style="text-align:center;padding:2px 6px;">R1</td>
+            <td style="text-align:center;padding:2px 6px;">R2</td>
+            <td style="text-align:center;padding:2px 6px;">R3</td>
+            <td style="text-align:center;padding:2px 6px;">R1</td>
+            <td style="text-align:center;padding:2px 6px;">R2</td>
+            <td style="text-align:center;padding:2px 6px;">R3</td>
+            <td></td><td></td>
+          </tr>
+        </thead>
+        <tbody id="heatBody"></tbody>
+      </table>
+    </div>
+    <div class="scale-legend">
+      <span style="font-size:11px;color:#5f5e5a;align-self:center;">Embedding:</span>
+      <span class="chip" style="background:#EAF3DE;color:#3B6D11;">&ge; 0.85 &nbsp;pass</span>
+      <span class="chip" style="background:#FAEEDA;color:#854F0B;">0.70&ndash;0.84 &nbsp;borderline</span>
+      <span class="chip" style="background:#FAC775;color:#633806;">0.50&ndash;0.69 &nbsp;low</span>
+      <span class="chip" style="background:#FCEBEB;color:#A32D2D;">&lt; 0.50 &nbsp;fail</span>
+      <span style="font-size:11px;color:#5f5e5a;align-self:center;margin-left:8px;">Judge:</span>
+      <span class="chip" style="background:#EAF3DE;color:#3B6D11;">&ge; 8 &nbsp;pass</span>
+      <span class="chip" style="background:#FAEEDA;color:#854F0B;">6&ndash;7 &nbsp;borderline</span>
+      <span class="chip" style="background:#FCEBEB;color:#A32D2D;">&lt; 6 &nbsp;fail</span>
+    </div>
+  </div>
+
+  <!-- Section 3: Charts row -->
+  <div class="charts-row">
+    <div class="card" style="margin-bottom:0;">
+      <h2>Embedding score distribution</h2>
+      <div style="font-size:11px;color:#888780;margin-bottom:8px;">
+        Bars show how many runs fell in each score band
+      </div>
+      <div class="chart-wrap" style="height:200px;">
+        <canvas id="chartDist"></canvas>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <h2>Pass rate by category</h2>
+      <div class="chart-wrap" style="height:220px;">
+        <canvas id="chartCat"></canvas>
+      </div>
+    </div>
+  </div>
+  <div style="margin-bottom:1.5rem;"></div>
+
+  <!-- Section 3b: Key Insights & Failure Analysis -->
+  <div class="two-col">
+    <div class="card" style="margin-bottom:0;">
+      <h2>Key Insights</h2>
+      <div class="insight-box">
+  <strong>Why is the average embedding score low (0.58) yet the pass rate is 100.0%?</strong><br>
+  Short expected outputs produce low cosine similarity against full-sentence LLM responses because the vector spaces do not overlap well at different lengths. This is a known limitation of embedding-based evaluation. The LLM judge correctly scores these as high quality, and the OR logic ensures they still pass. 46 of 50 tests passed via the judge validator alone, confirming the dual-validator design is essential.
+</div><div class="insight-box" style="margin-bottom:0;">
+  <strong>Why run each test 3 times?</strong><br>
+  LLMs are non-deterministic — the same prompt can produce different wording across runs. Running 3 times and requiring 2/3 to pass (majority vote) eliminates single-run flukes without being too strict. Consistent results across all runs indicate a stable, reliable model for that task type.
+</div>
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <h2>Failure Analysis</h2>
+      <div class="insight-box" style="margin-bottom:0;background:#f0faf4;border-left-color:#1D9E75;">
+  <strong style="color:#1D9E75;">No failures detected.</strong><br>
+  All test cases passed. The model is performing reliably across all categories and runs.
+</div>
+    </div>
+  </div>
+  <div style="margin-bottom:1.5rem;"></div>
+
+  <!-- Section 4: Run-level scatter -->
+  <div class="card">
+    <h2>Judge score per individual run</h2>
+    <div style="font-size:11px;color:#888780;margin-bottom:8px;">
+      Each dot = one run. Dashed line = pass threshold (8/10). Hover for test ID.
+    </div>
+    <div class="chart-wrap" style="height:220px;">
+      <canvas id="chartScatter"></canvas>
+    </div>
+    <div class="legend">
+      <span style="font-size:11px;color:#888780;">Category:</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#7F77DD;"></span>factual</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#1D9E75;"></span>definition</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#D85A30;"></span>reasoning</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#888780;"></span>math</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#534AB7;"></span>science</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#993556;"></span>history</span>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ── Data injected by ReportGenerator.cs ─────────────────────────────────────
+const tests = [{"id":"factual_022","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.52,"avgJudge":10,"embRuns":[0.5,0.56,0.49],"judgeRuns":[10,10,10]},{"id":"factual_004","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.62,"avgJudge":10,"embRuns":[0.61,0.63,0.62],"judgeRuns":[10,10,10]},{"id":"factual_006","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.56,"avgJudge":10,"embRuns":[0.55,0.57,0.56],"judgeRuns":[10,10,10]},{"id":"factual_007","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.56,"avgJudge":10,"embRuns":[0.57,0.55,0.57],"judgeRuns":[10,10,10]},{"id":"factual_009","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.65,"avgJudge":10,"embRuns":[0.66,0.66,0.64],"judgeRuns":[10,10,10]},{"id":"factual_021","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.45,"avgJudge":10,"embRuns":[0.45,0.45,0.45],"judgeRuns":[10,10,10]},{"id":"factual_023","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.31,"avgJudge":10,"embRuns":[0.29,0.31,0.32],"judgeRuns":[10,10,10]},{"id":"factual_002","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.68,"avgJudge":10,"embRuns":[0.61,0.8,0.61],"judgeRuns":[10,10,10]},{"id":"factual_003","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.73,"avgJudge":10,"embRuns":[0.66,0.75,0.77],"judgeRuns":[10,10,10]},{"id":"math_021","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.43,"avgJudge":10,"embRuns":[0.43,0.43,0.42],"judgeRuns":[10,10,10]},{"id":"math_022","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.33,"avgJudge":10,"embRuns":[0.35,0.34,0.3],"judgeRuns":[10,10,10]},{"id":"math_023","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.3,"avgJudge":10,"embRuns":[0.28,0.32,0.3],"judgeRuns":[10,10,10]},{"id":"math_001","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.81,"avgJudge":10,"embRuns":[1,0.43,1],"judgeRuns":[10,10,10]},{"id":"math_002","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.34,"avgJudge":10,"embRuns":[0.35,0.34,0.34],"judgeRuns":[10,10,10]},{"id":"math_004","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":1,"avgJudge":10,"embRuns":[1,1,1],"judgeRuns":[10,10,10]},{"id":"math_005","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.81,"avgJudge":10,"embRuns":[1,1,0.43],"judgeRuns":[10,10,10]},{"id":"math_006","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.58,"avgJudge":10,"embRuns":[0.58,0.58,0.58],"judgeRuns":[10,10,10]},{"id":"reasoning_016","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.73,"avgJudge":10,"embRuns":[0.79,0.69,0.71],"judgeRuns":[10,10,10]},{"id":"reasoning_024","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.63,"avgJudge":9.7,"embRuns":[0.69,0.64,0.57],"judgeRuns":[10,9,10]},{"id":"reasoning_021","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.46,"avgJudge":10,"embRuns":[0.46,0.46,0.46],"judgeRuns":[10,10,10]},{"id":"reasoning_002","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.36,"avgJudge":10,"embRuns":[0.34,0.34,0.41],"judgeRuns":[10,10,10]},{"id":"reasoning_003","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.5,"avgJudge":10,"embRuns":[0.5,0.5,0.5],"judgeRuns":[10,10,10]},{"id":"reasoning_004","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.42,"avgJudge":10,"embRuns":[0.44,0.35,0.47],"judgeRuns":[10,10,10]},{"id":"reasoning_010","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.7,"avgJudge":10,"embRuns":[0.67,0.73,0.69],"judgeRuns":[10,10,10]},{"id":"reasoning_011","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.55,"avgJudge":10,"embRuns":[0.54,0.55,0.55],"judgeRuns":[10,10,10]},{"id":"reasoning_012","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.81,"avgJudge":10,"embRuns":[0.81,0.81,0.81],"judgeRuns":[10,10,10]},{"id":"history_002","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.59,"avgJudge":10,"embRuns":[0.63,0.61,0.55],"judgeRuns":[10,10,10]},{"id":"history_004","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.58,"avgJudge":10,"embRuns":[0.58,0.58,0.57],"judgeRuns":[10,10,10]},{"id":"history_008","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.66,"avgJudge":10,"embRuns":[0.6,0.74,0.63],"judgeRuns":[10,10,10]},{"id":"history_009","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.47,"avgJudge":10,"embRuns":[0.42,0.51,0.49],"judgeRuns":[10,10,10]},{"id":"history_011","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.6,"avgJudge":10,"embRuns":[0.6,0.6,0.61],"judgeRuns":[10,10,10]},{"id":"history_012","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.78,"avgJudge":10,"embRuns":[0.77,0.78,0.77],"judgeRuns":[10,10,10]},{"id":"history_014","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.59,"avgJudge":10,"embRuns":[0.59,0.59,0.59],"judgeRuns":[10,10,10]},{"id":"history_017","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.66,"avgJudge":10,"embRuns":[0.7,0.63,0.64],"judgeRuns":[10,10,10]},{"id":"definition_003","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.4,"avgJudge":10,"embRuns":[0.4,0.38,0.42],"judgeRuns":[10,10,10]},{"id":"definition_004","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.5,"avgJudge":10,"embRuns":[0.53,0.48,0.5],"judgeRuns":[10,10,10]},{"id":"definition_005","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.48,"avgJudge":10,"embRuns":[0.48,0.47,0.48],"judgeRuns":[10,10,10]},{"id":"definition_006","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.45,"avgJudge":10,"embRuns":[0.45,0.45,0.45],"judgeRuns":[10,10,10]},{"id":"definition_007","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.7,"avgJudge":10,"embRuns":[0.72,0.73,0.66],"judgeRuns":[10,10,10]},{"id":"definition_008","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.49,"avgJudge":10,"embRuns":[0.51,0.48,0.47],"judgeRuns":[10,10,10]},{"id":"definition_009","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.62,"avgJudge":10,"embRuns":[0.58,0.64,0.64],"judgeRuns":[10,10,10]},{"id":"definition_010","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.65,"avgJudge":10,"embRuns":[0.64,0.65,0.64],"judgeRuns":[10,10,10]},{"id":"science_002","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.7,"avgJudge":10,"embRuns":[0.72,0.68,0.71],"judgeRuns":[10,10,10]},{"id":"science_001","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.59,"avgJudge":10,"embRuns":[0.59,0.58,0.61],"judgeRuns":[10,10,10]},{"id":"science_004","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.47,"avgJudge":10,"embRuns":[0.47,0.46,0.47],"judgeRuns":[10,10,10]},{"id":"science_005","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.7,"avgJudge":10,"embRuns":[0.7,0.7,0.7],"judgeRuns":[10,10,10]},{"id":"science_012","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.53,"avgJudge":10,"embRuns":[0.56,0.55,0.48],"judgeRuns":[10,10,10]},{"id":"science_013","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.49,"avgJudge":10,"embRuns":[0.5,0.46,0.52],"judgeRuns":[10,10,10]},{"id":"science_014","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.64,"avgJudge":10,"embRuns":[0.63,0.63,0.66],"judgeRuns":[10,10,10]},{"id":"science_016","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.71,"avgJudge":10,"embRuns":[0.71,0.72,0.72],"judgeRuns":[10,10,10]}];
+
+// ── Category colour map ──────────────────────────────────────────────────────
+const CAT_COLORS = {
+  factual:    '#7F77DD',
+  definition: '#1D9E75',
+  reasoning:  '#D85A30',
+  math:       '#888780',
+  science:    '#534AB7',
+  history:    '#993556'
+};
+function catColor(cat) {
+  return CAT_COLORS[cat] || '#378ADD';
+}
+
+// ── Heatmap cell colour helpers ──────────────────────────────────────────────
+function embStyle(v) {
+  if (v >= 0.85) return { bg: '#EAF3DE', color: '#3B6D11' };
+  if (v >= 0.70) return { bg: '#FAEEDA', color: '#854F0B' };
+  if (v >= 0.50) return { bg: '#FAC775', color: '#633806' };
+  return { bg: '#FCEBEB', color: '#A32D2D' };
+}
+function judgeStyle(v) {
+  if (v >= 8) return { bg: '#EAF3DE', color: '#3B6D11' };
+  if (v >= 6) return { bg: '#FAEEDA', color: '#854F0B' };
+  return { bg: '#FCEBEB', color: '#A32D2D' };
+}
+
+// ── Build reliability assessment table ──────────────────────────────────────
+const allCatsRel = [...new Set(tests.map(t => t.cat))].sort();
+const relBody = document.getElementById('reliabilityBody');
+allCatsRel.forEach(cat => {
+  const group      = tests.filter(t => t.cat === cat);
+  const catTotal   = group.length;
+  const catPassed  = group.filter(t => t.passed).length;
+  const rate       = catTotal > 0 ? catPassed / catTotal * 100 : 0;
+  const avgEmb     = group.reduce((s, t) => s + t.avgEmb,   0) / catTotal;
+  const avgJudge   = group.reduce((s, t) => s + t.avgJudge, 0) / catTotal;
+  const color      = catColor(cat);
+
+  let verdictClass, verdictLabel, recommendation;
+  if (rate >= 90) {
+    verdictClass = 'verdict-reliable';   verdictLabel = 'RELIABLE';
+    recommendation = `Safe to deploy for ${cat} queries`;
+  } else if (rate >= 75) {
+    verdictClass = 'verdict-borderline'; verdictLabel = 'BORDERLINE';
+    recommendation = `Use with caution; review failing cases`;
+  } else {
+    verdictClass = 'verdict-unreliable'; verdictLabel = 'UNRELIABLE';
+    recommendation = `Not recommended for production use`;
+  }
+
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><span class="cat-chip" style="background:${color}22;color:${color};">${cat}</span></td>
+    <td style="text-align:center;">${catTotal}</td>
+    <td style="text-align:center;">${catPassed}</td>
+    <td style="text-align:center;font-weight:600;">${rate.toFixed(1)}%</td>
+    <td style="text-align:center;">${avgEmb.toFixed(2)}</td>
+    <td style="text-align:center;">${avgJudge.toFixed(1)}/10</td>
+    <td><span class="${verdictClass}">${verdictLabel}</span></td>
+    <td style="font-size:12px;color:#5f5e5a;">${recommendation}</td>
+  `;
+  relBody.appendChild(tr);
+});
+
+// ── Build heatmap table ──────────────────────────────────────────────────────
+const tbody = document.getElementById('heatBody');
+tests.forEach(t => {
+  const tr = document.createElement('tr');
+  let html = `<td class="mono">${t.id}</td>`;
+  html += `<td><span class="cat-chip" style="background:${catColor(t.cat)}22;color:${catColor(t.cat)};">${t.cat}</span></td>`;
+
+  const embR   = [...t.embRuns,   ...Array(3).fill(null)].slice(0, 3);
+  const judgeR = [...t.judgeRuns, ...Array(3).fill(null)].slice(0, 3);
+
+  embR.forEach(v => {
+    if (v === null) { html += `<td></td>`; return; }
+    const s = embStyle(v);
+    html += `<td style="text-align:center;"><span class="score-chip" style="background:${s.bg};color:${s.color};">${Number(v).toFixed(2)}</span></td>`;
+  });
+  judgeR.forEach(v => {
+    if (v === null) { html += `<td></td>`; return; }
+    const s = judgeStyle(v);
+    html += `<td style="text-align:center;"><span class="score-chip" style="background:${s.bg};color:${s.color};">${v}/10</span></td>`;
+  });
+  html += `<td style="text-align:center;">${t.runs}/${t.total}</td>`;
+  html += `<td style="text-align:center;"><span class="badge ${t.passed ? 'badge-pass' : 'badge-fail'}">${t.passed ? 'pass' : 'fail'}</span></td>`;
+  tr.innerHTML = html;
+  tbody.appendChild(tr);
+});
+
+// ── Embedding distribution histogram ────────────────────────────────────────
+const allEmb = tests.flatMap(t => t.embRuns);
+const bins      = ['< 0.50', '0.50–0.69', '0.70–0.84', '≥ 0.85'];
+const binColors = ['#F09595', '#FAC775', '#FAEEDA', '#97C459'];
+const counts    = [
+  allEmb.filter(v => v <  0.50).length,
+  allEmb.filter(v => v >= 0.50 && v < 0.70).length,
+  allEmb.filter(v => v >= 0.70 && v < 0.85).length,
+  allEmb.filter(v => v >= 0.85).length
+];
+
+new Chart(document.getElementById('chartDist'), {
+  type: 'bar',
+  data: { labels: bins, datasets: [{ data: counts, backgroundColor: binColors, borderRadius: 4 }] },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { font: { size: 11 } }, grid: { display: false } },
+      y: { min: 0, ticks: { stepSize: 1, font: { size: 11 } }, grid: { color: '#e5e5e5' } }
+    }
+  }
+});
+
+// ── Pass rate by category ────────────────────────────────────────────────────
+const allCats   = [...new Set(tests.map(t => t.cat))].sort();
+const catPassed = allCats.map(c => tests.filter(t => t.cat === c && t.passed).length);
+const catTotal  = allCats.map(c => tests.filter(t => t.cat === c).length);
+
+new Chart(document.getElementById('chartCat'), {
+  type: 'bar',
+  data: {
+    labels: allCats,
+    datasets: [
+      { label: 'Passed', data: catPassed, backgroundColor: '#1D9E75', borderRadius: 4, stack: 'a' },
+      { label: 'Failed', data: catTotal.map((t, i) => t - catPassed[i]), backgroundColor: '#F09595', borderRadius: 4, stack: 'a' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => {
+            const i = ctx.dataIndex;
+            const rate = catTotal[i] > 0 ? Math.round(catPassed[i] / catTotal[i] * 100) : 0;
+            return ` ${catPassed[i]}/${catTotal[i]} passed (${rate}%)`;
+          }
+        }
+      }
+    },
+    scales: {
+      x: { stacked: true, min: 0, ticks: { stepSize: 1, font: { size: 11 } }, grid: { display: false } },
+      y: { stacked: true, ticks: { font: { size: 11 } }, grid: { display: false } }
+    }
+  }
+});
+
+// ── Run-level judge score scatter ────────────────────────────────────────────
+const scatterDatasets = tests.map(t => ({
+  label: t.id,
+  data: t.judgeRuns.map((j, i) => ({ x: i + 1, y: j })),
+  backgroundColor: catColor(t.cat),
+  pointRadius: 8,
+  pointHoverRadius: 10
+}));
+
+scatterDatasets.push({
+  label: '_threshold',
+  data: [{ x: 0.5, y: 8 }, { x: 3.5, y: 8 }],
+  type: 'line',
+  borderColor: '#E24B4A',
+  borderDash: [5, 4],
+  borderWidth: 1.5,
+  pointRadius: 0,
+  fill: false
+});
+
+new Chart(document.getElementById('chartScatter'), {
+  type: 'scatter',
+  data: { datasets: scatterDatasets },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        filter: item => !item.dataset.label.startsWith('_'),
+        callbacks: { title: items => items[0].dataset.label }
+      }
+    },
+    scales: {
+      x: {
+        min: 0.5, max: 3.5,
+        ticks: { stepSize: 1, callback: v => `Run ${v}`, font: { size: 11 } },
+        grid: { display: false }
+      },
+      y: {
+        min: 0, max: 10,
+        ticks: { font: { size: 11 } },
+        grid: { color: '#e5e5e5' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

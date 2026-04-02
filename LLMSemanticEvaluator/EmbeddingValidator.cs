@@ -1,99 +1,85 @@
-using LLMSemanticEvaluator.Models;
+using LLMSemanticEvaluator.Configuration;
 using LLMSemanticEvaluator.Interfaces;
+using LLMSemanticEvaluator.Models;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace LLMSemanticEvaluator;
 
 /// <summary>
-/// Validates LLM responses by measuring semantic similarity between the expected
-/// and actual output using vector embeddings and cosine similarity.
+/// Validates an LLM response by measuring semantic similarity between the expected
+/// and actual output using embedding vectors and cosine similarity.
 ///
-/// HOW IT WORKS:
-///   1. Both the expected and actual texts are converted into numeric vectors
-///      (embeddings) via the OpenAI Embeddings API.
-///   2. Cosine similarity is calculated between the two vectors, producing a
-///      score between 0.0 (completely different) and 1.0 (identical meaning).
-///   3. If the score meets or exceeds the threshold, the test PASSES.
-/// 
-/// SCORE GUIDE:
-///   1.0       = Identical meaning
-///   0.90–0.99 = Very similar (minor wording differences)
-///   0.85–0.89 = Similar enough → PASS at default threshold
-///   0.70–0.84 = Related but not close enough → FAIL
-///   below 0.70 = Clearly different meaning → FAIL
+/// How it works:
+///   1. Both texts are converted to float[] vectors via IEmbeddingGenerator.
+///   2. Cosine similarity is computed between the two vectors by ISimilarityCalculator.
+///   3. The run passes if similarity >= EmbeddingThreshold (default 0.85).
+///
+/// IEmbeddingGenerator&lt;string, Embedding&lt;float&gt;&gt; is the standard Microsoft.Extensions.AI
+/// interface. The concrete implementation (OpenAI or Ollama) is resolved by
+/// LLMClientFactory and injected here — this class never knows which provider is used.
+///
+/// Score interpretation:
+///   1.00       — identical meaning
+///   0.90–0.99  — very similar, minor wording differences
+///   0.85–0.89  — similar enough → PASS at default threshold
+///   0.70–0.84  — related but not close enough → FAIL
+///   below 0.70 — clearly different meaning → FAIL
+///
+/// Known limitation: single-word expected outputs (e.g. "Paris") produce similarity
+/// scores of 0.30–0.55 against correct full-sentence responses, well below the threshold.
+/// This is why OR logic with the LLM judge is essential — see TestRunner.
 /// </summary>
 public class EmbeddingValidator
 {
-    private readonly IEmbeddingProvider _embeddings; // Calls OpenAI to generate vectors
-    private readonly ISimilarityCalculator _calculator; // Computes cosine similarity
-    private readonly double _threshold; // Minimum score required to pass
+    private readonly IEmbeddingGenerator<string, Embedding<float>> _embeddingGenerator;
+    private readonly ISimilarityCalculator                         _calculator;
+    private readonly double                                        _threshold;
+    private readonly ILogger<EmbeddingValidator>                   _logger;
 
-    /// <summary>
-    /// Creates a new EmbeddingValidator.
-    /// </summary>
-    /// <param name="embeddings">Provider that converts text to float[] vectors (e.g. OpenAIClient).</param>
-    /// <param name="calculator">Calculator that computes cosine similarity between two vectors.</param>
-    /// <param name="threshold">
-    ///     Minimum similarity score (0.0–1.0) required to pass. Defaults to 0.85.
-    ///     Lower = more lenient, Higher = stricter. Recommended range: 0.80–0.90.
-    /// </param>
     public EmbeddingValidator(
-        IEmbeddingProvider embeddings,
-        ISimilarityCalculator calculator,
-        double threshold = 0.85)
+        IEmbeddingGenerator<string, Embedding<float>> embeddingGenerator,
+        ISimilarityCalculator                         calculator,
+        IOptions<TestConfiguration>                   options,
+        ILogger<EmbeddingValidator>                   logger)
     {
-        _embeddings = embeddings;
-        _calculator = calculator;
-        _threshold = threshold;
+        _embeddingGenerator = embeddingGenerator;
+        _calculator         = calculator;
+        _threshold          = options.Value.EmbeddingThreshold;
+        _logger             = logger;
     }
 
     /// <summary>
-    /// Validates whether the actual LLM output is semantically close enough to the expected output.
+    /// Validates whether the actual LLM output is semantically equivalent to
+    /// the expected output using cosine similarity on embedding vectors.
     /// </summary>
-    /// <param name="expected">The correct/expected answer (from your test case JSON).</param>
-    /// <param name="actual">The actual response returned by the LLM being tested.</param>
-    /// <returns>
-    ///     A <see cref="ValidationResult"/> containing:
-    ///     - Passed: true if similarity >= threshold
-    ///     - Score: the raw cosine similarity value (0.0–1.0)
-    ///     - Reasoning: only set if an error occurred
-    /// </returns>
+    /// <param name="expected">Reference answer from the test case JSON.</param>
+    /// <param name="actual">Response returned by the LLM under test.</param>
     public async Task<ValidationResult> ValidateAsync(string expected, string actual)
     {
-        // Treat empty/null LLM response as an automatic fail
         if (string.IsNullOrWhiteSpace(actual))
-        {
-            return new ValidationResult
-            {
-                ValidatorName = "Embedding",
-                Score         = 0,
-                Passed        = false,
-                Reasoning     = "LLM returned an empty response"
-            };
-        }
+            return Fail("LLM returned an empty response.");
 
         try
         {
-            // Step 1: Convert both texts to embedding vectors via OpenAI API
-            var embExpected = await _embeddings.GenerateEmbeddingAsync(expected);
-            var embActual   = await _embeddings.GenerateEmbeddingAsync(actual);
+            // GenerateAsync returns GeneratedEmbeddings<Embedding<float>>.
+            // Each Embedding<float> holds the vector in its Vector property.
+            var embExpected = (await _embeddingGenerator.GenerateAsync([expected]))
+                                  .First().Vector.ToArray();
 
-            // Check embeddings came back with data
-            if (embExpected == null || embExpected.Length == 0 ||
-                embActual   == null || embActual.Length   == 0)
-            {
-                return new ValidationResult
-                {
-                    ValidatorName = "Embedding",
-                    Score         = 0,
-                    Passed        = false,
-                    Reasoning     = "Embedding API returned empty vectors"
-                };
-            }
+            var embActual   = (await _embeddingGenerator.GenerateAsync([actual]))
+                                  .First().Vector.ToArray();
 
-            // Step 2: Calculate how similar the two vectors are (0.0 to 1.0)
+            if (embExpected.Length == 0 || embActual.Length == 0)
+                return Fail("Embedding generator returned an empty vector.");
+
             double similarity = _calculator.CalculateCosineSimilarity(embExpected, embActual);
 
-            // Step 3: Return result — pass if similarity meets the threshold
+            _logger.LogDebug(
+                "Embedding similarity: {Score:F4} (threshold {Threshold})",
+                similarity, _threshold);
+
             return new ValidationResult
             {
                 ValidatorName = "Embedding",
@@ -103,15 +89,16 @@ public class EmbeddingValidator
         }
         catch (Exception ex)
         {
-            // If the API call fails (e.g. no key, network issue), treat as a failed validation
-            // and surface the error message for debugging rather than crashing the test run.
-            return new ValidationResult
-            {
-                ValidatorName = "Embedding",
-                Score         = 0,
-                Passed        = false,
-                Reasoning     = $"Error: {ex.Message}"
-            };
+            _logger.LogWarning("Embedding validation error: {Error}", ex.Message);
+            return Fail($"Error: {ex.Message}");
         }
     }
+
+    private static ValidationResult Fail(string reason) => new()
+    {
+        ValidatorName = "Embedding",
+        Score         = 0,
+        Passed        = false,
+        Reasoning     = reason
+    };
 }

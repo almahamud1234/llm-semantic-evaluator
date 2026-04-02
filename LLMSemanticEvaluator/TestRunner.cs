@@ -1,73 +1,112 @@
+using LLMSemanticEvaluator.Configuration;
 using LLMSemanticEvaluator.Models;
-using LLMSemanticEvaluator.Interfaces;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace LLMSemanticEvaluator;
 
 /// <summary>
-/// Orchestrates the full test execution pipeline:
-///   1. Receives loaded test cases
-///   2. For each test: sends prompt to LLM, validates response, repeats 3 times
-///   3. Aggregates results using majority vote (2/3 runs must pass)
+/// Runs all test cases against the LLM and returns one TestResult per case.
+///
+/// For each test case, TestRunner:
+///   1. Sends the prompt to the LLM under test via IChatClient.GetResponseAsync.
+///   2. Runs EmbeddingValidator and LLMJudgeValidator independently on the response.
+///   3. Repeats steps 1–2 for NumberOfRuns iterations to handle LLM non-determinism.
+///   4. Aggregates results with majority-vote logic:
+///        RunPassed  = EmbeddingPassed OR JudgePassed
+///        TestPassed = PassedRunsCount >= MinimumPassingRuns
+///
+/// OR logic is used (not AND) because the two validators have complementary failure
+/// modes: embedding similarity is structurally low for short expected outputs, while
+/// the judge compensates by evaluating meaning rather than vector distance.
+///
+/// IChatClient is the standard Microsoft.Extensions.AI interface. The concrete
+/// implementation (OpenAI or Ollama) is resolved by LLMClientFactory and injected
+/// here — this class never knows which provider is used.
+///
+/// All settings come from IOptions&lt;TestConfiguration&gt; — no hard-coded values.
+/// ILogger replaces Console.WriteLine for environment-independent output.
 /// </summary>
 public class TestRunner
 {
-    private readonly ILLMClient         _llmClient;
-    private readonly EmbeddingValidator _embeddingValidator;
-    private readonly LLMJudgeValidator  _judgeValidator;
-    private readonly int                _runsPerTest;
-    private readonly int                _minPassRun;
+    private readonly IChatClient          _chatClient;
+    private readonly ChatOptions          _chatOptions;
+    private readonly EmbeddingValidator   _embeddingValidator;
+    private readonly LLMJudgeValidator    _judgeValidator;
+    private readonly TestConfiguration    _config;
+    private readonly ILogger<TestRunner>  _logger;
 
-    /// <param name="llmClient">Sends prompts to OpenAI and gets responses.</param>
-    /// <param name="embeddingValidator">Validates using cosine similarity.</param>
-    /// <param name="judgeValidator">Validates using LLM-as-judge scoring.</param>
-    /// <param name="runsPerTest">How many times to run each test.</param>
-    /// <param name="minPassRun">Minimum passing number out of total test run.</param>
     public TestRunner(
-        ILLMClient         llmClient,
-        EmbeddingValidator embeddingValidator,
-        LLMJudgeValidator  judgeValidator,
-        int                runsPerTest,
-        int                minPassRun)
+        IChatClient                 chatClient,
+        EmbeddingValidator          embeddingValidator,
+        LLMJudgeValidator           judgeValidator,
+        IOptions<TestConfiguration> options,
+        ILogger<TestRunner>         logger)
     {
-        _llmClient          = llmClient;
+        _chatClient         = chatClient;
         _embeddingValidator = embeddingValidator;
         _judgeValidator     = judgeValidator;
-        _runsPerTest        = runsPerTest;
-        _minPassRun         = minPassRun;
+        _config             = options.Value;
+        _logger             = logger;
+
+        // Some models (gpt-5-mini, o1, o3 etc.) do not accept a temperature parameter
+        // and will return HTTP 400 if it is set. For those models ChatOptions is left
+        // empty so the provider uses its own default. For all other models, Temperature
+        // is read from appsettings.json and applied on every call.
+        _chatOptions = SupportsTemperature(_config.ChatModel)
+            ? new ChatOptions { Temperature = (float)_config.Temperature }
+            : new ChatOptions();
     }
 
     /// <summary>
-    /// Runs all test cases and returns a result for each one.
-    /// Prints progress to console as tests complete.
+    /// Runs all test cases and returns one TestResult per case.
+    /// Logs a one-line summary after each test so progress is visible in real time.
+    /// Respects the CancellationToken — stops cleanly on Ctrl+C or host shutdown.
     /// </summary>
-    public async Task<List<TestResult>> RunAllAsync(List<TestCase> testCases)
+    public async Task<List<TestResult>> RunAllAsync(
+        List<TestCase>    testCases,
+        CancellationToken cancellationToken = default)
     {
         var results = new List<TestResult>();
         int total   = testCases.Count;
 
-        Console.WriteLine($"Starting test run: {total} tests, {_runsPerTest} runs each\n");
+        _logger.LogInformation(
+            "Starting: {Total} tests × {Runs} runs each", total, _config.NumberOfRuns);
 
         for (int i = 0; i < total; i++)
         {
-            var testCase = testCases[i];
-            Console.Write($"[{i + 1}/{total}] {testCase.Id} ... ");
+            cancellationToken.ThrowIfCancellationRequested();
 
-            var result = await RunSingleTestAsync(testCase);
+            var testCase = testCases[i];
+            var result   = await RunSingleTestAsync(testCase, cancellationToken);
             results.Add(result);
 
-            Console.WriteLine($"{(result.Passed ? "✅ PASS" : "❌ FAIL")} " +
-                              $"({result.PassedRunsCount}/{result.TotalRunsCount} runs passed)");
+            _logger.LogInformation(
+                "[{Index}/{Total}] {Id} → {Status} ({Passed}/{Runs} runs passed)",
+                i + 1,
+                total,
+                testCase.Id,
+                result.Passed ? "PASS" : "FAIL",
+                result.PassedRunsCount,
+                result.TotalRunsCount);
         }
 
-        Console.WriteLine($"\nDone. Passed: {results.Count(r => r.Passed)}/{total}");
+        _logger.LogInformation(
+            "Complete. Passed: {Passed}/{Total}",
+            results.Count(r => r.Passed), total);
+
         return results;
     }
 
     /// <summary>
-    /// Runs a single test case 3 times and aggregates the results.
-    /// If a run fails due to an API error, it is counted as a failed run.
+    /// Runs one test case for NumberOfRuns iterations.
+    /// If an individual run throws (e.g. network timeout), it is recorded as a
+    /// failed run and execution continues — one error does not abort the full suite.
     /// </summary>
-    private async Task<TestResult> RunSingleTestAsync(TestCase testCase)
+    private async Task<TestResult> RunSingleTestAsync(
+        TestCase          testCase,
+        CancellationToken cancellationToken)
     {
         var result = new TestResult
         {
@@ -77,19 +116,28 @@ public class TestRunner
             ExpectedOutput = testCase.ExpectedOutput
         };
 
-        for (int run = 0; run < _runsPerTest; run++)
+        for (int run = 0; run < _config.NumberOfRuns; run++)
         {
             try
             {
-                // Step 1: Send prompt to LLM
-                string actual = await _llmClient.SendPromptAsync(testCase.Prompt);
+                // Send the prompt to the LLM under test.
+                // ChatOptions carries Temperature from appsettings.json.
+                // GetResponseAsync is the Microsoft.Extensions.AI standard method.
+                ChatResponse chatResponse = await _chatClient.GetResponseAsync(
+                    testCase.Prompt, _chatOptions, cancellationToken);
 
-                // Step 2: Validate with both validators independently
-                var embResult   = await _embeddingValidator.ValidateAsync(testCase.ExpectedOutput, actual);
-                var judgeResult = await _judgeValidator.ValidateAsync(testCase.Prompt, testCase.ExpectedOutput, actual, testCase.EvaluationCriteria);
+                string actual = chatResponse.Text;
 
-                // Step 3: Record each validator's outcome separately.
-                // TestRun.Passed is a computed property: true if EmbeddingPassed OR JudgePassed
+                // Run both validators independently on the response.
+                var embResult   = await _embeddingValidator.ValidateAsync(
+                    testCase.ExpectedOutput, actual);
+
+                var judgeResult = await _judgeValidator.ValidateAsync(
+                    testCase.Prompt, testCase.ExpectedOutput,
+                    actual, testCase.EvaluationCriteria);
+
+                // Record the run. RunPassed = EmbeddingPassed OR JudgePassed.
+                // OR is used because the two validators have complementary failure modes.
                 result.Runs.Add(new TestRun
                 {
                     Response        = actual,
@@ -103,29 +151,43 @@ public class TestRunner
             }
             catch (Exception ex)
             {
-                // API failure — log it and count as a failed run
-                Console.WriteLine($"\n  [Run {run + 1} Error] {ex.Message}");
+                _logger.LogWarning(
+                    "[{Id}] run {Run}/{Total} failed: {Error}",
+                    testCase.Id, run + 1, _config.NumberOfRuns, ex.Message);
 
                 result.Runs.Add(new TestRun
                 {
                     Response   = $"ERROR: {ex.Message}",
                     ExecutedAt = DateTime.UtcNow
-                    // EmbeddingPassed + JudgePassed default to false → Passed = false
+                    // EmbeddingPassed and JudgePassed both default to false
                 });
             }
 
-            // Small delay between runs to avoid hitting API rate limits
-            if (run < _runsPerTest - 1)
-                await Task.Delay(500);
+            // Wait between runs to avoid hitting API rate limits.
+            // RequestDelayMs is read from appsettings.json — never hard-coded.
+            if (run < _config.NumberOfRuns - 1)
+                await Task.Delay(_config.RequestDelayMs, cancellationToken);
         }
 
-        // Aggregate all runs into the final TestResult
         result.TotalRunsCount        = result.Runs.Count;
         result.PassedRunsCount       = result.Runs.Count(r => r.Passed);
         result.AverageEmbeddingScore = result.Runs.Average(r => r.EmbeddingScore);
         result.AverageJudgeScore     = result.Runs.Average(r => r.JudgeScore);
-        result.Passed                = result.PassedRunsCount >= _minPassRun; // majority vote: 2/3
+        result.Passed                = result.PassedRunsCount >= _config.MinimumPassingRuns;
 
         return result;
+    }
+
+    /// <summary>
+    /// Returns false for models that reject the temperature parameter entirely.
+    /// gpt-5 and OpenAI reasoning models (o1, o3) only accept the default value
+    /// and return HTTP 400 if temperature is set explicitly.
+    /// </summary>
+    private static bool SupportsTemperature(string modelName)
+    {
+        string m = modelName.ToLowerInvariant();
+        return !m.StartsWith("gpt-5")
+            && !m.StartsWith("o1")
+            && !m.StartsWith("o3");
     }
 }

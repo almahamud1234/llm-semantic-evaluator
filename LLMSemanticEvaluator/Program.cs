@@ -1,109 +1,89 @@
-﻿using LLMSemanticEvaluator.Configuration;
-using LLMSemanticEvaluator.Models;
+using LLMSemanticEvaluator.Configuration;
 using LLMSemanticEvaluator.Interfaces;
+using LLMSemanticEvaluator.Services;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-namespace LLMSemanticEvaluator
+namespace LLMSemanticEvaluator;
+
+/// <summary>
+/// Application entry point.
+///
+/// Uses Microsoft.Extensions.Hosting — the same infrastructure used in every
+/// production .NET service and ASP.NET Core application — to provide:
+///
+///   Configuration  : appsettings.json is loaded automatically by CreateDefaultBuilder.
+///                    All settings are bound to TestConfiguration via IOptions&lt;T&gt;.
+///                    No class reads the JSON file directly.
+///
+///   Dependency Injection : every service is registered in the DI container and
+///                    receives its dependencies through its constructor.
+///                    No class instantiates another class with "new".
+///
+///   Logging        : ILogger&lt;T&gt; is injected into every service.
+///                    Output is written through the logging infrastructure, not
+///                    Console.WriteLine, so it works in any hosting environment
+///                    (console, Windows Service, Docker container, CI pipeline).
+///
+///   MS AI Framework : IChatClient and IEmbeddingGenerator&lt;string, Embedding&lt;float&gt;&gt;
+///                    are the standard Microsoft.Extensions.AI interfaces.
+///                    LLMClientFactory resolves the correct implementation
+///                    (OpenAI, Grok, or Ollama) based on appsettings.json.
+///                    Switching providers requires only a config change — no code changes.
+/// </summary>
+public class Program
 {
-    public class Program
+    public static async Task Main(string[] args)
     {
-        static async Task Main(string[] args)
-        {
-            // ─── Load & validate configuration ───────────────────────────────────────
-            TestConfiguration config;
-            try
+        var host = Host.CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration((_, cfg) =>
             {
-                config = TestConfiguration.Load();
-                config.Validate();
-            }
-            catch (Exception ex)
+                // appsettings.json is already added by CreateDefaultBuilder.
+                // This call is made explicit so the configuration source is
+                // visible and readable at the entry point.
+                cfg.AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
+            })
+            .ConfigureServices((context, services) =>
             {
-                Console.WriteLine($"[Error] Failed to load configuration: {ex.Message}");
-                return;
-            }
+                // ── Configuration binding ───────────────────────────────────────
+                // Maps every key in appsettings.json to TestConfiguration properties.
+                // Services receive IOptions<TestConfiguration>; they never touch the file.
+                services.Configure<TestConfiguration>(context.Configuration);
 
-            Console.WriteLine($"Chat provider      : {config.Provider}");
-            Console.WriteLine($"Embedding provider : {config.EmbeddingProvider}");
-            Console.WriteLine($"Chat model         : {config.ChatModel}");
-            Console.WriteLine($"Embedding model    : {config.EmbeddingModel}");
-            Console.WriteLine($"Runs               : {config.NumberOfRuns}  |  " +
-                              $"Emb threshold: {config.EmbeddingThreshold}  |  " +
-                              $"Judge threshold: {config.JudgeThreshold}/10\n");
+                // ── LLM client factory ──────────────────────────────────────────
+                // The factory reads IOptions<TestConfiguration> and creates the
+                // correct client. Switching providers means changing appsettings.json;
+                // no code changes are required anywhere else.
+                services.AddSingleton<ILLMClientFactory, LLMClientFactory>();
 
-            // ─── Create chat client (used by LLM judge + sending prompts) ─────────────
-            ILLMClient chatClient;
-            try
-            {
-                chatClient = LLMClientFactory.Create(config);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Error] Could not create chat client: {ex.Message}");
-                return;
-            }
+                // ── Microsoft.Extensions.AI standard interfaces ─────────────────
+                // IChatClient and IEmbeddingGenerator are the MS AI framework interfaces.
+                // All services that need to call an LLM or generate embeddings
+                // depend on these interfaces — never on a concrete provider class.
+                services.AddSingleton<IChatClient>(sp =>
+                    sp.GetRequiredService<ILLMClientFactory>().CreateChatClient());
 
-            using var chatDisposable = chatClient as IDisposable;
+                services.AddSingleton<IEmbeddingGenerator<string, Embedding<float>>>(sp =>
+                    sp.GetRequiredService<ILLMClientFactory>().CreateEmbeddingGenerator());
 
-            // ─── Create embedding client (always OpenAI or Ollama) ────────────────────
-            IEmbeddingProvider embeddingClient;
-            try
-            {
-                embeddingClient = LLMClientFactory.CreateEmbeddingProvider(config);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Error] Could not create embedding client: {ex.Message}");
-                return;
-            }
+                // ── Core services ───────────────────────────────────────────────
+                services.AddSingleton<ISimilarityCalculator, CosineSimilarityCalculator>();
+                services.AddSingleton<EmbeddingValidator>();
+                services.AddSingleton<LLMJudgeValidator>();
+                services.AddSingleton<ITestLoader, JsonTestLoader>();
+                services.AddSingleton<TestRunner>();
+                services.AddSingleton<ReportGenerator>();
 
-            using var embDisposable = embeddingClient as IDisposable;
+                // ── Hosted service ──────────────────────────────────────────────
+                // EvaluatorService is the application's single hosted service.
+                // The host calls StartAsync(), waits for the run to complete,
+                // then shuts down and disposes all registered services.
+                services.AddHostedService<EvaluatorService>();
+            })
+            .Build();
 
-            // ─── Setup pipeline ───────────────────────────────────────────────────────
-            var embeddingValidator = new EmbeddingValidator(
-                                        embeddingClient,
-                                        new CosineSimilarityCalculator(),
-                                        threshold: config.EmbeddingThreshold);
-
-            var judgeValidator     = new LLMJudgeValidator(chatClient,
-                                        threshold: config.JudgeThreshold);
-
-            var runner             = new TestRunner(chatClient, embeddingValidator, judgeValidator,
-                                        runsPerTest: config.NumberOfRuns, minPassRun: config.MinimumPassingRuns);
-            var loader             = new JsonTestLoader();
-            var reportGenerator    = new ReportGenerator("reports");
-
-            // ─── Load test cases ──────────────────────────────────────────────────────
-            List<TestCase> testCases;
-            try
-            {
-                Console.WriteLine("Loading test cases...");
-                testCases = await loader.LoadTestsAsync("data/sample_test_cases.json");
-                if (testCases.Count == 0)
-                {
-                    Console.WriteLine("[Error] No test cases were loaded.");
-                    return;
-                }
-                Console.WriteLine($"Loaded {testCases.Count} test cases.\n");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Error] Failed to load test cases: {ex.Message}");
-                return;
-            }
-
-            // ─── Run tests ────────────────────────────────────────────────────────────
-            List<TestResult> results;
-            try
-            {
-                results = await runner.RunAllAsync(testCases);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Error] Test run failed: {ex.Message}");
-                return;
-            }
-
-            // ─── Generate reports ─────────────────────────────────────────────────────
-            await reportGenerator.GenerateAsync(results);
-        }
+        await host.RunAsync();
     }
 }

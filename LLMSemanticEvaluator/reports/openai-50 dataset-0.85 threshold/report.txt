@@ -1,0 +1,529 @@
+============================================================
+  LLM SEMANTIC EVALUATOR — TEST REPORT
+  Generated: 2026-04-01 10:51:29
+============================================================
+
+OVERALL SUMMARY
+------------------------------------------------------------
+Total Tests         : 50
+Passed              : 50
+Failed              : 0
+Pass Rate           : 100.0%
+Avg Embedding Score : 0.57
+Avg Judge Score     : 10.0/10
+
+CATEGORY BREAKDOWN
+------------------------------------------------------------
+definitions          8/8 passed  (100.0%)
+factual              9/9 passed  (100.0%)
+history              8/8 passed  (100.0%)
+math                 8/8 passed  (100.0%)
+reasoning            9/9 passed  (100.0%)
+science              8/8 passed  (100.0%)
+
+PER-TEST DETAILS
+------------------------------------------------------------
+[PASS] factual_022  (Category: factual)
+  Prompt  : Who wrote Romeo and Juliet?
+  Expected: William Shakespeare
+  Runs    : 3/3 passed
+  Avg Embedding: 0.50  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.49  Judge: 10/10  → Romeo and Juliet was written by William Shakespeare. It’s a ...
+    Run 2 [pass] Emb: 0.50  Judge: 10/10  → Romeo and Juliet was written by William Shakespeare. It is a...
+    Run 3 [pass] Emb: 0.49  Judge: 10/10  → Romeo and Juliet was written by William Shakespeare. It’s a ...
+
+[PASS] factual_004  (Category: factual)
+  Prompt  : What is the largest ocean on Earth?
+  Expected: The Pacific Ocean
+  Runs    : 3/3 passed
+  Avg Embedding: 0.62  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.62  Judge: 10/10  → The Pacific Ocean. It’s the largest ocean, covering about 16...
+    Run 2 [pass] Emb: 0.62  Judge: 10/10  → The Pacific Ocean. It is the largest ocean on Earth, coverin...
+    Run 3 [pass] Emb: 0.62  Judge: 10/10  → The Pacific Ocean. It’s the largest ocean, covering about 16...
+
+[PASS] factual_006  (Category: factual)
+  Prompt  : What is the longest river in the world?
+  Expected: The Nile River
+  Runs    : 3/3 passed
+  Avg Embedding: 0.53  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.50  Judge: 10/10  → There isn’t a single universally agreed answer. Traditionall...
+    Run 2 [pass] Emb: 0.50  Judge: 10/10  → There’s no single universally agreed answer because it depen...
+    Run 3 [pass] Emb: 0.57  Judge: 10/10  → Short answer: Traditionally the Nile is called the longest r...
+
+[PASS] factual_007  (Category: factual)
+  Prompt  : What is the tallest mountain in the world?
+  Expected: Mount Everest
+  Runs    : 3/3 passed
+  Avg Embedding: 0.54  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.50  Judge: 10/10  → It depends how you define "tallest":
+
+- By elevation above s...
+    Run 2 [pass] Emb: 0.57  Judge: 10/10  → The tallest mountain above sea level is Mount Everest — 8,84...
+    Run 3 [pass] Emb: 0.55  Judge: 10/10  → The tallest mountain above sea level is Mount Everest (on th...
+
+[PASS] factual_009  (Category: factual)
+  Prompt  : What is the smallest country in the world?
+  Expected: Vatican City
+  Runs    : 3/3 passed
+  Avg Embedding: 0.68  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.67  Judge: 10/10  → The smallest country in the world is Vatican City. It covers...
+    Run 2 [pass] Emb: 0.68  Judge: 10/10  → The smallest country in the world is Vatican City (the Vatic...
+    Run 3 [pass] Emb: 0.69  Judge: 10/10  → The smallest country in the world is Vatican City. It is an ...
+
+[PASS] factual_021  (Category: factual)
+  Prompt  : What is the capital of France?
+  Expected: Paris
+  Runs    : 3/3 passed
+  Avg Embedding: 0.53  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.45  Judge: 10/10  → The capital of France is Paris.
+    Run 2 [pass] Emb: 0.45  Judge: 10/10  → The capital of France is Paris.
+    Run 3 [pass] Emb: 0.71  Judge: 10/10  → Paris.
+
+[PASS] factual_023  (Category: factual)
+  Prompt  : What is the chemical symbol for gold?
+  Expected: Au
+  Runs    : 3/3 passed
+  Avg Embedding: 0.31  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.31  Judge: 10/10  → The chemical symbol for gold is Au — from the Latin name "au...
+    Run 2 [pass] Emb: 0.30  Judge: 10/10  → The chemical symbol for gold is Au (from the Latin "aurum")....
+    Run 3 [pass] Emb: 0.31  Judge: 10/10  → The chemical symbol for gold is Au (from the Latin name "aur...
+
+[PASS] factual_002  (Category: factual)
+  Prompt  : What is the capital of Japan?
+  Expected: Tokyo
+  Runs    : 3/3 passed
+  Avg Embedding: 0.71  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.92  Judge: 10/10  → Tokyo.
+    Run 2 [pass] Emb: 0.61  Judge: 10/10  → The capital of Japan is Tokyo.
+    Run 3 [pass] Emb: 0.60  Judge: 10/10  → The capital of Japan is Tokyo (東京).
+
+[PASS] factual_003  (Category: factual)
+  Prompt  : What is the capital of Australia?
+  Expected: Canberra
+  Runs    : 3/3 passed
+  Avg Embedding: 0.72  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.71  Judge: 10/10  → Canberra. It’s located in the Australian Capital Territory (...
+    Run 2 [pass] Emb: 0.77  Judge: 10/10  → Canberra — the capital city of Australia, located in the Aus...
+    Run 3 [pass] Emb: 0.67  Judge: 10/10  → The capital of Australia is Canberra — the planned capital c...
+
+[PASS] math_021  (Category: math)
+  Prompt  : What is 2+2?
+  Expected: 4
+  Runs    : 3/3 passed
+  Avg Embedding: 0.42  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.42  Judge: 10/10  → 2 + 2 = 4.
+    Run 2 [pass] Emb: 0.42  Judge: 10/10  → 2 + 2 = 4.
+    Run 3 [pass] Emb: 0.42  Judge: 10/10  → 2 + 2 = 4.
+
+[PASS] math_022  (Category: math)
+  Prompt  : Calculate 15% of 200
+  Expected: 30
+  Runs    : 3/3 passed
+  Avg Embedding: 0.32  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.31  Judge: 10/10  → 15% of 200 = 0.15 × 200 = 30
+
+(Or: 10% of 200 is 20, 5% is 1...
+    Run 2 [pass] Emb: 0.34  Judge: 10/10  → 15% of 200 = 0.15 × 200 = 30.
+    Run 3 [pass] Emb: 0.30  Judge: 10/10  → 15% of 200 is 0.15 × 200 = 30.
+
+(Or: 10% of 200 = 20, 5% = 1...
+
+[PASS] math_023  (Category: math)
+  Prompt  : What is the square root of 144?
+  Expected: 12
+  Runs    : 3/3 passed
+  Avg Embedding: 0.28  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.26  Judge: 10/10  → The principal square root of 144 is 12. (If you mean solutio...
+    Run 2 [pass] Emb: 0.26  Judge: 10/10  → The principal square root of 144 is 12. (If you mean solutio...
+    Run 3 [pass] Emb: 0.30  Judge: 10/10  → The principal square root of 144 is 12, since 12 × 12 = 144....
+
+[PASS] math_001  (Category: math)
+  Prompt  : What is 2 + 2?
+  Expected: 4
+  Runs    : 3/3 passed
+  Avg Embedding: 0.62  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 1.00  Judge: 10/10  → 4
+    Run 2 [pass] Emb: 0.42  Judge: 10/10  → 2 + 2 = 4.
+    Run 3 [pass] Emb: 0.43  Judge: 10/10  → 2 + 2 = 4
+
+[PASS] math_002  (Category: math)
+  Prompt  : What is 15% of 200?
+  Expected: 30
+  Runs    : 3/3 passed
+  Avg Embedding: 0.37  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.35  Judge: 10/10  → 15% of 200 is 30. 
+
+(10% of 200 = 20; 5% = 10; 20 + 10 = 30....
+    Run 2 [pass] Emb: 0.41  Judge: 10/10  → 15% of 200 is 30.
+    Run 3 [pass] Emb: 0.35  Judge: 10/10  → 15% of 200 is 30. 
+
+(0.15 × 200 = 30)
+
+[PASS] math_004  (Category: math)
+  Prompt  : What is 7 multiplied by 8?
+  Expected: 56
+  Runs    : 3/3 passed
+  Avg Embedding: 0.81  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.44  Judge: 10/10  → 7 × 8 = 56
+    Run 2 [pass] Emb: 1.00  Judge: 10/10  → 56
+    Run 3 [pass] Emb: 1.00  Judge: 10/10  → 56
+
+[PASS] math_005  (Category: math)
+  Prompt  : What is 100 divided by 4?
+  Expected: 25
+  Runs    : 3/3 passed
+  Avg Embedding: 0.79  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 1.00  Judge: 10/10  → 25
+    Run 2 [pass] Emb: 1.00  Judge: 10/10  → 25
+    Run 3 [pass] Emb: 0.38  Judge: 10/10  → 100 divided by 4 is 25. (Because 4 × 25 = 100.)
+
+[PASS] math_006  (Category: math)
+  Prompt  : What is 2 to the power of 10?
+  Expected: 1024
+  Runs    : 3/3 passed
+  Avg Embedding: 0.58  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.58  Judge: 10/10  → 2^10 = 1024.
+    Run 2 [pass] Emb: 0.58  Judge: 10/10  → 2^10 = 1024.
+    Run 3 [pass] Emb: 0.58  Judge: 10/10  → 2^10 = 1024.
+
+[PASS] reasoning_016  (Category: reasoning)
+  Prompt  : A man walks into a bar and asks for a glass of water. The bartender pulls out a ...
+  Expected: The man had hiccups and the scare from the gun cured them, so he no longer neede...
+  Runs    : 3/3 passed
+  Avg Embedding: 0.69  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.70  Judge: 10/10  → He had the hiccups. The bartender scared him (by pointing a ...
+    Run 2 [pass] Emb: 0.70  Judge: 10/10  → He had the hiccups. The bartender scared him by pulling a gu...
+    Run 3 [pass] Emb: 0.67  Judge: 10/10  → He had hiccups. The bartender scared him (by pulling a gun a...
+
+[PASS] reasoning_024  (Category: reasoning)
+  Prompt  : All roses are flowers. Some flowers fade quickly. Can we conclude all roses fade...
+  Expected: No, we cannot conclude that all roses fade quickly
+  Runs    : 3/3 passed
+  Avg Embedding: 0.65  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.64  Judge: 10/10  → No — the conclusion does not follow.
+
+Formally:
+Premises:
+1)...
+    Run 2 [pass] Emb: 0.64  Judge: 10/10  → No — the conclusion does not follow.
+
+Formally: from (∀x)(R(...
+    Run 3 [pass] Emb: 0.68  Judge: 10/10  → No — the conclusion does not follow.
+
+Reason: "All roses are...
+
+[PASS] reasoning_021  (Category: reasoning)
+  Prompt  : If all dogs are animals, and Max is a dog, what is Max?
+  Expected: An animal
+  Runs    : 3/3 passed
+  Avg Embedding: 0.46  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.41  Judge: 10/10  → Max is an animal. 
+
+Reason: from "All dogs are animals" and ...
+    Run 2 [pass] Emb: 0.45  Judge: 10/10  → Max is an animal.
+
+Because all dogs are animals and Max is a...
+    Run 3 [pass] Emb: 0.50  Judge: 10/10  → Max is an animal.
+
+[PASS] reasoning_002  (Category: reasoning)
+  Prompt  : A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. Ho...
+  Expected: 5 cents
+  Runs    : 3/3 passed
+  Avg Embedding: 0.35  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.34  Judge: 10/10  → Let the ball cost x dollars. Then the bat costs x + 1.00.  
+...
+    Run 2 [pass] Emb: 0.34  Judge: 10/10  → Let the ball cost x dollars. Then the bat costs x + 1.00.  
+...
+    Run 3 [pass] Emb: 0.36  Judge: 10/10  → Let the ball cost x dollars. Then the bat costs x + 1.00.  
+...
+
+[PASS] reasoning_003  (Category: reasoning)
+  Prompt  : If it takes 5 machines 5 minutes to make 5 widgets, how long does it take 100 ma...
+  Expected: 5 minutes
+  Runs    : 3/3 passed
+  Avg Embedding: 0.52  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.52  Judge: 10/10  → 5 minutes.
+
+Reason: 5 machines make 5 widgets in 5 minutes, ...
+    Run 2 [pass] Emb: 0.50  Judge: 10/10  → 5 minutes.
+
+Reason: 5 machines make 5 widgets in 5 minutes →...
+    Run 3 [pass] Emb: 0.53  Judge: 10/10  → 5 minutes.
+
+Reason: 5 machines make 5 widgets in 5 minutes →...
+
+[PASS] reasoning_004  (Category: reasoning)
+  Prompt  : All roses are flowers. Some flowers fade quickly. Can we conclude that some rose...
+  Expected: No, we cannot conclude that
+  Runs    : 3/3 passed
+  Avg Embedding: 0.39  Avg Judge: 9.7/10
+    Run 1 [pass] Emb: 0.39  Judge: 10/10  → No. The argument is invalid.
+
+Reason: From "All roses are fl...
+    Run 2 [pass] Emb: 0.35  Judge: 10/10  → No — it does not follow.
+
+Formally: from ∀x(Rose(x) → Flower...
+    Run 3 [pass] Emb: 0.43  Judge: 9/10  → No — the conclusion does not follow.
+
+Reason: "All roses are...
+
+[PASS] reasoning_010  (Category: reasoning)
+  Prompt  : You have two coins that add up to 30 cents. One is not a nickel. What are the tw...
+  Expected: A quarter and a nickel
+  Runs    : 3/3 passed
+  Avg Embedding: 0.70  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.72  Judge: 10/10  → A quarter (25¢) and a nickel (5¢). The riddle says "one is n...
+    Run 2 [pass] Emb: 0.69  Judge: 10/10  → A quarter (25¢) and a nickel (5¢). The riddle says "one is n...
+    Run 3 [pass] Emb: 0.69  Judge: 10/10  → A quarter (25¢) and a nickel (5¢).
+
+The riddle's trick is wo...
+
+[PASS] reasoning_011  (Category: reasoning)
+  Prompt  : If you overtake the person in second place in a race, what position are you in?
+  Expected: Second place
+  Runs    : 3/3 passed
+  Avg Embedding: 0.54  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.55  Judge: 10/10  → You would be in second place. By overtaking the person who w...
+    Run 2 [pass] Emb: 0.59  Judge: 10/10  → Second place. If you pass the runner who is in second, you t...
+    Run 3 [pass] Emb: 0.48  Judge: 10/10  → You'd be in second place. Overtaking the person who was seco...
+
+[PASS] reasoning_012  (Category: reasoning)
+  Prompt  : A rooster lays an egg on the peak of a roof. Which way does it roll?
+  Expected: Roosters do not lay eggs
+  Runs    : 3/3 passed
+  Avg Embedding: 0.76  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.77  Judge: 10/10  → It doesn't — roosters are male and don't lay eggs. (So there...
+    Run 2 [pass] Emb: 0.72  Judge: 10/10  → It doesn't—roosters are male and do not lay eggs. The riddle...
+    Run 3 [pass] Emb: 0.81  Judge: 10/10  → It doesn't — roosters are male and don't lay eggs.
+
+[PASS] history_002  (Category: history)
+  Prompt  : Who was the first President of the United States?
+  Expected: George Washington
+  Runs    : 3/3 passed
+  Avg Embedding: 0.59  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.56  Judge: 10/10  → George Washington. He was the first President of the United ...
+    Run 2 [pass] Emb: 0.57  Judge: 10/10  → George Washington. He was inaugurated as the first President...
+    Run 3 [pass] Emb: 0.63  Judge: 10/10  → George Washington. He served as the first President of the U...
+
+[PASS] history_004  (Category: history)
+  Prompt  : Who wrote the theory of evolution by natural selection?
+  Expected: Charles Darwin
+  Runs    : 3/3 passed
+  Avg Embedding: 0.57  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.57  Judge: 10/10  → The theory of evolution by natural selection was developed b...
+    Run 2 [pass] Emb: 0.59  Judge: 10/10  → The theory of evolution by natural selection is most closely...
+    Run 3 [pass] Emb: 0.56  Judge: 10/10  → The theory of evolution by natural selection was written and...
+
+[PASS] history_008  (Category: history)
+  Prompt  : Who was the first woman to win a Nobel Prize?
+  Expected: Marie Curie
+  Runs    : 3/3 passed
+  Avg Embedding: 0.67  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.63  Judge: 10/10  → The first woman to win a Nobel Prize was Marie Skłodowska Cu...
+    Run 2 [pass] Emb: 0.71  Judge: 10/10  → Marie Skłodowska Curie — she was the first woman to win a No...
+    Run 3 [pass] Emb: 0.65  Judge: 10/10  → The first woman to win a Nobel Prize was Marie Curie (born M...
+
+[PASS] history_009  (Category: history)
+  Prompt  : Which country was the first to grant women the right to vote?
+  Expected: New Zealand
+  Runs    : 3/3 passed
+  Avg Embedding: 0.46  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.48  Judge: 10/10  → Short answer: New Zealand.  
+
+New Zealand was the first self...
+    Run 2 [pass] Emb: 0.37  Judge: 10/10  → The first country generally recognized as granting women the...
+    Run 3 [pass] Emb: 0.52  Judge: 10/10  → New Zealand. It became the first self-governing country to g...
+
+[PASS] history_011  (Category: history)
+  Prompt  : Who was the leader of Nazi Germany during World War II?
+  Expected: Adolf Hitler
+  Runs    : 3/3 passed
+  Avg Embedding: 0.59  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.58  Judge: 10/10  → Adolf Hitler. He served as Chancellor (1933) and, after Pres...
+    Run 2 [pass] Emb: 0.62  Judge: 10/10  → Adolf Hitler — he was the Führer (leader) of Nazi Germany du...
+    Run 3 [pass] Emb: 0.57  Judge: 10/10  → Adolf Hitler — he was Chancellor (from 1933) and, after 1934...
+
+[PASS] history_012  (Category: history)
+  Prompt  : Which ancient wonder was located in Alexandria, Egypt?
+  Expected: The Lighthouse of Alexandria
+  Runs    : 3/3 passed
+  Avg Embedding: 0.78  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.78  Judge: 10/10  → The Lighthouse of Alexandria, also called the Pharos of Alex...
+    Run 2 [pass] Emb: 0.79  Judge: 10/10  → The Lighthouse of Alexandria (the Pharos of Alexandria) — on...
+    Run 3 [pass] Emb: 0.77  Judge: 10/10  → The Lighthouse of Alexandria (the Pharos of Alexandria). It ...
+
+[PASS] history_014  (Category: history)
+  Prompt  : Who gave the 'I Have a Dream' speech?
+  Expected: Martin Luther King Jr.
+  Runs    : 3/3 passed
+  Avg Embedding: 0.59  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.58  Judge: 10/10  → The "I Have a Dream" speech was delivered by Dr. Martin Luth...
+    Run 2 [pass] Emb: 0.59  Judge: 10/10  → The "I Have a Dream" speech was delivered by civil rights le...
+    Run 3 [pass] Emb: 0.59  Judge: 10/10  → The "I Have a Dream" speech was delivered by Dr. Martin Luth...
+
+[PASS] history_017  (Category: history)
+  Prompt  : Who invented the telephone?
+  Expected: Alexander Graham Bell
+  Runs    : 3/3 passed
+  Avg Embedding: 0.66  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.65  Judge: 10/10  → The telephone is generally credited to Alexander Graham Bell...
+    Run 2 [pass] Emb: 0.65  Judge: 10/10  → The telephone is most widely credited to Alexander Graham Be...
+    Run 3 [pass] Emb: 0.69  Judge: 10/10  → Alexander Graham Bell is generally credited with inventing t...
+
+[PASS] definition_003  (Category: definitions)
+  Prompt  : What is an algorithm?
+  Expected: A set of step-by-step instructions or rules designed to solve a problem or compl...
+  Runs    : 3/3 passed
+  Avg Embedding: 0.39  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.38  Judge: 10/10  → An algorithm is a precise, step-by-step procedure for solvin...
+    Run 2 [pass] Emb: 0.39  Judge: 10/10  → An algorithm is a precise, step-by-step procedure for solvin...
+    Run 3 [pass] Emb: 0.40  Judge: 10/10  → An algorithm is a finite, well-defined sequence of instructi...
+
+[PASS] definition_004  (Category: definitions)
+  Prompt  : Define gravity
+  Expected: A natural force that attracts objects with mass toward one another, pulling them...
+  Runs    : 3/3 passed
+  Avg Embedding: 0.53  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.53  Judge: 10/10  → Gravity is the physical interaction that causes masses and e...
+    Run 2 [pass] Emb: 0.57  Judge: 10/10  → Gravity is the natural phenomenon by which objects with mass...
+    Run 3 [pass] Emb: 0.51  Judge: 10/10  → Gravity is the universal interaction that causes masses (and...
+
+[PASS] definition_005  (Category: definitions)
+  Prompt  : What is inflation in economics?
+  Expected: The rate at which the general level of prices for goods and services rises over ...
+  Runs    : 3/3 passed
+  Avg Embedding: 0.50  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.52  Judge: 10/10  → Inflation is the sustained rise in the general price level o...
+    Run 2 [pass] Emb: 0.53  Judge: 10/10  → Inflation is the sustained rise in the general level of pric...
+    Run 3 [pass] Emb: 0.45  Judge: 10/10  → Inflation is the sustained increase in the overall level of ...
+
+[PASS] definition_006  (Category: definitions)
+  Prompt  : What is a hypothesis?
+  Expected: A proposed explanation for an observation that can be tested through further inv...
+  Runs    : 3/3 passed
+  Avg Embedding: 0.43  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.42  Judge: 10/10  → A hypothesis is a provisional, testable explanation for an o...
+    Run 2 [pass] Emb: 0.45  Judge: 10/10  → A hypothesis is a tentative, testable statement that propose...
+    Run 3 [pass] Emb: 0.43  Judge: 10/10  → A hypothesis is a tentative, testable statement that propose...
+
+[PASS] definition_007  (Category: definitions)
+  Prompt  : Define osmosis
+  Expected: The movement of water molecules through a semipermeable membrane from an area of...
+  Runs    : 3/3 passed
+  Avg Embedding: 0.69  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.70  Judge: 10/10  → Osmosis is the passive movement of a solvent (usually water)...
+    Run 2 [pass] Emb: 0.68  Judge: 10/10  → Osmosis is the net movement of a solvent (usually water) thr...
+    Run 3 [pass] Emb: 0.69  Judge: 10/10  → Osmosis is the passive net movement of a solvent (usually wa...
+
+[PASS] definition_008  (Category: definitions)
+  Prompt  : What is artificial intelligence?
+  Expected: The simulation of human intelligence processes by computer systems, including le...
+  Runs    : 3/3 passed
+  Avg Embedding: 0.50  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.53  Judge: 10/10  → Artificial intelligence (AI) is the branch of computer scien...
+    Run 2 [pass] Emb: 0.48  Judge: 10/10  → Artificial intelligence (AI) is the field of computer scienc...
+    Run 3 [pass] Emb: 0.49  Judge: 10/10  → Artificial intelligence (AI) is the branch of computer scien...
+
+[PASS] definition_009  (Category: definitions)
+  Prompt  : What is a synonym?
+  Expected: A word that has the same or nearly the same meaning as another word
+  Runs    : 3/3 passed
+  Avg Embedding: 0.63  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.63  Judge: 10/10  → A synonym is a word or phrase that has the same or very simi...
+    Run 2 [pass] Emb: 0.62  Judge: 10/10  → A synonym is a word (or phrase) that has the same or very ne...
+    Run 3 [pass] Emb: 0.64  Judge: 10/10  → A synonym is a word that has the same or nearly the same mea...
+
+[PASS] definition_010  (Category: definitions)
+  Prompt  : Define metabolism
+  Expected: The set of chemical processes that occur in living organisms to maintain life, i...
+  Runs    : 3/3 passed
+  Avg Embedding: 0.64  Avg Judge: 9.7/10
+    Run 1 [pass] Emb: 0.63  Judge: 9/10  → Metabolism is the sum of all chemical reactions that occur i...
+    Run 2 [pass] Emb: 0.64  Judge: 10/10  → Metabolism is the sum of all chemical reactions that occur i...
+    Run 3 [pass] Emb: 0.66  Judge: 10/10  → Metabolism is the sum of all chemical reactions in a living ...
+
+[PASS] science_002  (Category: science)
+  Prompt  : What is Newton's first law of motion?
+  Expected: An object at rest stays at rest, and an object in motion stays in motion, unless...
+  Runs    : 3/3 passed
+  Avg Embedding: 0.70  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.70  Judge: 10/10  → Newton's first law (the law of inertia) states:
+
+An object a...
+    Run 2 [pass] Emb: 0.70  Judge: 10/10  → Newton's first law (the law of inertia) states:
+
+An object a...
+    Run 3 [pass] Emb: 0.69  Judge: 10/10  → Newton's first law (the law of inertia): An object at rest s...
+
+[PASS] science_001  (Category: science)
+  Prompt  : What is the speed of light in a vacuum?
+  Expected: approximately 299,792,458 metres per second
+  Runs    : 3/3 passed
+  Avg Embedding: 0.63  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.58  Judge: 10/10  → The speed of light in vacuum (symbol c) is exactly 299,792,4...
+    Run 2 [pass] Emb: 0.63  Judge: 10/10  → The speed of light in vacuum is exactly 299,792,458 meters p...
+    Run 3 [pass] Emb: 0.66  Judge: 10/10  → The speed of light in vacuum is exactly 299,792,458 metres p...
+
+[PASS] science_004  (Category: science)
+  Prompt  : What gas do plants absorb during photosynthesis?
+  Expected: Carbon dioxide
+  Runs    : 3/3 passed
+  Avg Embedding: 0.45  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.46  Judge: 10/10  → Plants absorb carbon dioxide (CO2) during photosynthesis. Th...
+    Run 2 [pass] Emb: 0.45  Judge: 10/10  → Plants absorb carbon dioxide (CO2) from the air during photo...
+    Run 3 [pass] Emb: 0.45  Judge: 10/10  → Plants absorb carbon dioxide (CO2) during photosynthesis. Us...
+
+[PASS] science_005  (Category: science)
+  Prompt  : What is the powerhouse of the cell?
+  Expected: The mitochondria
+  Runs    : 3/3 passed
+  Avg Embedding: 0.69  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.68  Judge: 10/10  → The mitochondrion (plural: mitochondria) — the organelle tha...
+    Run 2 [pass] Emb: 0.70  Judge: 10/10  → The mitochondrion (plural: mitochondria). It generates most ...
+    Run 3 [pass] Emb: 0.69  Judge: 10/10  → The mitochondrion (plural: mitochondria). It generates most ...
+
+[PASS] science_012  (Category: science)
+  Prompt  : What type of energy does the Sun primarily produce?
+  Expected: Nuclear energy through fusion
+  Runs    : 3/3 passed
+  Avg Embedding: 0.53  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.51  Judge: 10/10  → The Sun primarily produces radiant (electromagnetic) energy ...
+    Run 2 [pass] Emb: 0.52  Judge: 10/10  → The Sun primarily produces radiant energy (electromagnetic r...
+    Run 3 [pass] Emb: 0.57  Judge: 10/10  → Primarily electromagnetic (radiant) energy — i.e., light and...
+
+[PASS] science_013  (Category: science)
+  Prompt  : What is the boiling point of water at standard atmospheric pressure?
+  Expected: 100 degrees Celsius
+  Runs    : 3/3 passed
+  Avg Embedding: 0.49  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.46  Judge: 10/10  → The boiling point of pure water at standard atmospheric pres...
+    Run 2 [pass] Emb: 0.50  Judge: 10/10  → At standard atmospheric pressure (1 atm = 101.325 kPa), pure...
+    Run 3 [pass] Emb: 0.52  Judge: 10/10  → Pure water boils at 100 °C (212 °F, 373.15 K) at standard at...
+
+[PASS] science_014  (Category: science)
+  Prompt  : What organ pumps blood through the human body?
+  Expected: The heart
+  Runs    : 3/3 passed
+  Avg Embedding: 0.64  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.64  Judge: 10/10  → The heart. It’s a muscular organ in the chest that contracts...
+    Run 2 [pass] Emb: 0.64  Judge: 10/10  → The heart — a muscular organ in the chest that pumps blood t...
+    Run 3 [pass] Emb: 0.64  Judge: 10/10  → The heart. It's the muscular organ in the chest that pumps b...
+
+[PASS] science_016  (Category: science)
+  Prompt  : What are the three states of matter?
+  Expected: Solid, liquid, and gas
+  Runs    : 3/3 passed
+  Avg Embedding: 0.71  Avg Judge: 10.0/10
+    Run 1 [pass] Emb: 0.71  Judge: 10/10  → The three classical states of matter are:
+
+- Solid — definit...
+    Run 2 [pass] Emb: 0.70  Judge: 10/10  → The three classical states of matter are:
+
+- Solid — definit...
+    Run 3 [pass] Emb: 0.71  Judge: 10/10  → The three classical states of matter are:
+
+- Solid — has a d...
+
+============================================================
+END OF REPORT
+============================================================

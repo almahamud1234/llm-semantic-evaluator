@@ -1,0 +1,2051 @@
+{
+  "generatedAt": "2026-04-01T10:51:29.659606+02:00",
+  "summary": {
+    "totalTests": 50,
+    "passed": 50,
+    "failed": 0,
+    "passRatePercent": 100,
+    "avgEmbeddingScore": 0.57,
+    "avgJudgeScore": 10
+  },
+  "categoryBreakdown": [
+    {
+      "category": "definitions",
+      "total": 8,
+      "passed": 8,
+      "passRatePercent": 100
+    },
+    {
+      "category": "factual",
+      "total": 9,
+      "passed": 9,
+      "passRatePercent": 100
+    },
+    {
+      "category": "history",
+      "total": 8,
+      "passed": 8,
+      "passRatePercent": 100
+    },
+    {
+      "category": "math",
+      "total": 8,
+      "passed": 8,
+      "passRatePercent": 100
+    },
+    {
+      "category": "reasoning",
+      "total": 9,
+      "passed": 9,
+      "passRatePercent": 100
+    },
+    {
+      "category": "science",
+      "total": 8,
+      "passed": 8,
+      "passRatePercent": 100
+    }
+  ],
+  "testResults": [
+    {
+      "testId": "factual_022",
+      "category": "factual",
+      "prompt": "Who wrote Romeo and Juliet?",
+      "expectedOutput": "William Shakespeare",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.5,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.49,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies William Shakespeare as the author of Romeo and Juliet. It captures the same meaning as the expected answer and adds accurate contextual information (that it is a tragedy and likely written in the mid-1590s). There are no factual errors or irrelevant content.",
+          "response": "Romeo and Juliet was written by William Shakespeare. It\u2019s a tragedy believed to have been written in the mid-1590s.",
+          "executedAt": "2026-04-01T08:27:07.0210525Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.5,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies William Shakespeare as the author of Romeo and Juliet. It conveys the same meaning as the expected answer and adds accurate, relevant historical details about its date and early publication. There are no factual errors or problematic omissions.",
+          "response": "Romeo and Juliet was written by William Shakespeare. It is a tragedy believed to have been written around 1594\u20131596 and first published in quarto form in 1597.",
+          "executedAt": "2026-04-01T08:27:15.189878Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.49,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies William Shakespeare as the author of Romeo and Juliet. It conveys the same meaning as the expected answer and adds accurate contextual details (that it\u2019s a tragedy and likely written around 1594\u20131596). There are no factual errors or irrelevant statements.",
+          "response": "Romeo and Juliet was written by William Shakespeare. It\u2019s a tragedy believed to have been written around 1594\u20131596.",
+          "executedAt": "2026-04-01T08:27:25.2171533Z"
+        }
+      ]
+    },
+    {
+      "testId": "factual_004",
+      "category": "factual",
+      "prompt": "What is the largest ocean on Earth?",
+      "expectedOutput": "The Pacific Ocean",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.62,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.62,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies the Pacific Ocean as the largest ocean on Earth and thus directly addresses the query. It captures the same meaning as the expected answer and adds accurate supporting details (area, fraction of Earth\u0027s surface, and the Challenger Deep depth). There are no factual errors or irrelevant content.",
+          "response": "The Pacific Ocean. It\u2019s the largest ocean, covering about 165 million km\u00B2 (\u224863.8 million mi\u00B2), roughly one-third of Earth\u2019s surface. Its deepest point is the Challenger Deep in the Mariana Trench at about 10,900\u201311,000 meters.",
+          "executedAt": "2026-04-01T08:27:34.7864033Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.62,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies the Pacific Ocean as the largest ocean on Earth and thus directly addresses the query. It captures the same meaning as the expected answer and adds a correct quantitative detail about its area (\u2248165 million km\u00B2 or \u224863.8 million mi\u00B2). There are no factual errors or irrelevant statements; the extra size information is accurate and relevant.",
+          "response": "The Pacific Ocean. It is the largest ocean on Earth, covering about 165 million square kilometers (\u224863.8 million square miles) \u2014 roughly one-third of the planet\u2019s surface.",
+          "executedAt": "2026-04-01T08:27:44.3737861Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.62,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies the Pacific Ocean as the largest ocean, matching the expected answer. It appropriately adds accurate, relevant details (approximate area, proportion of Earth\u0027s surface, and the Challenger Deep depth) without introducing errors. This is a complete and precise response.",
+          "response": "The Pacific Ocean. It\u2019s the largest ocean, covering about 165 million km\u00B2 (\u224863.8 million mi\u00B2) \u2014 roughly one\u2011third of Earth\u2019s surface. Its deepest point is the Challenger Deep in the Mariana Trench (about 10,900\u201311,000 m).",
+          "executedAt": "2026-04-01T08:27:54.8196864Z"
+        }
+      ]
+    },
+    {
+      "testId": "factual_006",
+      "category": "factual",
+      "prompt": "What is the longest river in the world?",
+      "expectedOutput": "The Nile River",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.53,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.5,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by identifying the Nile as the traditionally listed longest river and giving its approximate length. It captures the same core meaning as the expected answer while appropriately noting the ongoing debate that some measurements can make the Amazon longer depending on source selection. There are no factual errors and the additional context about measurement methods and the Amazon\u0027s greater discharge is relevant, not misleading.",
+          "response": "There isn\u2019t a single universally agreed answer. Traditionally the Nile is listed as the longest river \u2014 about 6,650 km (4,130 miles). However, some modern surveys that trace different Amazon headwaters put the Amazon longer (estimates range roughly 6,400\u20137,100 km / 3,980\u20134,410 miles). Which is \u201Clongest\u201D depends on which tributary is chosen as the true source and how river length is measured. The Amazon is indisputably the largest by water discharge and drainage area.",
+          "executedAt": "2026-04-01T08:28:09.5630565Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.5,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by identifying the Nile as the traditional/commonly cited longest river and notes the modern debate about the Amazon potentially being longer depending on measurement methods. It captures the same meaning as the expected answer while responsibly adding accurate nuance about differing measurements and discharge. There are no factual errors or significant omissions for the evaluation criterion, since the response explicitly names the Nile and advises using it as the single short answer.",
+          "response": "There\u2019s no single universally agreed answer because it depends on how you measure a river\u2019s length. Traditionally the Nile is cited as the longest (about 6,650 km / 4,130 mi). However, more recent measurements and different choices of source tributary lead some researchers to conclude the Amazon is slightly longer (estimates range roughly from 6,800 km to about 7,000\u002B km).\n\nSo:\n- Common textbook answer: Nile \u2014 ~6,650 km.  \n- Alternative/modern view: Amazon may be longest \u2014 ~6,800\u20137,000\u002B km (and is unquestionably the largest by water discharge).\n\nIf you need a single short answer for general use, say \u201Cthe Nile,\u201D but note that the Amazon is often argued to be longer depending on measurement methods.",
+          "executedAt": "2026-04-01T08:28:21.9544164Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.57,
+          "judgeScore": 10,
+          "judgeReasoning": "The response correctly identifies the Nile as the longest river \u201Ctraditionally,\u201D matching the expected answer. It also accurately notes the factual nuance that measurement methods can make the Amazon appear longer, which is relevant but does not contradict the main identification. There are no factual errors or omissions that affect the core answer.",
+          "response": "Short answer: Traditionally the Nile is called the longest river in the world.\n\nDetails: the Nile (northeast Africa) is usually given as about 6,650 km (4,130 mi). However there is a long-standing debate because different ways of measuring river length and choosing a river\u2019s ultimate source can make the Amazon (South America) longer \u2014 some studies put the Amazon as long as about 7,000 km. So most sources list the Nile as longest, but depending on the methodology the Amazon may be longer.",
+          "executedAt": "2026-04-01T08:28:34.9595198Z"
+        }
+      ]
+    },
+    {
+      "testId": "factual_007",
+      "category": "factual",
+      "prompt": "What is the tallest mountain in the world?",
+      "expectedOutput": "Mount Everest",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.54,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.5,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Mount Everest as the tallest by elevation above sea level and gives the accurate official elevation. It also correctly explains alternative definitions (height from base and distance from Earth\u0027s center) and names Mauna Kea and Chimborazo without factual error. The extra details are relevant context but do not conflict with the expected answer.",
+          "response": "It depends how you define \u0022tallest\u0022:\n\n- By elevation above sea level: Mount Everest \u2014 8,848.86 m (29,031.7 ft).\n- By height from base to summit (including the submerged base): Mauna Kea (Hawaii) \u2014 about 10,203 m (33,480 ft) from the ocean floor, though only 4,207 m above sea level.\n- By distance from the Earth\u2019s center: Mount Chimborazo (Ecuador) is the farthest point from the center because of the equatorial bulge.",
+          "executedAt": "2026-04-01T08:28:46.6325553Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.57,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Mount Everest as the tallest mountain above sea level and gives the 2020 Nepal\u2013China survey height (8,848.86 m), matching the expected answer. It captures the same meaning and usefully notes alternative definitions of \u0022tallest\u0022 (Mauna Kea by base-to-summit and Chimborazo by distance from Earth\u0027s center), which are relevant rather than misleading. There are no factual errors in the main claim or the supplementary notes.",
+          "response": "The tallest mountain above sea level is Mount Everest \u2014 8,848.86 m (29,031.7 ft), per the 2020 Nepal\u2013China survey.\n\n(Note on different meanings of \u0022tallest\u0022)\n- Measured from base to summit, Mauna Kea (Hawaii) is tallest: about 10,200 m (\u224833,500 ft) from its base on the ocean floor, though only ~4,207 m above sea level.\n- Measured by distance from the Earth\u2019s center, Mount Chimborazo (Ecuador) is the farthest point from the center because of the equatorial bulge.",
+          "executedAt": "2026-04-01T08:29:01.3083328Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.55,
+          "judgeScore": 10,
+          "judgeReasoning": "The response correctly names Mount Everest as the tallest mountain above sea level and gives its official elevation and location. It matches the expected answer while also usefully clarifying an alternative measure (height from base to summit) by mentioning Mauna Kea, which is relevant and accurate. There are no factual errors or misleading statements, so the answer fully satisfies the query.",
+          "response": "The tallest mountain above sea level is Mount Everest (on the Nepal\u2013China/Tibet border), with an officially recognized elevation of 8,848.86 m (29,031.7 ft). \n\nIf you mean tallest measured from base to summit, Mauna Kea in Hawaii is largest \u2014 about 10,203 m when measured from its base on the ocean floor, though only ~4,207 m above sea level.",
+          "executedAt": "2026-04-01T08:29:13.8712009Z"
+        }
+      ]
+    },
+    {
+      "testId": "factual_009",
+      "category": "factual",
+      "prompt": "What is the smallest country in the world?",
+      "expectedOutput": "Vatican City",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.68,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.67,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Vatican City as the smallest country, matching the expected answer. It adds accurate supporting details (area \u2248 0.44 km\u00B2, ~800 residents, an independent city-state within Rome and seat of the Roman Catholic Church) that are relevant and not misleading. There are no factual errors or significant omissions.",
+          "response": "The smallest country in the world is Vatican City. It covers about 0.44 km\u00B2 (44 hectares), has roughly 800 residents, is an independent city\u2011state enclaved within Rome, and is the seat of the Roman Catholic Church.",
+          "executedAt": "2026-04-01T08:29:24.6261464Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.68,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Vatican City as the smallest country and provides accurate supporting details (area ~0.44 km\u00B2, population ~800\u2013900, and that it is an independent city-state enclaved within Rome). It captures the same meaning as the expected answer and includes relevant, factual context without errors or extraneous information.",
+          "response": "The smallest country in the world is Vatican City (the Vatican City State). It is an independent city-state enclaved within Rome, with an area of about 0.44 km\u00B2 (0.17 sq mi) and roughly 800\u2013900 residents. It is also the spiritual and administrative center of the Roman Catholic Church.",
+          "executedAt": "2026-04-01T08:29:35.5796012Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.69,
+          "judgeScore": 10,
+          "judgeReasoning": "The response correctly identifies Vatican City as the smallest country in the world. It conveys the same meaning as the expected answer and adds accurate supporting details (area \u2248 0.44 km\u00B2, population \u2248 800, enclaved in Rome, and the Pope\u0027s residence). There are no factual errors or irrelevant content.",
+          "response": "The smallest country in the world is Vatican City. It is an independent city\u2011state enclaved within Rome, Italy, with an area of about 0.44 km\u00B2 (110 acres) and a population of roughly 800 people. It is the spiritual and administrative center of the Roman Catholic Church and the Pope\u0027s residence.",
+          "executedAt": "2026-04-01T08:29:47.5620198Z"
+        }
+      ]
+    },
+    {
+      "testId": "factual_021",
+      "category": "factual",
+      "prompt": "What is the capital of France?",
+      "expectedOutput": "Paris",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.53,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.45,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer directly and correctly states that the capital of France is Paris, which exactly addresses the query. It conveys the same meaning as the expected answer with no factual errors or omissions.",
+          "response": "The capital of France is Paris.",
+          "executedAt": "2026-04-01T08:29:53.8069134Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.45,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer directly and correctly identifies Paris as the capital of France, matching the expected answer. It captures the same meaning with no factual errors, omissions, or irrelevant content. The phrasing is clear and unambiguous.",
+          "response": "The capital of France is Paris.",
+          "executedAt": "2026-04-01T08:29:59.3368931Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.71,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer (\u0022Paris.\u0022) directly and correctly responds to the query by naming France\u0027s capital. It captures the same meaning as the expected answer with no factual errors, omissions, or irrelevant content. The punctuation does not alter correctness.",
+          "response": "Paris.",
+          "executedAt": "2026-04-01T08:30:04.9686275Z"
+        }
+      ]
+    },
+    {
+      "testId": "factual_023",
+      "category": "factual",
+      "prompt": "What is the chemical symbol for gold?",
+      "expectedOutput": "Au",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.31,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.31,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly states the chemical symbol for gold as \u0022Au.\u0022 It conveys the same meaning as the expected answer and adds accurate, relevant context (Latin name \u0022aurum\u0022 and atomic number 79). There are no factual errors or omissions.",
+          "response": "The chemical symbol for gold is Au \u2014 from the Latin name \u0022aurum\u0022. Its atomic number is 79.",
+          "executedAt": "2026-04-01T08:30:11.0795187Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.3,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly states the chemical symbol for gold as \u0022Au\u0022 and thus directly addresses the query. It captures the same meaning as the expected answer and adds accurate, relevant context (Latin name \u0022aurum\u0022 and atomic number 79) without error. There are no factual errors or omissions.",
+          "response": "The chemical symbol for gold is Au (from the Latin \u0022aurum\u0022). Gold\u0027s atomic number is 79.",
+          "executedAt": "2026-04-01T08:30:19.7188804Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.31,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly and directly provides the chemical symbol \u0022Au\u0022 for gold and even explains its Latin origin, matching the expected answer. It adds a correct, relevant fact (atomic number 79) but does not change or contradict the required information. There are no factual errors or omissions.",
+          "response": "The chemical symbol for gold is Au (from the Latin name \u0022aurum\u0022). Its atomic number is 79.",
+          "executedAt": "2026-04-01T08:30:24.5257541Z"
+        }
+      ]
+    },
+    {
+      "testId": "factual_002",
+      "category": "factual",
+      "prompt": "What is the capital of Japan?",
+      "expectedOutput": "Tokyo",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.71,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.92,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Tokyo as the capital of Japan. It captures the same meaning as the expected answer with no factual errors, omissions, or irrelevant content. The response is concise and fully addresses the query.",
+          "response": "Tokyo.",
+          "executedAt": "2026-04-01T08:30:29.0329986Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.61,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by identifying Tokyo as the capital of Japan. It captures the same meaning as the expected answer with no factual errors or omissions. There is no irrelevant content; the response is concise and accurate.",
+          "response": "The capital of Japan is Tokyo.",
+          "executedAt": "2026-04-01T08:30:34.7680069Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.6,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Tokyo as the capital of Japan and matches the expected answer in meaning. It includes the name in both English and Japanese characters, which is accurate and relevant. There are no factual errors or omissions.",
+          "response": "The capital of Japan is Tokyo (\u6771\u4EAC).",
+          "executedAt": "2026-04-01T08:30:39.9881448Z"
+        }
+      ]
+    },
+    {
+      "testId": "factual_003",
+      "category": "factual",
+      "prompt": "What is the capital of Australia?",
+      "expectedOutput": "Canberra",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.72,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.71,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Canberra as the capital of Australia. It captures the same meaning as the expected answer and adds accurate contextual details (ACT location and the compromise between Sydney and Melbourne). There are no factual errors or relevant omissions.",
+          "response": "Canberra. It\u2019s located in the Australian Capital Territory (ACT) and was selected as the national capital as a compromise between Sydney and Melbourne.",
+          "executedAt": "2026-04-01T08:30:45.3211704Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.77,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Canberra as the capital of Australia and explicitly provides the additional, accurate detail that it is located in the Australian Capital Territory (ACT). This matches the expected answer and does not confuse Canberra with Sydney. There are no factual errors, omissions, or irrelevant content.",
+          "response": "Canberra \u2014 the capital city of Australia, located in the Australian Capital Territory (ACT).",
+          "executedAt": "2026-04-01T08:30:51.8767326Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.67,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Canberra as the capital of Australia and matches the expected answer. It conveys the same meaning and adds accurate contextual detail (that Canberra is a planned city in the Australian Capital Territory) without introducing errors or irrelevant information.",
+          "response": "The capital of Australia is Canberra \u2014 the planned capital city located in the Australian Capital Territory (ACT).",
+          "executedAt": "2026-04-01T08:30:59.0345459Z"
+        }
+      ]
+    },
+    {
+      "testId": "math_021",
+      "category": "math",
+      "prompt": "What is 2\u002B2?",
+      "expectedOutput": "4",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.42,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.42,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly and directly provides the numerical result to the query. It captures the same meaning as the expected answer by showing the computation and the result. There are no factual errors, omissions, or irrelevant details.",
+          "response": "2 \u002B 2 = 4.",
+          "executedAt": "2026-04-01T08:31:03.9054439Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.42,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by providing the numerical result. It captures the same meaning as the expected answer and contains no factual errors or irrelevant content. There are no omissions; the response is fully correct.",
+          "response": "2 \u002B 2 = 4.",
+          "executedAt": "2026-04-01T08:31:10.0944637Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.42,
+          "judgeScore": 10,
+          "judgeReasoning": "The response directly answers the query by providing the correct numerical result, 4. It conveys the same meaning as the expected answer with no change in content or interpretation. There are no factual errors, omissions, or irrelevant elements.",
+          "response": "2 \u002B 2 = 4.",
+          "executedAt": "2026-04-01T08:31:16.6147674Z"
+        }
+      ]
+    },
+    {
+      "testId": "math_022",
+      "category": "math",
+      "prompt": "Calculate 15% of 200",
+      "expectedOutput": "30",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.32,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.31,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly computes 15% of 200 as 30 and shows the arithmetic 0.15 \u00D7 200 = 30. It matches the expected answer and provides an alternative explanation using 10% and 5% breakdowns. There are no factual errors or omissions.",
+          "response": "15% of 200 = 0.15 \u00D7 200 = 30\n\n(Or: 10% of 200 is 20, 5% is 10, so 20 \u002B 10 = 30.)",
+          "executedAt": "2026-04-01T08:31:23.0474239Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.34,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly computes 15% of 200 by showing the conversion to a decimal and the multiplication, yielding 30. It matches the expected answer exactly and captures the same meaning with no factual errors or omissions. The response is concise and directly addresses the query.",
+          "response": "15% of 200 = 0.15 \u00D7 200 = 30.",
+          "executedAt": "2026-04-01T08:31:29.4479758Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.3,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly calculates 15% of 200 as 0.15 \u00D7 200 = 30 and provides an alternative breakdown (10% \u002B 5%) arriving at the same result. It matches the expected answer exactly, with no factual errors or omissions. The explanation is clear and concise.",
+          "response": "15% of 200 is 0.15 \u00D7 200 = 30.\n\n(Or: 10% of 200 = 20, 5% = 10, total = 30.)",
+          "executedAt": "2026-04-01T08:31:35.5920785Z"
+        }
+      ]
+    },
+    {
+      "testId": "math_023",
+      "category": "math",
+      "prompt": "What is the square root of 144?",
+      "expectedOutput": "12",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.28,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.26,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by giving the principal square root as 12. It captures the same meaning as the expected answer and even adds a useful clarification that the equation x\u00B2 = 144 has two solutions, x = \u00B112. There are no factual errors or omissions and the extra context is relevant.",
+          "response": "The principal square root of 144 is 12. (If you mean solutions to x\u00B2 = 144, they are x = \u00B112.)",
+          "executedAt": "2026-04-01T08:31:41.4294077Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.26,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by stating the principal square root of 144 is 12. It captures the same meaning as the expected answer while also usefully clarifying that the equation x\u00B2 = 144 has two solutions, x = \u00B112. There are no factual errors and the additional note is relevant rather than extraneous.",
+          "response": "The principal square root of 144 is 12. (If you mean solutions to x\u00B2 = 144, they are x = \u00B112.)",
+          "executedAt": "2026-04-01T08:31:49.7233408Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.3,
+          "judgeScore": 10,
+          "judgeReasoning": "The response correctly answers the question by giving 12 as the principal square root and explains why (12 \u00D7 12 = 144). It also accurately notes that both 12 and \u221212 are square roots of 144, which is a correct and relevant clarification. There are no factual errors or omissions with respect to the expected answer.",
+          "response": "The principal square root of 144 is 12, since 12 \u00D7 12 = 144. (Note: both 12 and \u221212 are square roots of 144.)",
+          "executedAt": "2026-04-01T08:31:56.0723367Z"
+        }
+      ]
+    },
+    {
+      "testId": "math_001",
+      "category": "math",
+      "prompt": "What is 2 \u002B 2?",
+      "expectedOutput": "4",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.62,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 1,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by providing the correct sum of 2 \u002B 2. It captures the same meaning as the expected answer \u00224\u0022 with no factual errors, omissions, or irrelevant content. The response is concise and exact.",
+          "response": "4",
+          "executedAt": "2026-04-01T08:32:00.271406Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.42,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer directly and correctly addresses the query by stating the sum: \u00222 \u002B 2 = 4.\u0022 It captures the same meaning as the expected answer and contains no factual errors or irrelevant content. The response succinctly states that the result is 4, matching the expected answer exactly.",
+          "response": "2 \u002B 2 = 4.",
+          "executedAt": "2026-04-01T08:32:05.1859934Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.43,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer directly states the result of the arithmetic expression and matches the expected answer. It captures the same meaning with no factual errors or omissions. The response is concise and correctly answers the query.",
+          "response": "2 \u002B 2 = 4",
+          "executedAt": "2026-04-01T08:32:10.4092648Z"
+        }
+      ]
+    },
+    {
+      "testId": "math_002",
+      "category": "math",
+      "prompt": "What is 15% of 200?",
+      "expectedOutput": "30",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.37,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.35,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by stating that 15% of 200 is 30 and provides a clear, correct breakdown (10% = 20 and 5% = 10) supporting the result. It captures the same meaning as the expected answer with no factual errors, omissions, or irrelevant content.",
+          "response": "15% of 200 is 30. \n\n(10% of 200 = 20; 5% = 10; 20 \u002B 10 = 30.)",
+          "executedAt": "2026-04-01T08:32:16.1321288Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.41,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly computes 15% of 200 as 30 and directly states the result. It matches the expected answer exactly with no factual errors or omissions.",
+          "response": "15% of 200 is 30.",
+          "executedAt": "2026-04-01T08:32:21.1221603Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.35,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by stating that 15% of 200 is 30 and shows the calculation (0.15 \u00D7 200 = 30). It captures the same meaning as the expected answer with no factual errors or omissions. The response is clear and directly answers the question.",
+          "response": "15% of 200 is 30. \n\n(0.15 \u00D7 200 = 30)",
+          "executedAt": "2026-04-01T08:32:26.382846Z"
+        }
+      ]
+    },
+    {
+      "testId": "math_004",
+      "category": "math",
+      "prompt": "What is 7 multiplied by 8?",
+      "expectedOutput": "56",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.81,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.44,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by providing the multiplication result and explicitly stating that 7 \u00D7 8 = 56. It captures the same meaning as the expected answer with no factual errors, omissions, or irrelevant content.",
+          "response": "7 \u00D7 8 = 56",
+          "executedAt": "2026-04-01T08:32:30.8894151Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 1,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by providing the product of 7 and 8 as 56. It captures the same meaning as the expected answer with no factual errors, omissions, or irrelevant content. The response is concise and exact.",
+          "response": "56",
+          "executedAt": "2026-04-01T08:32:35.7020452Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 1,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by providing the product 56. It matches the expected answer exactly and conveys the same meaning. There are no factual errors, omissions, or irrelevant content.",
+          "response": "56",
+          "executedAt": "2026-04-01T08:32:41.0260887Z"
+        }
+      ]
+    },
+    {
+      "testId": "math_005",
+      "category": "math",
+      "prompt": "What is 100 divided by 4?",
+      "expectedOutput": "25",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.79,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 1,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query; 100 divided by 4 equals 25. It captures the same meaning as the expected answer with no factual errors, omissions, or irrelevant content. The response is concise and exactly matches the expected result.",
+          "response": "25",
+          "executedAt": "2026-04-01T08:32:45.3257495Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 1,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by giving the numerical result of 100 divided by 4. It matches the expected answer exactly and conveys the same meaning with no factual errors or omissions. There is no irrelevant content.",
+          "response": "25",
+          "executedAt": "2026-04-01T08:32:50.1383609Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.38,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer directly and correctly responds: it states that 100 divided by 4 is 25. It captures the same meaning as the expected answer and even includes a correct verification (4 \u00D7 25 = 100). There are no factual errors or irrelevant content.",
+          "response": "100 divided by 4 is 25. (Because 4 \u00D7 25 = 100.)",
+          "executedAt": "2026-04-01T08:32:55.7729067Z"
+        }
+      ]
+    },
+    {
+      "testId": "math_006",
+      "category": "math",
+      "prompt": "What is 2 to the power of 10?",
+      "expectedOutput": "1024",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.58,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.58,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly and directly addresses the query by stating the value of 2 to the power of 10. It captures the same meaning as the expected answer, explicitly giving 1024, and contains no factual errors or irrelevant content. There are no omissions\u2014response is concise and correct.",
+          "response": "2^10 = 1024.",
+          "executedAt": "2026-04-01T08:33:01.1974216Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.58,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by explicitly stating that 2^10 = 1024. It captures the same meaning as the expected answer with no factual errors, omissions, or irrelevant content. The response is semantically identical to the expected answer.",
+          "response": "2^10 = 1024.",
+          "executedAt": "2026-04-01T08:33:06.523318Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.58,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by explicitly giving the value of 2 to the power of 10. It captures the same meaning as the expected answer and presents it clearly and concisely. There are no factual errors, omissions, or irrelevant details.",
+          "response": "2^10 = 1024.",
+          "executedAt": "2026-04-01T08:33:13.1789067Z"
+        }
+      ]
+    },
+    {
+      "testId": "reasoning_016",
+      "category": "reasoning",
+      "prompt": "A man walks into a bar and asks for a glass of water. The bartender pulls out a gun and points it at him. The man says thank you and leaves. Why?",
+      "expectedOutput": "The man had hiccups and the scare from the gun cured them, so he no longer needed the water",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.69,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.7,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies that the man had hiccups and that the bartender\u0027s act of pointing a gun frightened him, which cured the hiccups. It captures the same meaning as the expected answer with no factual errors or relevant omissions. Wording is slightly different but semantically identical.",
+          "response": "He had the hiccups. The bartender scared him (by pointing a gun), which cured them \u2014 so he thanked the bartender and left.",
+          "executedAt": "2026-04-01T08:33:19.7319816Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.7,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer directly and correctly explains the riddle: the man had hiccups and the bartender frightened him by pulling a gun, curing them. It captures the same meaning as the expected answer with no factual errors or omissions. The wording is slightly different but semantically identical.",
+          "response": "He had the hiccups. The bartender scared him by pulling a gun, which cured them, so he thanked him and left.",
+          "executedAt": "2026-04-01T08:33:29.256166Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.67,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies that the man had hiccups and that the bartender cured them by frightening him with a gun, which matches the expected answer. It captures the same causal explanation and includes the reason for the man\u0027s gratitude and departure. There are no factual errors, omissions, or irrelevant content.",
+          "response": "He had hiccups. The bartender scared him (by pulling a gun and pointing it), which stopped the hiccups \u2014 so the man thanked him and left.",
+          "executedAt": "2026-04-01T08:33:36.117913Z"
+        }
+      ]
+    },
+    {
+      "testId": "reasoning_024",
+      "category": "reasoning",
+      "prompt": "All roses are flowers. Some flowers fade quickly. Can we conclude all roses fade quickly?",
+      "expectedOutput": "No, we cannot conclude that all roses fade quickly",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.65,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.64,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly concludes \u0022no\u0022 and explains that the conclusion does not follow from the premises. It matches the expected answer: it gives the formal premises and conclusion, and provides a clear counterexample (a rose that doesn\u0027t fade quickly and a different flower that does) showing the premises can be true while the conclusion is false. There are no factual errors or omissions \u2014 the explanation is sufficient and directly addresses the logical entailment.",
+          "response": "No \u2014 the conclusion does not follow.\n\nFormally:\nPremises:\n1) \u2200x (Rose(x) \u2192 Flower(x))\n2) \u2203x (Flower(x) \u2227 FadeQuickly(x))\n\nConclusion you want: \u2200x (Rose(x) \u2192 FadeQuickly(x))\n\nThose premises do not imply that. Counterexample: let there be two flowers, r (a rose) and d (a daisy). Let r be a flower that does not fade quickly, and let d be a flower that does fade quickly. Then 1) and 2) are true, but the conclusion is false. The flowers that fade quickly might be non-roses, so you cannot infer that all roses fade quickly.",
+          "executedAt": "2026-04-01T08:33:50.0432133Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.64,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query: it states the conclusion does not follow and matches the expected answer. It captures the same meaning and gives both a formal logical statement and a clear plain-language counterexample, with no factual errors or irrelevant content. The response is complete and precise.",
+          "response": "No \u2014 the conclusion does not follow.\n\nFormally: from (\u2200x)(R(x) \u2192 F(x)) and (\u2203x)(F(x) \u2227 Q(x)) you cannot derive (\u2200x)(R(x) \u2192 Q(x)). The fact that some flowers fade quickly doesn\u0027t tell you those flowers are roses.\n\nCounterexample (plain language): all roses are flowers. Some flowers that fade quickly are daisies. If no roses are among those fading flowers, then not all roses fade quickly. So the given premises are true while the conclusion is false.",
+          "executedAt": "2026-04-01T08:34:09.192423Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.68,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by denying the inference and stating that the conclusion does not follow from the premises. It conveys the same meaning as the expected answer and contains no factual errors, though it is more concise and lacks the concrete counterexample and formal notation. Overall it is a correct and adequate response.",
+          "response": "No \u2014 the conclusion does not follow.\n\nReason: \u0022All roses are flowers\u0022 says the set of roses is inside the set of flowers. \u0022Some flowers fade quickly\u0022 only says that part of the flower set (some members) fade quickly. That says nothing about the roses specifically; the quick-fading flowers might be other kinds.\n\nConcrete counterexample: Let flowers = {R1, R2, D1} where R1 and R2 are roses and D1 is a daisy. Suppose D1 fades quickly but R1 and R2 do not. Then both premises are true (all roses are flowers; some flowers fade quickly) but \u0022all roses fade quickly\u0022 is false.\n\nFormally: From \u2200x(Rose(x) \u2192 Flower(x)) and \u2203x(Flower(x) \u2227 Fade(x)) you cannot infer \u2200x(Rose(x) \u2192 Fade(x)).",
+          "executedAt": "2026-04-01T08:34:27.420295Z"
+        }
+      ]
+    },
+    {
+      "testId": "reasoning_021",
+      "category": "reasoning",
+      "prompt": "If all dogs are animals, and Max is a dog, what is Max?",
+      "expectedOutput": "An animal",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.46,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.41,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by deducing that Max is an animal from the premises \u0022All dogs are animals\u0022 and \u0022Max is a dog.\u0022 It captures the same meaning as the expected answer with no factual errors or omissions; the added note that Max is specifically a dog is accurate and relevant.",
+          "response": "Max is an animal. \n\nReason: from \u0022All dogs are animals\u0022 and \u0022Max is a dog,\u0022 it follows by simple syllogism that Max is an animal (specifically, a dog).",
+          "executedAt": "2026-04-01T08:34:34.7913266Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.45,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer directly and correctly addresses the query by stating that Max is an animal, matching the expected answer. It captures the same meaning with no factual errors or omissions and includes the simple logical deduction showing why the conclusion follows from the premises. The response is concise and logically valid.",
+          "response": "Max is an animal.\n\nBecause all dogs are animals and Max is a dog, it follows that Max is an animal.",
+          "executedAt": "2026-04-01T08:34:41.0387923Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.5,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by applying the universal premise (\u0022all dogs are animals\u0022) to the specific instance (\u0022Max is a dog\u0022) and concluding that Max is an animal. It captures the same meaning as the expected answer with no factual errors or omissions and succinctly demonstrates the logical deduction.",
+          "response": "Max is an animal.",
+          "executedAt": "2026-04-01T08:34:47.5930531Z"
+        }
+      ]
+    },
+    {
+      "testId": "reasoning_002",
+      "category": "reasoning",
+      "prompt": "A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?",
+      "expectedOutput": "5 cents",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.35,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.34,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query and arrives at the expected result that the ball costs $0.05 (5 cents). It captures the same meaning as the expected answer and shows clear, correct algebraic steps leading to x = 0.05, with the bat therefore costing $1.05. There are no factual errors, omissions, or irrelevant content.",
+          "response": "Let the ball cost x dollars. Then the bat costs x \u002B 1.00.  \nx \u002B (x \u002B 1.00) = 1.10 \u2192 2x \u002B 1.00 = 1.10 \u2192 2x = 0.10 \u2192 x = 0.05.\n\nThe ball costs $0.05 (5 cents) and the bat costs $1.05.",
+          "executedAt": "2026-04-01T08:34:56.501597Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.34,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by letting the ball cost x, setting up x \u002B (x \u002B 1.00) = 1.10, and solving to get x = 0.05. It captures the same meaning as the expected answer, stating the ball costs $0.05 (5 cents) and the bat $1.05. There are no factual errors, omissions, or irrelevant content.",
+          "response": "Let the ball cost x dollars. Then the bat costs x \u002B 1.00.  \nx \u002B (x \u002B 1.00) = 1.10 \u2192 2x \u002B 1.00 = 1.10 \u2192 2x = 0.10 \u2192 x = 0.05.\n\nThe ball costs $0.05 (5 cents), and the bat costs $1.05.",
+          "executedAt": "2026-04-01T08:35:05.6151519Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.36,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by letting x be the ball\u0027s price, writing x \u002B (x \u002B 1.00) = 1.10, and solving to get x = 0.05. It matches the expected answer of 5 cents, contains no factual errors, and clearly shows the algebraic reasoning (not 10 cents).",
+          "response": "Let the ball cost x dollars. Then the bat costs x \u002B 1.00.  \nx \u002B (x \u002B 1.00) = 1.10 \u2192 2x \u002B 1.00 = 1.10 \u2192 2x = 0.10 \u2192 x = 0.05.\n\nThe ball costs $0.05 (5 cents).",
+          "executedAt": "2026-04-01T08:35:13.9080153Z"
+        }
+      ]
+    },
+    {
+      "testId": "reasoning_003",
+      "category": "reasoning",
+      "prompt": "If it takes 5 machines 5 minutes to make 5 widgets, how long does it take 100 machines to make 100 widgets?",
+      "expectedOutput": "5 minutes",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.52,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.52,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by giving the same result as the expected answer: 5 minutes. Its explanation that one machine makes one widget in 5 minutes and thus 100 machines make 100 widgets in 5 minutes is logically correct and contains no factual errors or omissions. The response is concise and captures the intended reasoning.",
+          "response": "5 minutes.\n\nReason: 5 machines make 5 widgets in 5 minutes, so one machine makes one widget in 5 minutes. Therefore 100 machines can make 100 widgets in the same 5 minutes.",
+          "executedAt": "2026-04-01T08:35:20.6207788Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.5,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query and matches the expected answer of 5 minutes. The provided reasoning is accurate and shows the correct rate per machine and scaling to 100 machines, with no factual errors or omissions. It captures the same meaning and conclusion as the expected answer.",
+          "response": "5 minutes.\n\nReason: 5 machines make 5 widgets in 5 minutes \u2192 total rate = 5/5 = 1 widget per minute, so each machine is 1/5 widget per minute (i.e. 1 widget in 5 minutes). 100 machines would therefore produce 20 widgets per minute, so 100 widgets take 100/20 = 5 minutes.",
+          "executedAt": "2026-04-01T08:35:31.8295437Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.53,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by giving \u00225 minutes\u0022 as the time required. It captures the same meaning as the expected answer and the provided reasoning (each machine makes one widget in five minutes, so 100 machines make 100 widgets in five minutes) is correct. There are no factual errors, key omissions, or irrelevant content.",
+          "response": "5 minutes.\n\nReason: 5 machines make 5 widgets in 5 minutes \u2192 each machine makes 1 widget in 5 minutes. So 100 machines will make 100 widgets in the same 5 minutes.",
+          "executedAt": "2026-04-01T08:35:40.3289235Z"
+        }
+      ]
+    },
+    {
+      "testId": "reasoning_004",
+      "category": "reasoning",
+      "prompt": "All roses are flowers. Some flowers fade quickly. Can we conclude that some roses fade quickly?",
+      "expectedOutput": "No, we cannot conclude that",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.39,
+      "avgJudgeScore": 9.7,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.39,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by stating the conclusion does not follow and labeling the argument invalid. It captures the same meaning as the expected answer and gives a correct counterexample and formal notation showing non-entailment. There are no factual errors or relevant omissions.",
+          "response": "No. The argument is invalid.\n\nReason: From \u0022All roses are flowers\u0022 (every R is an F) and \u0022Some flowers fade quickly\u0022 (there exists an F that fades) you cannot infer that any of the roses fade. The \u0022some\u0022 flower that fades might be a non-rose.\n\nCounterexample: Let roses = {r1, r2} (none fade) and flowers = {r1, r2, t1} where t1 is a tulip that fades quickly. Both premises are true, but no rose fades, so the conclusion \u0022Some roses fade quickly\u0022 is false. Formally: \u2200x(R(x) \u2192 F(x)) and \u2203x(F(x) \u2227 G(x)) do not entail \u2203x(R(x) \u2227 G(x)).",
+          "executedAt": "2026-04-01T08:35:59.0669955Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.35,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query: it states \u0022No\u0022 and explains why the conclusion does not follow. It matches the expected meaning and gives a correct formalization and a valid counterexample (a tulip that fades quickly while roses do not). There are no factual errors or omissions.",
+          "response": "No \u2014 it does not follow.\n\nFormally: from \u2200x(Rose(x) \u2192 Flower(x)) and \u2203x(Flower(x) \u2227 FadesQuickly(x)) you cannot validly infer \u2203x(Rose(x) \u2227 FadesQuickly(x)). The existing flower that fades quickly might not be a rose.\n\nCounterexample: there is a tulip that fades quickly, and all roses do not fade quickly. Then \u0022All roses are flowers\u0022 is true, \u0022Some flowers fade quickly\u0022 is true (the tulip), but \u0022Some roses fade quickly\u0022 is false.",
+          "executedAt": "2026-04-01T08:36:18.2161474Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.43,
+          "judgeScore": 9,
+          "judgeReasoning": "The actual answer correctly addresses the query by rejecting the inference and saying the conclusion does not follow. It captures the same meaning as the expected answer but is very terse and omits the explanatory counterexample or reasoning that shows why the conclusion fails. There are no factual errors, only a lack of the supporting justification that the expected answer provides.",
+          "response": "No \u2014 the conclusion does not follow.\n\nReason: \u0022All roses are flowers\u0022 says Roses \u2286 Flowers. \u0022Some flowers fade quickly\u0022 says there exists at least one flower that fades quickly. But that particular fading flower need not be a rose, so you cannot conclude there exists a rose that fades quickly.\n\nCounterexample (simple model):\n- Domain = {r, d}\n- r is a rose and a flower, but does not fade quickly.\n- d is a flower (not a rose) and does fade quickly.\n\nThen \u0022All roses are flowers\u0022 is true, \u0022Some flowers fade quickly\u0022 is true (d), but \u0022Some roses fade quickly\u0022 is false. Hence the inference is invalid.\n\nIt would be valid only with an extra premise linking the fading flowers to roses (for example, \u0022Some flowers that fade quickly are roses\u0022 or \u0022All flowers that fade quickly are roses\u0022 or an explicit existential that some rose fades quickly).",
+          "executedAt": "2026-04-01T08:36:42.7918394Z"
+        }
+      ]
+    },
+    {
+      "testId": "reasoning_010",
+      "category": "reasoning",
+      "prompt": "You have two coins that add up to 30 cents. One is not a nickel. What are the two coins?",
+      "expectedOutput": "A quarter and a nickel",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.7,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.72,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies a quarter and a nickel and clearly explains the riddle\u2019s trick: \u201Cone is not a nickel\u201D can refer to the quarter while the other coin is the nickel, totaling 30\u00A2. There are no factual errors or omissions and the meaning matches the expected answer.",
+          "response": "A quarter (25\u00A2) and a nickel (5\u00A2). The riddle says \u0022one is not a nickel\u0022 \u2014 that can be true of the quarter, while the other coin is a nickel, giving 30\u00A2 total.",
+          "executedAt": "2026-04-01T08:36:51.4956852Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.69,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies the coins as a quarter and a nickel and explains the riddle\u0027s twist that \u0022one is not a nickel\u0022 refers to the quarter, allowing the other coin to be a nickel. It captures the same meaning as the expected answer with no factual errors or omissions. The explanation is clear and directly addresses the puzzle.",
+          "response": "A quarter (25\u00A2) and a nickel (5\u00A2). The riddle says \u0022one is not a nickel\u0022 \u2014 meaning one of the coins (the quarter) isn\u0027t a nickel; the other one can be. Together they make 30\u00A2.",
+          "executedAt": "2026-04-01T08:37:00.3911833Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.69,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies a quarter (25\u00A2) and a nickel (5\u00A2), which add to 30 cents. It captures the riddle\u2019s trick wording: the quarter is the one that is not a nickel while the other coin is a nickel. There are no factual errors or omissions.",
+          "response": "A quarter (25\u00A2) and a nickel (5\u00A2).\n\nThe riddle\u0027s trick is wording: \u0022one is not a nickel\u0022 \u2014 that can be true of the quarter, while the other coin is a nickel, making 25\u00A2 \u002B 5\u00A2 = 30\u00A2.",
+          "executedAt": "2026-04-01T08:37:10.3375071Z"
+        }
+      ]
+    },
+    {
+      "testId": "reasoning_011",
+      "category": "reasoning",
+      "prompt": "If you overtake the person in second place in a race, what position are you in?",
+      "expectedOutput": "Second place",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.54,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.55,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by stating you would be in second place. It captures the same meaning as the expected answer and includes a brief, accurate explanation of why the previous second-place runner falls to third. There are no factual errors or irrelevant content.",
+          "response": "You would be in second place. By overtaking the person who was second, you take their position; the former second drops to third.",
+          "executedAt": "2026-04-01T08:37:19.0409259Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.59,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by stating \u0022Second place.\u0022 It captures the same meaning as the expected answer and adds a brief, accurate clarification that passing the second-place runner moves you into their spot while the leader remains ahead. There are no factual errors or irrelevant content.",
+          "response": "Second place. If you pass the runner who is in second, you take their spot \u2014 the leader is still ahead.",
+          "executedAt": "2026-04-01T08:37:25.8004438Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.48,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer directly states \u0022second place\u0022 and succinctly explains that overtaking the person in second moves you into their position. It matches the expected answer\u0027s meaning and adds a correct clarifying remark that you would need to overtake the leader to be first. There are no factual errors or irrelevant content.",
+          "response": "You\u0027d be in second place. Overtaking the person who was second moves you into their position \u2014 to become first you\u0027d have to overtake the leader.",
+          "executedAt": "2026-04-01T08:37:33.5824087Z"
+        }
+      ]
+    },
+    {
+      "testId": "reasoning_012",
+      "category": "reasoning",
+      "prompt": "A rooster lays an egg on the peak of a roof. Which way does it roll?",
+      "expectedOutput": "Roosters do not lay eggs",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.76,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.77,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the riddle by pointing out that roosters are male and therefore do not lay eggs. It captures the same meaning as the expected answer and contains no factual errors or irrelevant content. The response is clear and complete.",
+          "response": "It doesn\u0027t \u2014 roosters are male and don\u0027t lay eggs. (So there\u0027s no egg to roll.)",
+          "executedAt": "2026-04-01T08:37:43.4129936Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.72,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by pointing out that roosters are male and do not lay eggs. It captures the same meaning as the expected answer and adds that the riddle is a trick question. There are no factual errors or omissions.",
+          "response": "It doesn\u0027t\u2014roosters are male and do not lay eggs. The riddle is a trick question.",
+          "executedAt": "2026-04-01T08:37:50.7854618Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.81,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the riddle by explaining that a rooster doesn\u0027t lay eggs, so there is no egg to roll. It captures the same meaning as the expected answer and contains no factual errors or irrelevant information. The wording is slightly more explicit but conveys the identical point.",
+          "response": "It doesn\u0027t \u2014 roosters are male and don\u0027t lay eggs.",
+          "executedAt": "2026-04-01T08:37:58.0553077Z"
+        }
+      ]
+    },
+    {
+      "testId": "history_002",
+      "category": "history",
+      "prompt": "Who was the first President of the United States?",
+      "expectedOutput": "George Washington",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.59,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.56,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies George Washington as the first President of the United States and adds accurate, relevant details about his inauguration date and term of service. It captures the same meaning as the expected answer without errors or misleading information. There are no key omissions given the simplicity of the query.",
+          "response": "George Washington. He was the first President of the United States under the Constitution, inaugurated April 30, 1789, and served two terms (1789\u20131797).",
+          "executedAt": "2026-04-01T08:38:06.1613985Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.57,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies George Washington as the first President of the United States and adds accurate, relevant details about his inauguration date and terms in office. It captures the same meaning as the expected answer and contains no factual errors or irrelevant content.",
+          "response": "George Washington. He was inaugurated as the first President of the United States on April 30, 1789 and served two terms (1789\u20131797).",
+          "executedAt": "2026-04-01T08:38:12.8024047Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.63,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies George Washington as the first President of the United States and therefore directly addresses the query. It captures the same meaning as the expected answer and adds accurate, relevant context about his terms in office and prior role in the Revolutionary War. There are no factual errors or omissions.",
+          "response": "George Washington. He served as the first President of the United States from 1789 to 1797, after serving as commander-in-chief of the Continental Army during the American Revolutionary War.",
+          "executedAt": "2026-04-01T08:38:19.3550877Z"
+        }
+      ]
+    },
+    {
+      "testId": "history_004",
+      "category": "history",
+      "prompt": "Who wrote the theory of evolution by natural selection?",
+      "expectedOutput": "Charles Darwin",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.57,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.57,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Charles Darwin as the developer of the theory of evolution by natural selection. It captures the same meaning as the expected answer and adds accurate, relevant context about Darwin\u2019s 1859 book On the Origin of Species and Alfred Russel Wallace\u2019s independent discovery. There are no factual errors or problematic omissions.",
+          "response": "The theory of evolution by natural selection was developed by Charles Darwin. He presented it most fully in his 1859 book On the Origin of Species. Alfred Russel Wallace independently arrived at the same idea around the same time; their findings were jointly presented to the Linnean Society in 1858.",
+          "executedAt": "2026-04-01T08:38:26.9342257Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.59,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Charles Darwin as the author of the theory of evolution by natural selection and notes Darwin\u0027s 1859 publication On the Origin of Species. It also accurately mentions Alfred Russel Wallace\u0027s independent contribution and the joint presentation in 1858, which is relevant context but does not contradict the expected answer. There are no factual errors or omissions with respect to the query.",
+          "response": "The theory of evolution by natural selection is most closely associated with Charles Darwin, who published it in 1859 in On the Origin of Species. Alfred Russel Wallace independently arrived at the same idea; their work was presented jointly to the Linnean Society in 1858.",
+          "executedAt": "2026-04-01T08:38:35.9441874Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.56,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Charles Darwin as the author of the theory of evolution by natural selection. It captures the same meaning as the expected answer and correctly adds accurate context (Darwin\u0027s 1859 On the Origin of Species and Wallace\u0027s independent, concurrent discovery with the joint 1858 presentation). There are no factual errors or irrelevant content.",
+          "response": "The theory of evolution by natural selection was written and developed by Charles Darwin (published in On the Origin of Species, 1859). Alfred Russel Wallace independently arrived at the same idea around the same time and they jointly presented their findings in 1858.",
+          "executedAt": "2026-04-01T08:38:44.8515078Z"
+        }
+      ]
+    },
+    {
+      "testId": "history_008",
+      "category": "history",
+      "prompt": "Who was the first woman to win a Nobel Prize?",
+      "expectedOutput": "Marie Curie",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.67,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.63,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Marie Sk\u0142odowska Curie as the first woman to win a Nobel Prize. It captures the same meaning as the expected answer and adds accurate, relevant details about her 1903 Physics prize and a later 1911 Chemistry prize. There are no factual errors or important omissions.",
+          "response": "The first woman to win a Nobel Prize was Marie Sk\u0142odowska Curie. She received the 1903 Nobel Prize in Physics (shared with Pierre Curie and Henri Becquerel) for their work on radioactivity. She later won a second Nobel Prize in Chemistry in 1911.",
+          "executedAt": "2026-04-01T08:38:55.3929805Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.71,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Marie Sk\u0142odowska Curie as the first woman to win a Nobel Prize and matches the expected answer \u0022Marie Curie.\u0022 It accurately adds relevant, factual context about her 1903 Nobel Prize in Physics (shared) and her later 1911 Nobel Prize in Chemistry without introducing errors or irrelevant information. This is a precise and complete response to the query.",
+          "response": "Marie Sk\u0142odowska Curie \u2014 she was the first woman to win a Nobel Prize, receiving the 1903 Nobel Prize in Physics (shared with Pierre Curie and Henri Becquerel). She later won a second Nobel Prize in Chemistry in 1911.",
+          "executedAt": "2026-04-01T08:39:04.1003397Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.65,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Marie Curie as the first woman to win a Nobel Prize and matches the expected answer. It accurately provides relevant additional details (her birth name, the 1903 Physics prize shared with Pierre Curie and Henri Becquerel, and her 1911 Chemistry prize) with no factual errors. The response fully addresses the query.",
+          "response": "The first woman to win a Nobel Prize was Marie Curie (born Maria Sk\u0142odowska). She received the 1903 Nobel Prize in Physics (shared with Pierre Curie and Henri Becquerel). She later won the 1911 Nobel Prize in Chemistry.",
+          "executedAt": "2026-04-01T08:39:14.0367568Z"
+        }
+      ]
+    },
+    {
+      "testId": "history_009",
+      "category": "history",
+      "prompt": "Which country was the first to grant women the right to vote?",
+      "expectedOutput": "New Zealand",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.46,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.48,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies New Zealand and cites the Electoral Act 1893 (September 1893), matching the expected answer. It captures the same meaning and adds accurate, relevant qualifiers about earlier local or territorial cases (Pitcairn, Isle of Man, Wyoming) and Finland without contradicting the main claim. There are no factual errors or key omissions regarding the primary question.",
+          "response": "Short answer: New Zealand.  \n\nNew Zealand was the first self-governing country to grant women the right to vote in parliamentary elections (the Electoral Act 1893, passed in September 1893).\n\nNote on exceptions and qualifiers:\n- Smaller jurisdictions preceded it: the Pitcairn Islands are often cited for early local voting rights (1838), and the Isle of Man gave certain women the vote in 1881.  \n- In the United States, the Wyoming Territory granted women full suffrage in 1869 (territory, not a sovereign country).  \n- Finland (then a Grand Duchy of Russia) was the first European country to give women both the vote and the right to stand for parliament (1906).",
+          "executedAt": "2026-04-01T08:39:37.2823067Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.37,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies New Zealand and gives the year 1893 (including the date of royal assent and that women voted that November), which matches the expected answer. It conveys the same core meaning and adds accurate, relevant caveats about earlier non\u2011sovereign jurisdictions and Finland\u0027s European firsts. There are no factual errors.",
+          "response": "The first country generally recognized as granting women the right to vote in national parliamentary elections was New Zealand \u2014 the Electoral Act of 1893 gave women the vote (royal assent 19 September 1893; women voted that November).\n\nCaveats: some non-sovereign places and jurisdictions enfranchised women earlier (e.g., Wyoming Territory in 1869; the Isle of Man in 1881), and New Jersey\u2019s 1776 rules briefly allowed some women property\u2011owners to vote until 1807. Finland was the first European country to give full political rights to women (1906) and to elect women to its national parliament (1907).",
+          "executedAt": "2026-04-01T08:39:58.8549122Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.52,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies New Zealand and gives the year 1893, matching the expected answer. It accurately specifies that New Zealand was the first self-governing country to grant women the vote in national parliamentary elections via the Electoral Act of 1893. There are no factual errors or relevant omissions for the scope defined.",
+          "response": "New Zealand. It became the first self-governing country to grant women the right to vote in national parliamentary elections with the Electoral Act of 1893.\n\n(If you include territories and local/partial rights, there were earlier cases \u2014 e.g. Wyoming Territory in 1869 and the Isle of Man in 1881 \u2014 and Finland was the first European country to give women both the vote and the right to stand for parliament in 1906.)",
+          "executedAt": "2026-04-01T08:40:10.0387133Z"
+        }
+      ]
+    },
+    {
+      "testId": "history_011",
+      "category": "history",
+      "prompt": "Who was the leader of Nazi Germany during World War II?",
+      "expectedOutput": "Adolf Hitler",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.59,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.58,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Adolf Hitler as the leader of Nazi Germany during World War II. It captures the same meaning as the expected answer and adds accurate, relevant context about his roles as Chancellor and later F\u00FChrer following Hindenburg\u0027s death. There are no factual errors or irrelevant content.",
+          "response": "Adolf Hitler. He served as Chancellor (1933) and, after President Hindenburg\u0027s death in 1934, as F\u00FChrer (head of state and government) of Nazi Germany until his death in April 1945.",
+          "executedAt": "2026-04-01T08:40:18.8560208Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.62,
+          "judgeScore": 10,
+          "judgeReasoning": "The answer correctly identifies Adolf Hitler as the leader of Nazi Germany and explicitly labels him \u201CF\u00FChrer,\u201D matching the expected answer. It captures the same meaning and adds the relevant WWII date range (1939\u20131945) without error or irrelevant content. There are no factual inaccuracies or omissions.",
+          "response": "Adolf Hitler \u2014 he was the F\u00FChrer (leader) of Nazi Germany during World War II (1939\u20131945).",
+          "executedAt": "2026-04-01T08:40:25.9224097Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.57,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Adolf Hitler as the leader of Nazi Germany during World War II and provides accurate, relevant context about his roles as Chancellor from 1933 and F\u00FChrer from 1934 until his death in 1945. It captures the same meaning as the expected answer with no factual errors or irrelevant content. This is a complete and precise response.",
+          "response": "Adolf Hitler \u2014 he was Chancellor (from 1933) and, after 1934 took the title F\u00FChrer (leader) of Nazi Germany, ruling as dictator throughout World War II until his suicide in April 1945.",
+          "executedAt": "2026-04-01T08:40:32.8848348Z"
+        }
+      ]
+    },
+    {
+      "testId": "history_012",
+      "category": "history",
+      "prompt": "Which ancient wonder was located in Alexandria, Egypt?",
+      "expectedOutput": "The Lighthouse of Alexandria",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.78,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.78,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies the Lighthouse of Alexandria (Pharos of Alexandria) as the ancient wonder located in Alexandria, Egypt. It captures the same meaning as the expected answer and even adds the alternate name and that it was one of the Seven Wonders of the Ancient World. There are no factual errors or irrelevant content.",
+          "response": "The Lighthouse of Alexandria, also called the Pharos of Alexandria \u2014 one of the Seven Wonders of the Ancient World.",
+          "executedAt": "2026-04-01T08:40:39.5414464Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.79,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies the Lighthouse of Alexandria and provides its alternate name (the Pharos of Alexandria). It captures the same meaning as the expected answer and adds accurate location detail (the island of Pharos in Alexandria, Egypt). There are no factual errors or relevant omissions.",
+          "response": "The Lighthouse of Alexandria (the Pharos of Alexandria) \u2014 one of the Seven Wonders of the Ancient World \u2014 located on the island of Pharos in Alexandria, Egypt.",
+          "executedAt": "2026-04-01T08:40:49.1668559Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.77,
+          "judgeScore": 10,
+          "judgeReasoning": "The response correctly identifies the Lighthouse of Alexandria (the Pharos) as the ancient wonder located in Alexandria. It captures the same meaning as the expected answer and adds accurate, relevant detail about its location on the island of Pharos and its 3rd century BCE construction/completion under Ptolemy II. There are no factual errors or irrelevant content.",
+          "response": "The Lighthouse of Alexandria (the Pharos of Alexandria). It stood on the island of Pharos at Alexandria\u2019s harbor, built in the 3rd century BCE (completed under Ptolemy II) and was one of the Seven Wonders of the Ancient World.",
+          "executedAt": "2026-04-01T08:40:58.2798199Z"
+        }
+      ]
+    },
+    {
+      "testId": "history_014",
+      "category": "history",
+      "prompt": "Who gave the \u0027I Have a Dream\u0027 speech?",
+      "expectedOutput": "Martin Luther King Jr.",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.59,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.58,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Martin Luther King Jr. as the speaker. It matches the expected answer and even adds accurate contextual details (date, event, and location). There are no factual errors or omissions.",
+          "response": "The \u0022I Have a Dream\u0022 speech was delivered by Dr. Martin Luther King Jr. on August 28, 1963, at the March on Washington from the steps of the Lincoln Memorial.",
+          "executedAt": "2026-04-01T08:41:04.7307037Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.59,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Martin Luther King Jr. as the speaker. It captures the same meaning as the expected answer and adds accurate contextual details (date, location, and event). There are no factual errors, omissions, or irrelevant content.",
+          "response": "The \u0022I Have a Dream\u0022 speech was delivered by civil rights leader Dr. Martin Luther King Jr. on August 28, 1963, at the Lincoln Memorial during the March on Washington for Jobs and Freedom.",
+          "executedAt": "2026-04-01T08:41:16.7119958Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.59,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Martin Luther King Jr. as the speaker and therefore directly addresses the query. It captures the same meaning as the expected answer and adds accurate contextual details (date, event, and location) that are relevant. There are no factual errors or omissions.",
+          "response": "The \u0022I Have a Dream\u0022 speech was delivered by Dr. Martin Luther King Jr. on August 28, 1963, during the March on Washington for Jobs and Freedom at the Lincoln Memorial.",
+          "executedAt": "2026-04-01T08:41:22.0360058Z"
+        }
+      ]
+    },
+    {
+      "testId": "history_017",
+      "category": "history",
+      "prompt": "Who invented the telephone?",
+      "expectedOutput": "Alexander Graham Bell",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.66,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.65,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Alexander Graham Bell as the inventor most widely credited with the telephone and even cites his U.S. patent number and date, matching the expected answer. It also responsibly notes relevant historical controversies and other contributors (Meucci, Gray, Reis), which are accurate and provide useful context without contradicting the core identification. There are no factual errors or irrelevant content.",
+          "response": "The telephone is generally credited to Alexander Graham Bell, who was awarded U.S. patent No. 174,465 for the invention of the telephone on March 7, 1876.\n\nThere is, however, historical controversy and other claimants:\n- Antonio Meucci had earlier working voice-transmission devices and filed a caveat in the U.S. in 1871; the U.S. House of Representatives passed a non\u2011binding resolution in 2002 recognizing his contributions.\n- Elisha Gray filed a caveat for a similar design on the same day Bell filed his patent application (February 14, 1876).\n- Johann Philipp Reis built an early \u201Ctelephon\u201D in the 1860s that could transmit sounds but was not a practical commercial telephone.\n\nSo, while Bell is the inventor most widely recognized (and the patent holder), several inventors contributed important earlier work.",
+          "executedAt": "2026-04-01T08:41:33.3229574Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.65,
+          "judgeScore": 10,
+          "judgeReasoning": "The response correctly identifies Alexander Graham Bell as the inventor most widely credited with the telephone and cites his 1876 U.S. patent and the famous first transmitted words. It captures the same core meaning as the expected answer while responsibly adding accurate, relevant context about competing claims (Meucci, Gray, Reis) and the 2002 U.S. House resolution. There are no factual errors or significant omissions.",
+          "response": "The telephone is most widely credited to Alexander Graham Bell. He was awarded U.S. Patent No. 174,465 on March 7, 1876, and is famous for the first successful voice transmission\u2014\u0022Mr. Watson\u2014come here\u2014I want to see you.\u0022\n\nThere is, however, historical controversy. Italian inventor Antonio Meucci developed early voice-transmission devices in the 1850s\u20131870s and in 2002 the U.S. House of Representatives passed a resolution recognizing his contributions. Elisha Gray filed a caveat on the same day Bell filed his patent application (February 14, 1876), and Johann Philipp Reis built earlier experimental telephone-like devices in the 1860s. Despite these claims, Bell is generally credited because he secured the patent and commercialized the technology.",
+          "executedAt": "2026-04-01T08:41:46.6137079Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.69,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies Alexander Graham Bell as the inventor most commonly credited with the telephone and provides supporting details (patent number, date, and the first intelligible transmission). It captures the same meaning as the expected answer while adding accurate context about disputes and other contributors (Antonio Meucci, Elisha Gray) without factual errors. No key omissions affecting the core answer are present; the additional information is relevant and accurate.",
+          "response": "Alexander Graham Bell is generally credited with inventing the telephone. He was awarded U.S. Patent No. 174,465 for the \u0022improvement in telegraphy\u0022 on March 7, 1876, and on March 10, 1876 made the first famous intelligible voice transmission to his assistant (\u0022Mr. Watson \u2014 come here \u2014 I want to see you\u0022).\n\nHowever, the invention was disputed. Italian inventor Antonio Meucci had created voice-transmission devices earlier and filed a caveat in 1871 (and in 2002 the U.S. House passed a resolution acknowledging his contributions), and Elisha Gray filed a caveat on the same day Bell\u2019s patent application was filed. In short, Bell holds the patent and is commonly credited, but the telephone\u2019s development involved contributions from several inventors.",
+          "executedAt": "2026-04-01T08:41:59.2069487Z"
+        }
+      ]
+    },
+    {
+      "testId": "definition_003",
+      "category": "definitions",
+      "prompt": "What is an algorithm?",
+      "expectedOutput": "A set of step-by-step instructions or rules designed to solve a problem or complete a task",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.39,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.38,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer accurately and fully addresses the query: it defines an algorithm as a precise, step-by-step procedure for solving a problem or performing a task, matching the expected answer\u0027s emphasis on steps, instructions, and problem solving. It adds correct and relevant details (inputs/outputs, key properties like finiteness and well-defined steps), gives clear examples and context (pseudocode example, complexity, types), and contains no factual errors or misleading statements. The content is semantically equivalent to the expected answer and is even more informative while remaining on-topic.",
+          "response": "An algorithm is a precise, step-by-step procedure for solving a problem or performing a task. It takes zero or more inputs, follows a sequence of well-defined operations, and produces one or more outputs.\n\nKey properties of an algorithm\n- Finite: it must finish after a finite number of steps (terminate).\n- Well-defined: each step is unambiguous and executable.\n- Effective: steps are simple enough to be carried out in practice.\n- Input/output: it may accept inputs and produces outputs.\n- Correctness: it should produce the desired result for all valid inputs.\n\nSimple examples\n- A cooking recipe: list of ingredients and explicit steps to make a dish.\n- Finding the maximum number in a list:\n  1. Let max = first element.\n  2. For each remaining element, if it is greater than max, set max to that element.\n  3. After checking all elements, return max.\n\nComputing context\n- Algorithms are the conceptual procedures implemented by programs. The same algorithm can be implemented in many programming languages.\n- Algorithms are analyzed for correctness and performance, typically measured by time complexity (how run time grows with input size) and space complexity (memory used). Common notation: Big O (e.g., O(n), O(n log n)).\n\nTypes and variations\n- Deterministic vs. nondeterministic/probabilistic algorithms.\n- Exact vs. approximate algorithms.\n- Recursive vs. iterative algorithms.\n- Specialized families: sorting, searching, graph algorithms, dynamic programming, etc.\n\nWhy they matter\nAlgorithms are central to computer science and everyday technology: they determine how efficiently tasks are done, whether problems are solvable in reasonable time, and how resources are used.\n\nIf you want, I can show a concrete pseudocode example, compare two common sorting algorithms, or explain how to analyze an algorithm\u2019s complexity. Which would you prefer?",
+          "executedAt": "2026-04-01T08:42:12.5206865Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.39,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query: it defines an algorithm as a precise, step-by-step procedure for solving a problem or performing a task, which matches the expected definition of instructions and problem solving. It captures the same meaning and adds relevant, accurate details (inputs/outputs, finiteness, well-defined steps, effectiveness, correctness) and useful examples and pseudocode without factual errors. Overall it is complete and semantically equivalent to the expected answer.",
+          "response": "An algorithm is a precise, step-by-step procedure for solving a problem or performing a task. It tells you, for any valid input, what actions to take and in what order to produce the desired output.\n\nKey properties of an algorithm\n- Input: one or more values supplied to the procedure.\n- Output: a result produced for each valid input.\n- Finiteness: it must terminate after a finite number of steps.\n- Well-defined (unambiguous): each step is clear and executable.\n- Effectiveness: each step is basic enough to be carried out (in practice) by a person or machine.\n- Correctness and termination: it should produce the correct output and stop for all allowed inputs.\n\nExamples and analogies\n- Everyday: a cooking recipe or driving directions \u2014 both are algorithms for a task.\n- Computing: sorting a list (e.g., quicksort, mergesort), searching (binary search), finding shortest paths in a graph (Dijkstra\u2019s algorithm).\n\nSimple example (informal pseudocode)\nTo find the maximum number in a list:\n1. Set max to the first element.\n2. For each remaining element x in the list:\n   - If x \u003E max, set max = x.\n3. Return max.\n\nWhy algorithms matter\n- They capture the logical method to solve problems independent of any particular programming language or hardware.\n- We analyze algorithms for correctness and efficiency (time and space complexity) to choose the best approach for a given problem and constraints.\n\nDifference between an algorithm and a program\n- Algorithm: the idea or plan (abstract steps).\n- Program: a concrete implementation of that algorithm in code that runs on a computer.\n\nIf you want, I can show examples of specific algorithms (e.g., binary search or merge sort), explain algorithm analysis (big-O notation), or walk through designing an algorithm for a problem you have.",
+          "executedAt": "2026-04-01T08:42:27.0913008Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.4,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by defining an algorithm as a finite, well-defined sequence of instructions for solving a problem or performing a task. It captures the same meaning as the expected answer and includes the required concepts of steps/instructions, inputs and outputs, definiteness, finiteness, and effectiveness, plus useful examples and distinctions (types, algorithm vs program, correctness, complexity). There are no factual errors or significant omissions relative to the expected answer; the response is comprehensive and accurate.",
+          "response": "An algorithm is a finite, well-defined sequence of instructions for solving a problem or performing a task. Given some input, an algorithm prescribes the exact steps to produce the desired output.\n\nKey properties of an algorithm\n- Input: may take zero or more inputs.\n- Output: produces one or more outputs (the result).\n- Definiteness: each step is precisely and unambiguously specified.\n- Finiteness: it must terminate after a finite number of steps for all valid inputs.\n- Effectiveness: every step must be basic enough to be carried out (in practice, by a human or machine).\n\nSimple examples\n- A cooking recipe: ingredients (input), step-by-step instructions (algorithm), finished dish (output).\n- Euclidean algorithm for gcd(a, b):\n  1. While b \u2260 0: set (a, b) := (b, a mod b).\n  2. When b = 0, return a.\n  This is a compact, terminating procedure that computes the greatest common divisor.\n\nTypes and paradigms\n- Deterministic vs nondeterministic vs randomized.\n- Divide-and-conquer, dynamic programming, greedy, backtracking, branch-and-bound, brute-force, approximation, online, parallel algorithms.\n\nAlgorithm vs program\n- Algorithm: abstract method/plan.\n- Program: a concrete implementation of an algorithm in a programming language, runnable on hardware.\n\nCorrectness and complexity\n- Correctness: proof or argument that the algorithm always gives the right output for valid inputs.\n- Complexity: typically analyzed in time (how many steps) and space (how much memory) as functions of input size.\n\nWhy algorithms matter\n- They determine whether a problem can be solved at all, and how efficiently it can be solved. Choosing or designing the right algorithm is central to software performance, scalability, and resource usage.",
+          "executedAt": "2026-04-01T08:42:40.8855119Z"
+        }
+      ]
+    },
+    {
+      "testId": "definition_004",
+      "category": "definitions",
+      "prompt": "Define gravity",
+      "expectedOutput": "A natural force that attracts objects with mass toward one another, pulling them together",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.53,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.53,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by defining gravity as a physical interaction that causes masses (and energy) to attract one another and by giving both the everyday and Newtonian notion of it as a force. It captures the same core meaning as the expected answer while usefully expanding to include the relativistic view (curved spacetime) and relevant equations without factual errors. It explicitly mentions attraction and provides Newton\u2019s force law, so it meets the evaluation criterion and is complete and accurate.",
+          "response": "Gravity is the physical interaction that causes masses and energy to attract one another and determines the motion of bodies in the presence of mass/energy.\n\nShort, practical view\n- On everyday scales it\u2019s the force that makes apples fall, keeps you on the ground, makes planets orbit the Sun, and causes tides.\n\nNewtonian (classical) description\n- Newton\u2019s law of universal gravitation: two point masses m1 and m2 separated by distance r attract with magnitude F = G m1 m2 / r^2, where G \u2248 6.674\u00D710^\u221211 N\u00B7m^2/kg^2.  \n- The gravitational acceleration near Earth\u2019s surface is about g \u2248 9.81 m/s^2.  \n- Potential energy of a mass m at distance r from mass M is U = \u2212GMm/r, and escape velocity v_esc = sqrt(2GM/R).\n\nRelativistic (modern) description\n- In general relativity (GR), gravity is not a force in the Newtonian sense but the effect of mass-energy curving spacetime. Matter and energy tell spacetime how to curve; curved spacetime tells matter how to move.  \n- Mathematically this is expressed by Einstein\u2019s field equations: G_{\u03BC\u03BD} = (8\u03C0G/c^4) T_{\u03BC\u03BD}, where G_{\u03BC\u03BD} describes spacetime curvature and T_{\u03BC\u03BD} is the energy\u2013momentum tensor. Free-falling objects follow geodesics (the straightest possible paths) in curved spacetime. GR predicts light deflection, gravitational time dilation, and gravitational waves, all confirmed by experiment.\n\nKey properties and facts\n- Gravity is long-range and effectively infinite in range, and is always attractive (in classical GR for ordinary matter-energy).  \n- It couples universally to mass and energy (equivalence principle).  \n- It is the weakest of the four known fundamental interactions but dominates on astronomical scales because it only accumulates (no negative \u201Cgravitational charge\u201D).  \n- A complete quantum theory of gravity that reconciles GR and quantum mechanics remains an open problem.\n\nIf you want, I can give equations for specific situations (planetary orbits, Schwarzschild solution, tidal forces), or explain how gravity causes orbital motion and tides.",
+          "executedAt": "2026-04-01T08:42:59.8290583Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.57,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query and captures the same meaning as the expected answer: both state that gravity is an attractive effect between masses. It explicitly mentions attraction and, in the everyday summary, calls it a force that pulls you toward Earth; the Newtonian and Einsteinian descriptions are accurate and appropriate. There are no factual errors or misleading statements, and the additional context (Newtonian formula, general relativity, light deflection, quantum gravity) is relevant and correct.",
+          "response": "Gravity is the natural phenomenon by which objects with mass (and energy) attract one another.\n\nShort/Everyday: it\u2019s the force that pulls you toward Earth, makes apples fall, and keeps planets in orbit.\n\nNewtonian (classical) description:\n- Gravity is an attractive force between two masses.  \n- Magnitude given by Newton\u2019s law of universal gravitation: F = G m1 m2 / r^2, where G \u2248 6.67430\u00D710^\u221211 m^3\u00B7kg^\u22121\u00B7s^\u22122, m1 and m2 are the masses, and r is the distance between them.\n- Near Earth\u2019s surface this produces an acceleration g \u2248 9.81 m/s^2.\n\nEinsteinian (modern) description:\n- In general relativity, gravity is not a force in the Newtonian sense but the result of mass-energy curving spacetime; objects follow geodesics (the straightest possible paths) in that curved spacetime.\n- The curvature is determined by the Einstein field equations, which relate spacetime geometry to the distribution of mass-energy.\n\nOther points:\n- Gravity is long-range, always attractive in observed macroscopic situations, and acts on anything with energy (including light, which is deflected by massive bodies).  \n- A quantum theory of gravity (in which gravity would be mediated by gravitons) has not yet been experimentally confirmed.",
+          "executedAt": "2026-04-01T08:43:12.6294679Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.51,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query and explicitly states that gravity is the interaction that causes masses (and energy) to attract one another, matching the expected definition of a force that pulls objects together. It expands appropriately with both Newtonian (force, inverse-square law, G) and Einsteinian (spacetime curvature, geodesics) descriptions and notes key points like tidal effects and that gravity acts on energy as well as mass. There are no factual errors or irrelevant content; the response is accurate and more informative than the brief expected answer.",
+          "response": "Gravity is the universal interaction that causes masses (and energy) to attract one another and governs the motion of objects on all scales from apples falling to the motion of galaxies.\n\nShort, everyday definition\n- Gravity is the pull that a massive object (like Earth) exerts on other objects, producing a downward acceleration (about 9.81 m/s^2 at Earth\u2019s surface).\n\nNewtonian (classical) description\n- Newton\u2019s law of universal gravitation: the force between two point masses m1 and m2 separated by distance r is F = G m1 m2 / r^2. This is an attractive force directed along the line joining the masses.\n- G (the gravitational constant) \u2248 6.674\u00D710^-11 m^3 kg^-1 s^-2.\n- The gravitational field (acceleration) produced by a mass M at distance r is g = GM/r^2. The inverse-square dependence explains orbits and why gravity weakens with distance.\n\nEinsteinian (relativistic) description\n- In general relativity, gravity is not a force but a manifestation of curved spacetime: mass\u2013energy tells spacetime how to curve, and curved spacetime tells matter how to move. Free-falling objects follow geodesics (the straightest possible paths) in curved spacetime.\n- GR explains phenomena Newtonian gravity cannot (e.g., the precession of Mercury\u2019s perihelion, gravitational time dilation, light bending) and predicts gravitational waves, which have been directly detected.\n\nOther key points\n- Gravity is always effectively attractive for ordinary mass-energy.\n- Tidal effects arise from differences in gravitational acceleration across an extended object.\n- Gravity acts on energy and momentum, not just rest mass.\n- A full quantum theory of gravity that reconciles general relativity with quantum mechanics is still an open area of research.\n\nIf you want, I can give a visual intuition, derive g = GM/r^2, compare predictions of Newton vs. GR, or summarize experimental evidence.",
+          "executedAt": "2026-04-01T08:43:29.1138808Z"
+        }
+      ]
+    },
+    {
+      "testId": "definition_005",
+      "category": "definitions",
+      "prompt": "What is inflation in economics?",
+      "expectedOutput": "The rate at which the general level of prices for goods and services rises over time, reducing purchasing power",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.5,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.52,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly defines inflation as a sustained rise in the general price level and explicitly notes the resulting loss of purchasing power, matching the expected answer\u0027s core meaning. It also expands appropriately on measurement (CPI, PCE), causes, effects, and policy responses without factual errors. The content is accurate, complete, and even more informative than the brief expected answer.",
+          "response": "Inflation is the sustained rise in the general price level of goods and services in an economy over time \u2014 in other words, money loses purchasing power.\n\nKey points\n\n- A simple measure: inflation rate = (Price level this period \u2212 Price level last period) / Price level last period \u00D7 100%.\n- Common measures: Consumer Price Index (CPI) and Personal Consumption Expenditures (PCE) price index. These track baskets of goods and services and are adjusted differently for substitution and quality changes.\n- Main causes:\n  - Demand-pull: aggregate demand grows faster than aggregate supply (too much money chasing too few goods).\n  - Cost-push: rising costs of production (wages, raw materials, energy) push firms to raise prices.\n  - Built-in/expectations: if people expect higher inflation, they demand higher wages and firms set higher prices, reinforcing inflation.\n  - Monetary factors: sustained growth in the money supply relative to output can drive inflation (quantity theory).\n- Effects:\n  - Reduces real purchasing power of money and fixed nominal incomes.\n  - Redistributes wealth: unexpected inflation helps debtors and hurts creditors; savers may lose out if interest rates don\u2019t keep up.\n  - Creates economic friction: menu costs (changing prices), shoe-leather costs (more frequent transactions), and greater uncertainty that can discourage investment.\n  - Moderate, stable inflation can grease wage and price adjustments; very high inflation (or hyperinflation) is highly disruptive.\n- Policy response: central banks use monetary policy (primarily interest-rate changes) to control inflation; many aim for a low, stable target (commonly around 2% annually).\n- Related terms: deflation (falling price level), disinflation (slowing inflation rate), hyperinflation (extremely high inflation).\n\nIf you want, I can show a simple historical example, explain how CPI is constructed, or compare CPI vs. PCE.",
+          "executedAt": "2026-04-01T08:43:46.5238827Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.53,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly defines inflation as a sustained rise in the general price level and explicitly notes that it reduces the purchasing power of money. It captures the same meaning as the expected answer without factual errors, though it is more concise and omits the extended details (measurement, causes, effects, policy) from the key points. Because the required elements (rising prices and reduced purchasing power) are present, the response is accurate.",
+          "response": "Inflation is the sustained rise in the general level of prices for goods and services in an economy over time, which reduces the purchasing power of money.\n\nKey points\n\n- Simple formula: Inflation rate \u2248 (Price level this period \u2212 Price level last period) / Price level last period \u00D7 100%.\n- How it\u2019s measured: common price indices include the Consumer Price Index (CPI), Producer Price Index (PPI), and the GDP deflator. \u201CCore inflation\u201D excludes volatile items such as food and energy to show underlying trends.\n- Main types/causes:\n  - Demand-pull inflation: aggregate demand outpaces supply (too much money chasing too few goods).\n  - Cost-push inflation: higher production costs (wages, raw materials) push firms to raise prices.\n  - Built-in (wage-price) inflation: expectations of future inflation cause workers to demand higher wages, which firms pass on as higher prices.\n- Effects:\n  - Erodes purchasing power (a given amount of money buys less).\n  - Redistributes wealth: borrowers often benefit (debt is repaid in less valuable money), savers lose unless returns beat inflation.\n  - Can create uncertainty, planning difficulties, \u201Cmenu\u201D and \u201Cshoe-leather\u201D costs.\n  - Moderate inflation can grease market adjustments; very high inflation (or hyperinflation) is damaging.\n- Policy response: central banks use interest rates and other tools to control inflation, often aiming for a low, stable target (commonly around 2% in many countries).\n- Real vs nominal: \u201CNominal\u201D values are measured in current prices; \u201Creal\u201D values are adjusted for inflation (real wages, real GDP).\n\nExample: If the CPI was 200 last year and 206 this year, the inflation rate is (206\u2212200)/200 = 3%.\n\nIf you want, I can show how inflation is calculated from a specific price index, compare historical inflation rates, or explain how inflation affects investments and wages.",
+          "executedAt": "2026-04-01T08:44:01.8140581Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.45,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly defines inflation as a sustained increase in the overall price level and explicitly notes that each unit of currency buys fewer goods and services, matching the expected emphasis on rising prices and reduced purchasing power. It captures the same meaning as the expected answer and adds appropriate details on measurement, causes, effects, and policy without factual errors. Overall the response is accurate, complete, and concise.",
+          "response": "Inflation is the sustained increase in the overall level of prices in an economy over time, which means each unit of currency buys fewer goods and services. It\u2019s usually expressed as an annual percentage change in a price index.\n\nKey points\n\n- Measurement\n  - Common measures: Consumer Price Index (CPI), Producer Price Index (PPI), GDP deflator.\n  - Inflation rate formula: (Price level this period \u2212 Price level last period) / Price level last period \u00D7 100%.\n\n- Main causes\n  - Demand-pull: aggregate demand outpaces aggregate supply (too much money chasing too few goods).\n  - Cost-push: rising costs of production (e.g., wages, energy) push firms to raise prices.\n  - Built-in inflation: wage\u2013price spirals where expectations of inflation lead workers to demand higher wages, which raises costs and prices.\n  - Monetary factors: sustained growth in the money supply can fuel inflation if it outstrips output growth.\n\n- Effects\n  - Reduces purchasing power of money (hurts people on fixed incomes).\n  - Redistributes income and wealth (debtors can benefit; creditors lose if rates don\u2019t adjust).\n  - Creates uncertainty and can distort investment and saving decisions.\n  - Causes \u201Cmenu costs\u201D (firms changing prices) and \u201Cshoe-leather costs\u201D (more frequent transactions to avoid holding cash).\n  - Moderate, stable inflation is often seen as normal; deflation (falling prices) can be more damaging.\n\n- Policy responses\n  - Central banks use monetary policy (raising interest rates, tightening money supply) to lower inflation.\n  - Governments may use fiscal measures or supply-side reforms to address causes.\n  - Controlling inflation often requires anchoring expectations through credible policy (many central banks target ~2% inflation).\n\n- Extreme cases\n  - High inflation and hyperinflation (very rapid, out-of-control price rises) can destroy confidence in a currency and require drastic correction.\n\nExamples: 1970s stagflation in advanced economies after oil shocks; hyperinflation in Weimar Germany, Zimbabwe, and Venezuela.\n\nIf you want, I can show how inflation is calculated from a CPI series, give historical examples with numbers, or explain how inflation affects your savings and investments.",
+          "executedAt": "2026-04-01T08:44:20.7244047Z"
+        }
+      ]
+    },
+    {
+      "testId": "definition_006",
+      "category": "definitions",
+      "prompt": "What is a hypothesis?",
+      "expectedOutput": "A proposed explanation for an observation that can be tested through further investigation or experimentation",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.43,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.42,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly defines a hypothesis as a provisional, testable explanation and explicitly notes it can be used to make predictions and be tested with data or experiments, matching the expected answer\u0027s emphasis on testability and prediction. It also covers key aspects (form, falsifiability, tentativeness, types, statistical framing, and how to write one) without factual errors or irrelevant content.",
+          "response": "A hypothesis is a provisional, testable explanation for an observation or a tentative answer to a specific question. It\u2019s a statement you can use to make predictions and then test through data or experiments.\n\nKey points\n- Purpose: to propose a possible relationship between variables that can be evaluated empirically.\n- Form: often written as a clear, specific statement (e.g., \u201CIf X, then Y\u201D) that predicts an outcome.\n- Testability: must be measurable and testable with observations or experiments.\n- Falsifiability: must be capable of being proven false by evidence (a crucial scientific requirement).\n- Tentative: it\u2019s not final knowledge \u2014 it can be supported, revised, or rejected based on results.\n\nCommon types\n- Descriptive hypothesis: predicts characteristics of a single variable (e.g., \u201CThe average commute time in City A is 30 minutes\u201D).\n- Relational/correlational hypothesis: predicts an association between two variables (e.g., \u201CHigher stress is associated with poorer sleep\u201D).\n- Causal hypothesis: predicts that one variable causes a change in another (e.g., \u201CTaking Drug A reduces symptoms of condition B\u201D).\n\nStatistical framing\n- Null hypothesis (H0): a statement of no effect or no difference (used as the default in statistical tests).\n- Alternative hypothesis (H1 or Ha): the claim you\u2019re testing for, indicating an effect or difference.\n\nHow to write a good hypothesis\n- Be specific and concise.\n- Define variables clearly and say how they\u2019ll be measured (operationalize).\n- Make a prediction that could be observed or measured.\n- Ensure it\u2019s realistic and based on background knowledge or theory.\n\nExample\n- Research question: Does coffee improve short-term memory?\n- Hypothesis (causal): \u201CDrinking one cup of coffee before a memory test improves short-term memory performance.\u201D\n- Null hypothesis: \u201CDrinking one cup of coffee before a memory test has no effect on short-term memory performance.\u201D\n\nDifference from a theory\n- A hypothesis is a specific, testable claim. A theory is a broader, well-substantiated explanation that integrates many hypotheses and findings.\n\nIf you want, give me a research question or topic and I\u2019ll help you write testable hypotheses for it.",
+          "executedAt": "2026-04-01T08:44:35.5735541Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.45,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly defines a hypothesis as a tentative, testable explanation for an observation or relationship between variables and emphasizes that it can be supported or refuted by evidence. It captures the same meaning as the expected answer and adds helpful detail (testable, falsifiable, measurable, types, scientific-method steps and examples) without factual errors. This response fully meets the requirement to mention a testable explanation or prediction.",
+          "response": "A hypothesis is a tentative, testable statement that proposes an explanation for an observation or a relationship between variables. It\u2019s a starting point for investigation that can be supported or refuted by evidence.\n\nKey characteristics\n- Testable: it can be investigated through observation or experiment.  \n- Falsifiable: there must be a possible observation that would prove it wrong.  \n- Specific and clear: identifies the variables and the expected relationship.  \n- Measurable: terms can be operationalized so data can be collected.\n\nCommon types\n- Descriptive/exploratory: proposes a pattern or description to investigate.  \n- Explanatory: proposes a cause-and-effect relationship.  \n- Directional vs non-directional: directional predicts the direction of the effect (e.g., \u201Cincreases\u201D), non-directional only predicts a difference.  \n- Statistical hypotheses: null hypothesis (H0) typically states \u201Cno effect\u201D or \u201Cno difference\u201D; alternative hypothesis (H1 or Ha) states there is an effect or difference.\n\nHow it\u2019s used in the scientific method\n1. Observe and ask a question.  \n2. Review existing knowledge.  \n3. Formulate a hypothesis (a clear, testable statement).  \n4. Design and run experiments or collect data.  \n5. Analyze results to support or reject the hypothesis.  \n6. Refine hypothesis or develop theory.\n\nSimple examples\n- Scientific: \u201CIncreasing light intensity will increase the growth rate of this plant species.\u201D  \n- Statistical: H0: \u201CThere is no difference in mean test scores between Group A and Group B.\u201D H1: \u201CGroup A has a higher mean test score than Group B.\u201D  \n- Everyday: \u201CIf I study for one extra hour each day, my exam score will improve.\u201D\n\nTips for writing a good hypothesis\n- Be specific about variables (independent and dependent).  \n- Make it measurable (how will you assess change?).  \n- Keep it concise and focused.  \n- If applicable, state the null hypothesis for statistical testing.\n\nIf you want, I can help you write a hypothesis for a topic you have in mind.",
+          "executedAt": "2026-04-01T08:44:50.5231178Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.43,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly and fully addresses the query by defining a hypothesis as a tentative, testable statement proposing an explanation or predicted relationship. It captures the same meaning as the expected answer and explicitly includes the key feature that hypotheses must be testable (and falsifiable), plus useful additional detail on types and how to write one. There are no factual errors or omissions; the response is accurate and more comprehensive than the brief expected answer.",
+          "response": "A hypothesis is a tentative, testable statement that proposes a possible explanation for a phenomenon or a predicted relationship between variables. It guides investigation by stating what you expect to find and can be supported or refuted by evidence.\n\nKey features\n- Testable: can be investigated with observations or experiments.\n- Falsifiable: there must be possible evidence that could show it false.\n- Specific and measurable: variables and conditions are defined so results can be evaluated.\n- Tentative: it\u2019s not proven fact but a starting point for testing.\n\nCommon types\n- Causal (if\u2013then): predicts one variable causes a change in another.\n  Example: \u201CIf plants receive more sunlight, then they will grow taller.\u201D\n- Relational (correlational): predicts a relationship between variables without asserting causation.\n  Example: \u201CThere is a relationship between hours of study and exam scores.\u201D\n- Directional vs non-directional: directional specifies the direction of the effect (\u201Cincreases\u201D, \u201Cdecreases\u201D); non-directional only predicts a relationship.\n- Null vs alternative (statistical): the null hypothesis (H0) states no effect or difference; the alternative (H1 or Ha) states there is an effect.\n\nHow to write a good hypothesis\n1. Start with a clear research question.\n2. Identify the independent (cause) and dependent (effect) variables.\n3. Make the statement specific and measurable.\n4. Choose a form: an if\u2013then causal statement or a declarative relationship.\n5. Consider how you will test it (what data or experiment).\n\nDifference from a theory\n- A hypothesis is a specific, testable prediction.\n- A theory is a broader, well-substantiated explanation that can generate many hypotheses.\n\nExample set\n- Research question: Does caffeine affect reaction time?\n- Hypothesis (directional): \u201CConsuming 200 mg of caffeine will decrease reaction time compared with consuming a placebo.\u201D\n- Null hypothesis: \u201CConsuming 200 mg of caffeine has no effect on reaction time compared with a placebo.\u201D\n\nIf you want, tell me your topic and I can help you craft a testable hypothesis.",
+          "executedAt": "2026-04-01T08:45:05.1849282Z"
+        }
+      ]
+    },
+    {
+      "testId": "definition_007",
+      "category": "definitions",
+      "prompt": "Define osmosis",
+      "expectedOutput": "The movement of water molecules through a semipermeable membrane from an area of lower solute concentration to higher solute concentration",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.69,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.7,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query: it defines osmosis as passive movement of a solvent (noting water) across a semipermeable membrane from lower to higher solute concentration and explains the driving force in terms of chemical potential. It captures the same meaning as the expected answer while adding useful, accurate details (osmotic pressure, van \u2019t Hoff relation, biological examples) without introducing errors. It includes all required elements (water/solvent, membrane, concentration) and the extra details are relevant and correct.",
+          "response": "Osmosis is the passive movement of a solvent (usually water) across a semipermeable membrane from a region of lower solute concentration (higher solvent chemical potential) to a region of higher solute concentration (lower solvent chemical potential). It continues until the chemical potentials equilibrate or until an opposing pressure (osmotic pressure) balances the flow.\n\nKey points:\n- Occurs through a membrane that allows solvent but not (or less) solute to pass.\n- Does not require cellular energy (passive transport).\n- Osmotic pressure is the pressure needed to stop the net flow; for dilute solutions \u03C0 \u2248 iMRT (van \u2019t Hoff law).\n- Biological examples: water uptake and turgor in plant cells; red blood cell swelling or shrinking in hypotonic/hypertonic solutions.",
+          "executedAt": "2026-04-01T08:45:14.4493348Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.68,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query: it defines osmosis as movement of a solvent (usually water) across a semi-permeable membrane driven by differences in solute concentration/chemical potential. It captures the same meaning as the expected answer and expands usefully on mechanisms (chemical potential), the passive nature, osmotic pressure, and biological relevance without introducing errors. There are no factual errors and the required elements\u2014water, membrane, and concentration\u2014are all explicitly present.",
+          "response": "Osmosis is the net movement of a solvent (usually water) through a selectively (semi-)permeable membrane from a region of lower solute concentration (higher solvent chemical potential) to a region of higher solute concentration (lower solvent chemical potential). It is a passive process driven by differences in chemical potential and continues until equilibrium is reached or until an opposing pressure (osmotic pressure) balances the tendency to flow.\n\nKey points:\n- The membrane must permit solvent but restrict at least some solutes.\n- Osmosis does not require metabolic energy (it is not active transport).\n- Osmotic pressure is the pressure difference required to stop solvent flow; for dilute solutions it is approximated by van \u2019t Hoff\u2019s law: \u03C0 = iCRT.\n- Biological relevance: cell swelling or shrinking in hypotonic/hypertonic solutions, water uptake in plant roots, dialysis and water purification.",
+          "executedAt": "2026-04-01T08:45:28.4497892Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.69,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly defines osmosis, explicitly noting solvent (usually water), a semipermeable membrane, and movement from lower to higher solute concentration driven by chemical potential differences. It captures the same meaning as the expected answer while adding useful, accurate detail about equilibrium, opposing pressure, osmotic pressure (van \u2019t Hoff law), and biological examples. There are no factual errors or misleading statements; the extra content is relevant and accurate.",
+          "response": "Osmosis is the passive net movement of a solvent (usually water) through a semipermeable membrane from a region of lower solute concentration (higher solvent chemical potential) to a region of higher solute concentration (lower solvent chemical potential). It continues until the chemical potentials equilibrate or an opposing pressure (osmotic or hydrostatic) balances the flow.\n\nKey points:\n- The membrane is permeable to the solvent but not (or much less) to the solute.\n- Osmosis does not require metabolic energy (it is driven by differences in chemical potential).\n- The pressure required to stop osmotic flow is called the osmotic pressure; for dilute ideal solutions it follows van \u2019t Hoff\u2019s law: \u03C0 = iMRT.\n- Biological example: water moving into plant cells makes them turgid; water leaving cells causes them to shrink (plasmolysis).",
+          "executedAt": "2026-04-01T08:45:41.1088791Z"
+        }
+      ]
+    },
+    {
+      "testId": "definition_008",
+      "category": "definitions",
+      "prompt": "What is artificial intelligence?",
+      "expectedOutput": "The simulation of human intelligence processes by computer systems, including learning, reasoning, and problem-solving",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.5,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.53,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly defines AI as a field of computer science that creates machines or software to perform tasks requiring human intelligence, which matches the expected answer\u0027s idea of computers simulating human intelligence (learning, reasoning, problem-solving). It also expands usefully on types, main approaches, a high-level workflow, applications, and limitations without factual errors. The content is relevant, accurate, and more comprehensive than the brief expected answer while preserving the same core meaning.",
+          "response": "Artificial intelligence (AI) is the branch of computer science that designs machines or software that perform tasks that normally require human intelligence. These tasks include recognizing speech and images, understanding language, making decisions, planning, and learning from experience.\n\nKey points, briefly:\n\n- Types\n  - Narrow (or weak) AI: systems that do one specific task well (e.g., voice assistants, image classifiers).\n  - General AI (hypothetical): a system with broad, human-like cognitive abilities across many domains.\n  - Superintelligence (speculative): intelligence far beyond human capabilities.\n\n- Main approaches\n  - Symbolic/knowledge-based AI: rules and logic encoded by humans.\n  - Machine learning (ML): systems that learn patterns from data rather than being explicitly programmed.\n  - Deep learning: ML using multi-layer neural networks, effective for vision, speech, and language.\n  - Reinforcement learning: agents learn by trial and error to maximize reward.\n\n- How it works (high level)\n  - Collect data, choose a model type, train the model on data to minimize errors, evaluate and refine, then deploy for real-world use.\n\n- Common applications\n  - Search and recommendations, speech recognition, medical diagnostics, autonomous vehicles, fraud detection, customer service chatbots, industrial automation, language translation.\n\n- Limitations and risks\n  - Biased or poor-quality data can produce unfair or wrong outcomes.\n  - Models can fail unpredictably outside their training scenarios (lack common sense).\n  - Explainability, privacy, job disruption, and misuse are key societal concerns.\n  - Safety and alignment are active research areas for more capable systems.\n\nIf you want, I can:\n- Explain a particular technique (e.g., neural networks, transformers).\n- Show simple examples or demos.\n- Suggest beginner learning resources. Which would you like?",
+          "executedAt": "2026-04-01T08:45:58.1075456Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.48,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly defines AI as systems that perform tasks normally requiring human intelligence and explains how they simulate learning, reasoning, and decision-making. It captures the same meaning as the expected answer and expands with accurate, relevant detail on types, methods (ML, deep learning), workings, applications, limitations, and ethics. There are no factual errors or key omissions relative to the expected answer; the response is comprehensive and accurate.",
+          "response": "Artificial intelligence (AI) is the field of computer science and engineering that creates systems able to perform tasks that normally require human intelligence. At its core, AI involves designing algorithms and models that can perceive inputs (like images, sound, or text), learn patterns from data, make decisions or predictions, and sometimes act in an environment.\n\nKey types and concepts\n- Narrow (weak) AI: Systems built for a specific task (e.g., speech recognition, image tagging, recommendation engines). Almost all practical AI today is narrow.\n- General (strong) AI: A hypothetical system that can understand, learn, and apply intelligence across a wide range of tasks at human-level (not achieved yet).\n- Machine learning (ML): A dominant approach where models learn patterns from data. Subtypes include supervised, unsupervised, and reinforcement learning.\n- Deep learning: A set of ML methods using multi-layer neural networks that excel at perceptual tasks (vision, speech, language).\n- Symbolic AI and hybrid approaches: Earlier AI focused on logic, rules and symbolic reasoning; many modern systems combine symbolic and statistical methods.\n\nHow AI works (high level)\n- Data: examples the system learns from (labeled images, recorded conversations, etc.).\n- Algorithms/models: mathematical procedures that find patterns in data (neural networks, decision trees, probabilistic models).\n- Compute and training: optimization (e.g., gradient descent) adjusts model parameters to minimize error on tasks.\n- Evaluation and deployment: models are tested on held-out data, tuned, and then used in real applications.\n\nCommon applications\n- Virtual assistants and chatbots (Siri, Alexa, customer support)\n- Search engines and recommendation systems (Google, Netflix)\n- Computer vision (face recognition, medical image analysis)\n- Natural language processing (translation, summarization, language models)\n- Autonomous vehicles and robotics\n- Fraud detection, predictive maintenance, supply-chain optimization\n\nStrengths and limitations\n- Strengths: fast pattern recognition at scale, handling large datasets, automating repetitive tasks, augmenting human work.\n- Limitations: require lots of data, can be brittle outside their training distribution, lack general common-sense reasoning, can inherit biases from training data, often hard to interpret, can be vulnerable to adversarial inputs.\n\nEthics and societal impacts\n- Bias and fairness, privacy concerns, safety and reliability, job and economic impacts, and governance/regulation are major considerations when deploying AI. Responsible design, transparency, and alignment with human values are active research and policy areas.\n\nIf you want to learn more, good starting points are introductory courses on machine learning (e.g., Andrew Ng\u2019s course), books like \u0022Artificial Intelligence: A Modern Approach\u0022 (Russell \u0026 Norvig) for breadth, and online resources about deep learning and ethics.\n\nWould you like a concise beginner\u2019s roadmap to learning AI, or examples of how AI might apply to a specific field?",
+          "executedAt": "2026-04-01T08:46:20.2262309Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.49,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly defines AI as computer systems that perform tasks requiring human intelligence, which matches the expected definition of simulating human intelligence processes. It captures the same meaning and adds accurate, relevant details about how AI works, types, subfields, applications, and limitations without factual errors. The response explicitly links AI to computers and human-like tasks and is a comprehensive and accurate expansion of the expected answer.",
+          "response": "Artificial intelligence (AI) is the branch of computer science that builds systems able to perform tasks that normally require human intelligence. These tasks include recognizing speech and images, understanding and generating language, making decisions, planning, and learning from data.\n\nKey ideas \u2014 how AI works\n- Algorithms \u002B data: AI systems use algorithms (mathematical procedures) trained or programmed to find patterns in data and make predictions or decisions.\n- Learning vs. rules: Some AI is rule-based (explicit instructions), while most modern AI relies on machine learning (ML), where models improve through exposure to data.\n- Models: Common model types include decision trees, support vector machines, neural networks and, within ML, deep learning (multi-layer neural networks).\n\nTypes of AI (common distinctions)\n- Narrow AI (ANI): Systems specialized for one task (e.g., speech recognition, recommendation engines). This is what exists today.\n- General AI (AGI): A hypothetical system with broad, human-like intelligence across many domains (not yet realized).\n- Superintelligent AI (ASI): A speculative future AI that would surpass human intelligence across nearly all tasks.\n\nMain subfields and techniques\n- Machine learning (supervised, unsupervised, semi-supervised)\n- Deep learning (convolutional nets for vision, transformers for language)\n- Natural language processing (NLP) for understanding/generating text and speech\n- Computer vision for interpreting images and video\n- Reinforcement learning for decision-making in sequential tasks\n- Robotics, symbolic AI, knowledge representation and reasoning\n\nExamples and applications\n- Virtual assistants (Siri, Alexa), chatbots (ChatGPT)\n- Recommender systems (Netflix, Amazon)\n- Image recognition in medical imaging and diagnostics\n- Autonomous vehicles (perception and planning)\n- Fraud detection, predictive maintenance, customer support automation\n\nLimitations and risks\n- Dependence on data: biased or low-quality training data produces biased or unreliable systems.\n- Lack of common sense: many systems fail outside their training distribution.\n- Explainability concerns: complex models (deep nets) can be hard to interpret.\n- Privacy, security, job displacement, and misuse risks; these raise ethical and regulatory issues.\n\nHow to learn more / next steps\n- Intro texts: \u201CArtificial Intelligence: A Modern Approach\u201D (Russell \u0026 Norvig) or online courses (Coursera, edX).\n- Practical: learn Python, then ML libraries (scikit-learn, TensorFlow, PyTorch) and try projects/datasets (Kaggle).\n- Follow news and ethics literature to understand societal implications.\n\nIf you want, I can explain any subtopic in more detail (machine learning vs. symbolic AI, how neural networks work, real-world examples, or how AI is regulated). Which part interests you most?",
+          "executedAt": "2026-04-01T08:46:38.7599769Z"
+        }
+      ]
+    },
+    {
+      "testId": "definition_009",
+      "category": "definitions",
+      "prompt": "What is a synonym?",
+      "expectedOutput": "A word that has the same or nearly the same meaning as another word",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.63,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.63,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly defines a synonym as a word or phrase with the same or very similar meaning as another, matching the expected answer\u2019s core point. It also appropriately adds useful clarifications about near-synonyms, contextual interchangeability, examples, and how to find synonyms, with no factual errors. The response is complete, accurate, and helpful beyond the basic definition.",
+          "response": "A synonym is a word or phrase that has the same or very similar meaning as another word or phrase in a particular context. \n\nKey points:\n- Synonyms can be exact (nearly identical meaning) or near (similar but with slight differences in nuance, formality, or connotation).\n- They are useful for avoiding repetition and choosing the best word for a tone or context.\n- Not all synonyms are interchangeable in every sentence because of differences in register, collocations, or subtle meaning.\n\nExamples:\n- big \u2014 large \u2014 huge (similar, but huge implies greater size)\n- start \u2014 begin \u2014 commence (commence is more formal)\n- happy \u2014 joyful \u2014 content (different shades of positive feeling)\n\nHow to find synonyms: use a thesaurus, dictionary (to check nuances), or look at example sentences to ensure the substitute fits the context.",
+          "executedAt": "2026-04-01T08:46:49.065308Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.62,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly defines a synonym as a word (or phrase) with the same or very nearly the same meaning as another word, which matches the expected answer. It adds useful examples and accurate, relevant notes about nuances (rarity of exact synonyms, part of speech alignment, antonyms, and thesaurus use) without introducing errors. Overall it is complete, precise, and directly addresses the query.",
+          "response": "A synonym is a word (or phrase) that has the same or very nearly the same meaning as another word. \n\nExamples:\n- big and large\n- start and begin\n- happy and joyful\n\nNotes:\n- Exact synonyms are rare \u2014 many synonyms differ in tone, formality, connotation, or typical word combinations (collocations). For example, ask vs. inquire (inquire is more formal).\n- Synonyms are usually the same part of speech (noun with noun, verb with verb).\n- Opposite of a synonym is an antonym (e.g., hot vs. cold).\n\nA thesaurus is a useful tool for finding synonyms.",
+          "executedAt": "2026-04-01T08:46:58.6262872Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.64,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly defines a synonym as a word with the same or nearly the same meaning as another word, matching the expected answer. It adds the sensible clarification \u0022in the same language,\u0022 provides examples, and useful notes about nuance and context without introducing errors. Nothing factual is missing for the basic definition.",
+          "response": "A synonym is a word that has the same or nearly the same meaning as another word in the same language. \n\nExamples:\n- happy and joyful\n- big and large\n- begin and start\n\nNotes:\n- Exact synonyms are rare; most synonyms differ slightly in connotation, formality, or typical usage (for example, ask vs. inquire).\n- Context matters: two words may be interchangeable in some sentences but not in others because of collocations or subtle nuance.\n- Thesauruses list synonyms but you should check each word in context to make sure it fits.",
+          "executedAt": "2026-04-01T08:47:08.0463588Z"
+        }
+      ]
+    },
+    {
+      "testId": "definition_010",
+      "category": "definitions",
+      "prompt": "Define metabolism",
+      "expectedOutput": "The set of chemical processes that occur in living organisms to maintain life, including converting food to energy",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.64,
+      "avgJudgeScore": 9.7,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.63,
+          "judgeScore": 9,
+          "judgeReasoning": "The actual answer correctly addresses the query: it defines metabolism as the sum of chemical reactions in living organisms and explicitly mentions conversion of nutrients into energy, assembly/breakdown of compounds, and waste elimination. It captures the same meaning as the expected answer and even expands on functions (building blocks, waste removal). It does omit explicit labels for catabolism/anabolism and mention of ATP/cofactors or enzymes/pathways, but those are additional key points rather than required to meet the basic criterion.",
+          "response": "Metabolism is the sum of all chemical reactions that occur in a living organism (or cell) to convert nutrients and molecules into energy and cellular building blocks, to assemble and break down compounds, and to eliminate wastes.\n\nKey points\n- Two broad types: catabolism (breakdown of molecules to release energy) and anabolism (biosynthesis of complex molecules, which consumes energy).\n- Energy currency: ATP (and related cofactors like NADH, NADPH) links energy-releasing and energy-consuming reactions.\n- Controlled by enzymes and organized into metabolic pathways (e.g., glycolysis, Krebs cycle, fatty acid synthesis).\n- Occurs at the cellular level and underlies growth, maintenance, repair, and responses to environment; overall speed is reflected in an organism\u2019s metabolic rate.",
+          "executedAt": "2026-04-01T08:47:20.7449184Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.64,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly defines metabolism as the chemical reactions in living organisms that maintain life and explicitly ties these processes to energy use and transformation. It captures the same meaning as the expected answer and expands appropriately by naming catabolism and anabolism, energy carriers (ATP, NADH/NADPH), enzymatic organization, regulation mechanisms, and examples like respiration and photosynthesis. There are no factual errors or irrelevant statements; the response is accurate and comprehensive.",
+          "response": "Metabolism is the sum of all chemical reactions that occur in a living organism to maintain life. These reactions transform nutrients and energy to support growth, repair, maintenance, reproduction and responses to the environment.\n\nKey points\n- Two broad types: catabolism (breakdown of molecules to release energy and produce smaller building blocks) and anabolism (synthesis of complex molecules from smaller units, using energy).\n- Energy currency: ATP is the primary short-term energy carrier; reducing equivalents (NADH, NADPH) shuttle electrons in redox reactions.\n- Catalysis and organization: enzymes speed reactions and link them into metabolic pathways and cycles (e.g., glycolysis, citric acid cycle, Calvin cycle).\n- Regulation: metabolism is tightly controlled by allosteric regulation, covalent modification, hormones and gene expression so supply meets demand.\n- Examples: cellular respiration (glucose \u2192 CO2 \u002B H2O \u002B ATP) and photosynthesis (CO2 \u002B H2O \u002B light \u2192 carbohydrates \u002B O2).\n\nMetabolism thus integrates chemical transformations and energy flow that sustain cellular and organismal function.",
+          "executedAt": "2026-04-01T08:47:31.9062505Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.66,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query: it defines metabolism as the sum of chemical reactions in living organisms that convert nutrients into energy and building blocks, and it notes waste removal. It captures the expected meaning and adds useful detail (catabolism/anabolism, enzymatic control, regulation, and purpose) without factual errors. No key omissions relative to the evaluation criteria.",
+          "response": "Metabolism is the sum of all chemical reactions in a living organism that convert nutrients into energy and the molecules needed for growth, repair, and maintenance, while removing waste.  \n\nKey points:\n- It includes two complementary processes:\n  - Catabolism: breakdown of molecules (e.g., glucose, fats) to release energy and produce ATP, NADH, etc.\n  - Anabolism: biosynthesis of complex molecules (e.g., proteins, lipids, nucleic acids) using energy.\n- Metabolic reactions occur in cells and are controlled by enzymes and regulated by signals (hormones, allosteric effectors, gene expression).\n- Purpose: support cellular functions, growth, reproduction, and adaptation to environmental changes.",
+          "executedAt": "2026-04-01T08:47:42.5558829Z"
+        }
+      ]
+    },
+    {
+      "testId": "science_002",
+      "category": "science",
+      "prompt": "What is Newton\u0027s first law of motion?",
+      "expectedOutput": "An object at rest stays at rest, and an object in motion stays in motion, unless acted upon by an external force",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.7,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.7,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly and fully addresses the query: it states that an object at rest stays at rest and an object in motion stays in motion unless acted on by a net external force, adding the useful clarification that this means constant velocity (no acceleration). It also correctly adds that the law applies in inertial frames and gives clear examples, with no factual errors or omissions relative to the expected answer. This is semantically identical to the expected answer and more informative, so it merits the highest score.",
+          "response": "Newton\u0027s first law (the law of inertia) states:\n\nAn object at rest stays at rest, and an object in motion stays in motion with constant velocity (constant speed in a straight line), unless acted on by a net external force.\n\nWhat that means:\n- If the net (sum of) external forces on an object is zero, its acceleration is zero \u2014 so its velocity does not change.\n- The law applies in inertial reference frames (non-accelerating frames). In accelerating frames apparent forces (e.g., centrifugal) must be included.\n\nExamples:\n- A hockey puck sliding on an almost frictionless ice surface continues moving nearly straight at constant speed.\n- A book stays on a table at rest until you push it (an external force).\n- In a car that suddenly stops, passengers lurch forward because their bodies tend to keep moving (seatbelts provide the force to stop them).",
+          "executedAt": "2026-04-01T08:47:55.7299106Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.7,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly and fully addresses the query: it states that objects remain at rest or in constant motion unless acted on by a net external force, matching the expected answer while adding clarifying details (straight-line constant speed, inertial frames). There are no factual errors or omissions relevant to the core law, and the extra examples and connection to \u03A3F = 0 are appropriate and useful.",
+          "response": "Newton\u0027s first law (the law of inertia) states:\n\nAn object at rest stays at rest, and an object in motion continues moving in a straight line at constant speed, unless acted on by a net external force.\n\nKey points:\n- \u0022Constant velocity\u0022 means both speed and direction stay the same.\n- The law applies in inertial reference frames (frames not accelerating).\n- It is the special case of Newton\u0027s second law when the net force is zero: \u03A3F = 0 \u21D2 a = 0.\n\nExamples: a book stays on a table until a force (push or friction change) moves it; a hockey puck glides nearly straight on ice because friction is small; a passenger lurches forward in a car that stops suddenly (seatbelt provides the unbalanced force).",
+          "executedAt": "2026-04-01T08:48:05.1859834Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.69,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly and fully addresses the query by restating Newton\u0027s first law (the law of inertia) and explicitly saying an object at rest stays at rest and an object in motion continues in a straight line at constant speed unless acted on by a net external force. It captures the same meaning as the expected answer and expands usefully on inertia, velocity components, inertial reference frames, and provides relevant examples without factual error. There are no key omissions or misleading statements.",
+          "response": "Newton\u0027s first law (the law of inertia): An object at rest stays at rest and an object in motion continues moving in a straight line at constant speed unless acted on by a net external force. \n\nIn other words, without a net force the velocity (speed and direction) of an object does not change. This law defines inertia \u2014 the tendency of matter to resist changes in its motion \u2014 and applies in inertial (non-accelerating) reference frames. Examples: a puck on a frictionless ice surface keeps sliding, and a passenger lurches forward when a bus stops because their body tends to keep moving.",
+          "executedAt": "2026-04-01T08:48:15.425798Z"
+        }
+      ]
+    },
+    {
+      "testId": "science_001",
+      "category": "science",
+      "prompt": "What is the speed of light in a vacuum?",
+      "expectedOutput": "approximately 299,792,458 metres per second",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.63,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.58,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly and directly states the speed of light in vacuum as exactly 299,792,458 m/s and gives the common approximate value 3.00 \u00D7 10^8 m/s, matching the expected answer. It captures the same meaning and also provides equivalent values in km/s and mi/s, which are consistent and not misleading. There are no factual errors or key omissions.",
+          "response": "The speed of light in vacuum (symbol c) is exactly 299,792,458 meters per second (by definition). That\u0027s about 3.00 \u00D7 10^8 m/s, or \u2248299,792.458 km/s (\u2248186,282 mi/s).",
+          "executedAt": "2026-04-01T08:48:25.2583547Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.63,
+          "judgeScore": 10,
+          "judgeReasoning": "The response correctly answers the query by giving the defined exact value of the speed of light, 299,792,458 m/s, and also provides equivalent values in km/s and miles/s. It captures the same meaning as the expected answer (approximately 300,000 km/s or 299,792,458 m/s) and adds a correct note about it being the maximum speed for information or massless particles. There are no factual errors or irrelevant content.",
+          "response": "The speed of light in vacuum is exactly 299,792,458 meters per second (by definition of the metre). \n\nThat is about 299,792.458 km/s or \u2248186,282.397 miles/s. This is the maximum speed at which information or massless particles can travel.",
+          "executedAt": "2026-04-01T08:48:37.7496334Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.66,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly and directly addresses the query by giving the exact defined value of the speed of light in vacuum, 299,792,458 m/s, and also provides reasonable approximations in scientific notation and in km/s and miles/s. It captures the same meaning as the expected answer with no factual errors or omissions. The extra unit conversions are relevant and accurate.",
+          "response": "The speed of light in vacuum is exactly 299,792,458 metres per second (\u22483.00\u00D710^8 m/s). That\u0027s about 299,792.458 km/s or 186,282.397 miles per second.",
+          "executedAt": "2026-04-01T08:48:50.0379493Z"
+        }
+      ]
+    },
+    {
+      "testId": "science_004",
+      "category": "science",
+      "prompt": "What gas do plants absorb during photosynthesis?",
+      "expectedOutput": "Carbon dioxide",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.45,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.46,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies carbon dioxide (CO2) as the gas plants absorb during photosynthesis. It captures the same meaning as the expected answer and appropriately adds accurate, relevant details about stomata, chlorophyll, and the balanced chemical equation. There are no factual errors or misleading content.",
+          "response": "Plants absorb carbon dioxide (CO2) during photosynthesis. They take it in through stomata in the leaves and use light energy (captured by chlorophyll) to convert CO2 and water into sugars, releasing oxygen as a byproduct:\n6 CO2 \u002B 6 H2O \u2192 C6H12O6 \u002B 6 O2.",
+          "executedAt": "2026-04-01T08:48:57.6145011Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.45,
+          "judgeScore": 10,
+          "judgeReasoning": "The response correctly identifies carbon dioxide (CO2) as the gas plants absorb during photosynthesis. It captures the same meaning as the expected answer and adds accurate, relevant context about using CO2 with water and light to produce sugars and release oxygen. There are no factual errors or irrelevant statements.",
+          "response": "Plants absorb carbon dioxide (CO2) from the air during photosynthesis. They use it, along with water and light energy, to make sugars and release oxygen (O2) as a byproduct.",
+          "executedAt": "2026-04-01T08:49:04.2111368Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.45,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies carbon dioxide (CO2) as the gas plants absorb during photosynthesis and matches the expected answer. It also accurately and succinctly explains the basic process\u2014using light and water to convert CO2 into sugars and releasing oxygen\u2014without errors or irrelevant content.",
+          "response": "Plants absorb carbon dioxide (CO2) during photosynthesis. Using light energy and water, they convert CO2 into sugars and release oxygen (O2) as a byproduct.",
+          "executedAt": "2026-04-01T08:49:11.6194368Z"
+        }
+      ]
+    },
+    {
+      "testId": "science_005",
+      "category": "science",
+      "prompt": "What is the powerhouse of the cell?",
+      "expectedOutput": "The mitochondria",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.69,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.68,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies the mitochondrion/mitochondria as the powerhouse of the cell. It captures the same meaning as the expected answer and adds accurate, relevant detail that mitochondria produce most of a cell\u2019s ATP via cellular respiration (Krebs cycle and oxidative phosphorylation). There are no factual errors or significant omissions.",
+          "response": "The mitochondrion (plural: mitochondria) \u2014 the organelle that produces most of a cell\u2019s ATP by cellular respiration (Krebs cycle and oxidative phosphorylation).",
+          "executedAt": "2026-04-01T08:49:23.5217818Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.7,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies the mitochondrion/mitochondria as the powerhouse of the cell. It captures the same meaning as the expected answer and even adds accurate, relevant detail about ATP production via the Krebs cycle in the matrix and oxidative phosphorylation at the inner membrane. There are no factual errors or irrelevant content.",
+          "response": "The mitochondrion (plural: mitochondria). It generates most of a cell\u2019s ATP by cellular respiration (Krebs cycle in the matrix and oxidative phosphorylation at the inner membrane).",
+          "executedAt": "2026-04-01T08:49:33.965258Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.69,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies the mitochondrion (plural: mitochondria) as the cell\u2019s powerhouse. It conveys the same meaning as the expected answer and adds a brief, accurate explanation that it generates most of the cell\u2019s ATP via cellular respiration. There are no factual errors or relevant omissions.",
+          "response": "The mitochondrion (plural: mitochondria). It generates most of a cell\u2019s ATP through cellular respiration, so it\u2019s often called the cell\u2019s \u0022powerhouse.\u0022",
+          "executedAt": "2026-04-01T08:49:42.4720058Z"
+        }
+      ]
+    },
+    {
+      "testId": "science_012",
+      "category": "science",
+      "prompt": "What type of energy does the Sun primarily produce?",
+      "expectedOutput": "Nuclear energy through fusion",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.53,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.51,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly addresses the query by stating that the Sun\u2019s energy comes from nuclear fusion. It captures the same meaning as the expected answer and explicitly names hydrogen-to-helium fusion converting mass to energy. There are no factual errors and the extra detail (that fusion energy is emitted mainly as radiant electromagnetic energy) is a useful clarification.",
+          "response": "The Sun primarily produces radiant (electromagnetic) energy \u2014 i.e., light and heat \u2014 generated by nuclear fusion in its core (hydrogen fusing into helium, converting mass to energy).",
+          "executedAt": "2026-04-01T08:49:51.3754803Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.52,
+          "judgeScore": 10,
+          "judgeReasoning": "The response correctly identifies nuclear fusion in the Sun\u0027s core as the source of its energy. It captures the expected meaning while clarifying that the energy reaches us primarily as radiant (electromagnetic) energy and also produces neutrinos. There are no factual errors or irrelevant content.",
+          "response": "The Sun primarily produces radiant energy (electromagnetic radiation\u2014light and heat) generated by nuclear fusion in its core. Neutrinos are also produced, but the main energy we receive is photons (visible, infrared, ultraviolet, etc.).",
+          "executedAt": "2026-04-01T08:50:00.0792727Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.57,
+          "judgeScore": 10,
+          "judgeReasoning": "Yes \u2014 the actual answer correctly addresses the query by stating the Sun\u0027s primary output is electromagnetic (radiant) energy while explicitly attributing its source to nuclear fusion in the core. It captures the same meaning as the expected answer (nuclear energy through fusion) and adds a correct clarification that fusion produces high-energy photons (and neutrinos) that emerge as light and heat. There are no factual errors or key omissions; the extra detail about photons and neutrinos is relevant, not misleading.",
+          "response": "Primarily electromagnetic (radiant) energy \u2014 i.e., light and heat. This energy comes from nuclear fusion in the Sun\u2019s core (hydrogen fusing into helium), which releases energy mostly as high\u2011energy photons (and some neutrinos) that eventually emerge as visible light, infrared, ultraviolet, etc.",
+          "executedAt": "2026-04-01T08:50:15.233606Z"
+        }
+      ]
+    },
+    {
+      "testId": "science_013",
+      "category": "science",
+      "prompt": "What is the boiling point of water at standard atmospheric pressure?",
+      "expectedOutput": "100 degrees Celsius",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.49,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.46,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer directly and correctly states the boiling point as 100.0 \u00B0C at standard atmospheric pressure and also provides equivalent Fahrenheit and Kelvin values. It matches the expected answer exactly, includes the correct pressure definition (1 atm = 101.325 kPa), and contains no factual errors or irrelevant information.",
+          "response": "The boiling point of pure water at standard atmospheric pressure (1 atm = 101.325 kPa) is 100.0 \u00B0C, which is 212.0 \u00B0F or 373.15 K.",
+          "executedAt": "2026-04-01T08:50:23.1196288Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.5,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly states that pure water boils at 100.00 \u00B0C at standard atmospheric pressure. It captures the same meaning as the expected answer and also provides accurate equivalent temperatures in Fahrenheit (212.00 \u00B0F) and Kelvin (373.15 K). There are no factual errors or omissions.",
+          "response": "At standard atmospheric pressure (1 atm = 101.325 kPa), pure water boils at 100.00 \u00B0C \u2014 that is 212.00 \u00B0F or 373.15 K.",
+          "executedAt": "2026-04-01T08:50:31.4118695Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.52,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly states that pure water boils at 100 \u00B0C at standard atmospheric pressure and also provides equivalent temperatures in Fahrenheit and Kelvin along with the numeric value for 1 atm. It captures the same meaning as the expected answer without factual errors, omissions, or irrelevant content. Therefore it matches the expected response precisely.",
+          "response": "Pure water boils at 100 \u00B0C (212 \u00B0F, 373.15 K) at standard atmospheric pressure (1 atm = 101.325 kPa).",
+          "executedAt": "2026-04-01T08:50:38.6830853Z"
+        }
+      ]
+    },
+    {
+      "testId": "science_014",
+      "category": "science",
+      "prompt": "What organ pumps blood through the human body?",
+      "expectedOutput": "The heart",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.64,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.64,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies the heart as the organ that pumps blood and thus directly addresses the query. It captures the same meaning as the expected answer and adds a brief, accurate description of the heart\u2019s function and location. There are no factual errors, omissions, or irrelevant content.",
+          "response": "The heart. It\u2019s a muscular organ in the chest that contracts to pump blood through the body\u2019s circulatory system.",
+          "executedAt": "2026-04-01T08:50:44.2134525Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.64,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly and directly identifies the heart as the organ that pumps blood and adds a brief, accurate description (a muscular organ in the chest that pumps blood through the circulatory system). It captures the same meaning as the expected answer without any factual errors or irrelevant content. The response is concise and complete.",
+          "response": "The heart \u2014 a muscular organ in the chest that pumps blood through the circulatory system.",
+          "executedAt": "2026-04-01T08:50:52.4057366Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.64,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly identifies the heart as the organ that pumps blood through the body. It conveys the same meaning as the expected answer and adds a brief, accurate description (a muscular organ in the chest that pumps blood through the circulatory system). There are no factual errors or irrelevant content.",
+          "response": "The heart. It\u0027s the muscular organ in the chest that pumps blood through the circulatory system.",
+          "executedAt": "2026-04-01T08:50:58.3447366Z"
+        }
+      ]
+    },
+    {
+      "testId": "science_016",
+      "category": "science",
+      "prompt": "What are the three states of matter?",
+      "expectedOutput": "Solid, liquid, and gas",
+      "passed": true,
+      "passedRuns": 3,
+      "totalRuns": 3,
+      "avgEmbeddingScore": 0.71,
+      "avgJudgeScore": 10,
+      "runs": [
+        {
+          "runNumber": 1,
+          "passed": true,
+          "embeddingScore": 0.71,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly lists the three classical states of matter\u2014solid, liquid, and gas\u2014and provides accurate brief definitions and examples for each. It captures the same meaning as the expected answer and contains no factual errors; the mention of additional states (plasma, Bose\u2013Einstein condensates) is relevant but not required. Overall it meets the evaluation criteria fully.",
+          "response": "The three classical states of matter are:\n\n- Solid \u2014 definite shape and volume; particles are tightly packed and vibrate in place (example: ice, rock).  \n- Liquid \u2014 definite volume but takes the shape of its container; particles are close but can move/flow past one another (example: water).  \n- Gas \u2014 no definite shape or volume; particles are far apart and move freely to fill the available space (example: steam, air).\n\n(There are other states too, such as plasma and Bose\u2013Einstein condensates, but the three above are the basic ones taught first.)",
+          "executedAt": "2026-04-01T08:51:11.3885651Z"
+        },
+        {
+          "runNumber": 2,
+          "passed": true,
+          "embeddingScore": 0.7,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly lists the three classical states of matter (solid, liquid, gas) and gives accurate, concise descriptions and examples that match the expected answer. It captures the same meaning and adds relevant context about additional states at extreme energies, which is not erroneous or misleading. There are no factual errors or key omissions.",
+          "response": "The three classical states of matter are:\n\n- Solid \u2014 definite shape and volume; particles are tightly packed and mainly vibrate in place (e.g., ice, wood).  \n- Liquid \u2014 definite volume but takes the shape of its container; particles are close but can move/slide past one another (e.g., water, oil).  \n- Gas \u2014 no definite shape or fixed volume; particles are far apart and move freely to fill the available space (e.g., air, steam).\n\n(At very high or low energies there are additional states such as plasma and Bose\u2013Einstein condensates.)",
+          "executedAt": "2026-04-01T08:51:19.9780941Z"
+        },
+        {
+          "runNumber": 3,
+          "passed": true,
+          "embeddingScore": 0.71,
+          "judgeScore": 10,
+          "judgeReasoning": "The actual answer correctly lists the three classical states of matter (solid, liquid, gas) and gives accurate, concise descriptions and examples for each, matching the expected answer. It captures the same meaning as the expected answer and contains no factual errors; the brief mention of other states (plasma, BEC) is relevant additional information but not necessary to meet the query. Overall the response is complete and accurate.",
+          "response": "The three classical states of matter are:\n\n- Solid \u2014 has a definite shape and volume; particles are tightly packed and vibrate in place. Example: ice, rock.\n- Liquid \u2014 has a definite volume but takes the shape of its container; particles are close together but can move/flow. Example: water, oil.\n- Gas \u2014 has no definite shape or volume and fills its container; particles are far apart and move freely. Example: oxygen, steam.\n\n(There are also other states such as plasma and Bose\u2013Einstein condensates under special conditions.)",
+          "executedAt": "2026-04-01T08:51:29.2693876Z"
+        }
+      ]
+    }
+  ]
+}

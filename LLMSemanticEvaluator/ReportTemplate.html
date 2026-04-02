@@ -60,7 +60,21 @@
   @media (max-width: 680px) {
     .metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
     .charts-row { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
   }
+
+  .reliability-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .reliability-table th { text-align:left; padding:8px 10px; font-weight:500; color:#5f5e5a; border-bottom:1px solid rgba(0,0,0,0.08); }
+  .reliability-table td { padding:9px 10px; border-bottom:0.5px solid rgba(0,0,0,0.06); }
+  .verdict-reliable   { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; background:#EAF3DE; color:#3B6D11; }
+  .verdict-borderline { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; background:#FAEEDA; color:#854F0B; }
+  .verdict-unreliable { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; background:#FCEBEB; color:#A32D2D; }
+  .insight-box { background:#f0f4ff; border-left:3px solid #534AB7; border-radius:0 8px 8px 0; padding:1rem 1.2rem; margin-bottom:0.8rem; font-size:13px; line-height:1.6; }
+  .insight-box strong { color:#534AB7; }
+  .failure-box { background:#fff8f0; border-left:3px solid #D85A30; border-radius:0 8px 8px 0; padding:1rem 1.2rem; font-size:13px; line-height:1.6; }
+  .failure-box strong { color:#D85A30; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:1.5rem; }
+
 </style>
 </head>
 <body>
@@ -73,6 +87,22 @@
       <div class="subtitle">%%TOTAL%% tests &middot; %%TOTAL_RUNS%% total runs &middot; %%CATEGORIES%% &middot; %%GENERATED_AT%%</div>
     </div>
     <span class="badge %%PASS_BADGE_CLASS%%">%%PASS_RATE%%% pass rate</span>
+  </div>
+
+  <!-- Section 0: Problem & Goal -->
+  <div class="card" style="background:#fafaf9;border-left:3px solid #534AB7;border-radius:0 12px 12px 0;margin-bottom:1.5rem;">
+    <h2 style="margin-bottom:10px;">Problem &amp; Goal</h2>
+    <div style="font-size:13px;line-height:1.7;color:#3a3a38;">
+      <p style="margin-bottom:8px;">
+        <strong>Problem:</strong> When a software team builds a product on top of an LLM (e.g. a customer-support chatbot or a document-summarisation service), they cannot manually verify thousands of outputs to check whether the model is reliable. Traditional <code>assert output == expected</code> testing fails because LLMs are <em>non-deterministic</em> &mdash; the same prompt can return semantically correct but differently-worded answers on every run.
+      </p>
+      <p style="margin-bottom:8px;">
+        <strong>Goal:</strong> Automatically evaluate whether an LLM answers correctly across %%TOTAL%% test cases and %%TOTAL_RUNS%% total runs, using two independent semantic validators &mdash; embedding cosine similarity and an LLM-as-a-judge (G-Eval style) &mdash; and produce an actionable reliability verdict per category that tells the customer which task types are safe to deploy.
+      </p>
+      <p style="margin-bottom:0;">
+        <strong>Strategy:</strong> Each test case is executed %%RUNS_PER_TEST%% times to account for non-determinism. A run passes if <em>either</em> the embedding similarity &ge; %%EMB_THRESHOLD%% <em>or</em> the judge score &ge; %%JUDGE_THRESHOLD%%/10 (OR logic). A test case passes if at least %%MIN_PASS_RUNS%% of %%RUNS_PER_TEST%% runs pass (majority vote). This tolerates one outlier run without masking a genuinely unreliable model.
+      </p>
+    </div>
   </div>
 
   <!-- Section 1: Metric cards -->
@@ -97,6 +127,30 @@
       <div class="metric-val">%%AVG_JUDGE%%<span style="font-size:14px;color:#888780;">/10</span></div>
       <div class="metric-sub" style="color:%%JUDGE_COLOR%%;">%%JUDGE_NOTE%%</div>
     </div>
+  </div>
+  
+  <!-- Section 1b: Category Reliability Assessment -->
+  <div class="card" style="margin-bottom:1.5rem;">
+    <h2>Category Reliability Assessment</h2>
+    <p style="font-size:12px;color:#5f5e5a;margin-bottom:12px;">
+      Verdict is based on pass rate: &ge; 90% = RELIABLE &nbsp;|&nbsp; 75&ndash;89% = BORDERLINE &nbsp;|&nbsp; &lt; 75% = UNRELIABLE.
+      This tells the customer which task types are safe to deploy in production.
+    </p>
+    <table class="reliability-table">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th style="text-align:center;">Tests</th>
+          <th style="text-align:center;">Passed</th>
+          <th style="text-align:center;">Pass Rate</th>
+          <th style="text-align:center;">Avg Embedding</th>
+          <th style="text-align:center;">Avg Judge</th>
+          <th>Verdict</th>
+          <th>Recommendation</th>
+        </tr>
+      </thead>
+      <tbody id="reliabilityBody"></tbody>
+    </table>
   </div>
 
   <!-- Section 2: Heatmap table -->
@@ -160,6 +214,19 @@
   </div>
   <div style="margin-bottom:1.5rem;"></div>
 
+  <!-- Section 3b: Key Insights & Failure Analysis -->
+  <div class="two-col">
+    <div class="card" style="margin-bottom:0;">
+      <h2>Key Insights</h2>
+      %%INSIGHTS_HTML%%
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <h2>Failure Analysis</h2>
+      %%FAILURES_HTML%%
+    </div>
+  </div>
+  <div style="margin-bottom:1.5rem;"></div>
+
   <!-- Section 4: Run-level scatter -->
   <div class="card">
     <h2>Judge score per individual run</h2>
@@ -212,6 +279,44 @@ function judgeStyle(v) {
   if (v >= 6) return { bg: '#FAEEDA', color: '#854F0B' };
   return { bg: '#FCEBEB', color: '#A32D2D' };
 }
+
+// ── Build reliability assessment table ──────────────────────────────────────
+const allCatsRel = [...new Set(tests.map(t => t.cat))].sort();
+const relBody = document.getElementById('reliabilityBody');
+allCatsRel.forEach(cat => {
+  const group      = tests.filter(t => t.cat === cat);
+  const catTotal   = group.length;
+  const catPassed  = group.filter(t => t.passed).length;
+  const rate       = catTotal > 0 ? catPassed / catTotal * 100 : 0;
+  const avgEmb     = group.reduce((s, t) => s + t.avgEmb,   0) / catTotal;
+  const avgJudge   = group.reduce((s, t) => s + t.avgJudge, 0) / catTotal;
+  const color      = catColor(cat);
+
+  let verdictClass, verdictLabel, recommendation;
+  if (rate >= 90) {
+    verdictClass = 'verdict-reliable';   verdictLabel = 'RELIABLE';
+    recommendation = `Safe to deploy for ${cat} queries`;
+  } else if (rate >= 75) {
+    verdictClass = 'verdict-borderline'; verdictLabel = 'BORDERLINE';
+    recommendation = `Use with caution; review failing cases`;
+  } else {
+    verdictClass = 'verdict-unreliable'; verdictLabel = 'UNRELIABLE';
+    recommendation = `Not recommended for production use`;
+  }
+
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><span class="cat-chip" style="background:${color}22;color:${color};">${cat}</span></td>
+    <td style="text-align:center;">${catTotal}</td>
+    <td style="text-align:center;">${catPassed}</td>
+    <td style="text-align:center;font-weight:600;">${rate.toFixed(1)}%</td>
+    <td style="text-align:center;">${avgEmb.toFixed(2)}</td>
+    <td style="text-align:center;">${avgJudge.toFixed(1)}/10</td>
+    <td><span class="${verdictClass}">${verdictLabel}</span></td>
+    <td style="font-size:12px;color:#5f5e5a;">${recommendation}</td>
+  `;
+  relBody.appendChild(tr);
+});
 
 // ── Build heatmap table ──────────────────────────────────────────────────────
 const tbody = document.getElementById('heatBody');

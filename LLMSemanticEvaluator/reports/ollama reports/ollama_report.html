@@ -60,7 +60,21 @@
   @media (max-width: 680px) {
     .metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
     .charts-row { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
   }
+
+  .reliability-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .reliability-table th { text-align:left; padding:8px 10px; font-weight:500; color:#5f5e5a; border-bottom:1px solid rgba(0,0,0,0.08); }
+  .reliability-table td { padding:9px 10px; border-bottom:0.5px solid rgba(0,0,0,0.06); }
+  .verdict-reliable   { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; background:#EAF3DE; color:#3B6D11; }
+  .verdict-borderline { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; background:#FAEEDA; color:#854F0B; }
+  .verdict-unreliable { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; background:#FCEBEB; color:#A32D2D; }
+  .insight-box { background:#f0f4ff; border-left:3px solid #534AB7; border-radius:0 8px 8px 0; padding:1rem 1.2rem; margin-bottom:0.8rem; font-size:13px; line-height:1.6; }
+  .insight-box strong { color:#534AB7; }
+  .failure-box { background:#fff8f0; border-left:3px solid #D85A30; border-radius:0 8px 8px 0; padding:1rem 1.2rem; font-size:13px; line-height:1.6; }
+  .failure-box strong { color:#D85A30; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:1.5rem; }
+
 </style>
 </head>
 <body>
@@ -70,33 +84,73 @@
   <div class="header">
     <div>
       <h1>LLM evaluation report</h1>
-      <div class="subtitle">130 tests &middot; 390 total runs &middot; definition, definitions, factual, history, math, reasoning, science &middot; 17 Mar 2026 01:04</div>
+      <div class="subtitle">50 tests &middot; 150 total runs &middot; definitions, factual, history, math, reasoning, science &middot; 01 Apr 2026 10:21</div>
     </div>
-    <span class="badge badge-fail">44.6% pass rate</span>
+    <span class="badge badge-warn">82.0% pass rate</span>
+  </div>
+
+  <!-- Section 0: Problem & Goal -->
+  <div class="card" style="background:#fafaf9;border-left:3px solid #534AB7;border-radius:0 12px 12px 0;margin-bottom:1.5rem;">
+    <h2 style="margin-bottom:10px;">Problem &amp; Goal</h2>
+    <div style="font-size:13px;line-height:1.7;color:#3a3a38;">
+      <p style="margin-bottom:8px;">
+        <strong>Problem:</strong> When a software team builds a product on top of an LLM (e.g. a customer-support chatbot or a document-summarisation service), they cannot manually verify thousands of outputs to check whether the model is reliable. Traditional <code>assert output == expected</code> testing fails because LLMs are <em>non-deterministic</em> &mdash; the same prompt can return semantically correct but differently-worded answers on every run.
+      </p>
+      <p style="margin-bottom:8px;">
+        <strong>Goal:</strong> Automatically evaluate whether an LLM answers correctly across 50 test cases and 150 total runs, using two independent semantic validators &mdash; embedding cosine similarity and an LLM-as-a-judge (G-Eval style) &mdash; and produce an actionable reliability verdict per category that tells the customer which task types are safe to deploy.
+      </p>
+      <p style="margin-bottom:0;">
+        <strong>Strategy:</strong> Each test case is executed 3 times to account for non-determinism. A run passes if <em>either</em> the embedding similarity &ge; 0.85 <em>or</em> the judge score &ge; 8/10 (OR logic). A test case passes if at least 2 of 3 runs pass (majority vote). This tolerates one outlier run without masking a genuinely unreliable model.
+      </p>
+    </div>
   </div>
 
   <!-- Section 1: Metric cards -->
   <div class="metrics">
     <div class="metric-card">
       <div class="metric-lbl">Total tests</div>
-      <div class="metric-val">130</div>
-      <div class="metric-sub" style="color:#5f5e5a;">7 categories</div>
+      <div class="metric-val">50</div>
+      <div class="metric-sub" style="color:#5f5e5a;">6 categories</div>
     </div>
     <div class="metric-card">
       <div class="metric-lbl">Pass rate</div>
-      <div class="metric-val" style="color:#3B6D11;">44.6%</div>
-      <div class="metric-sub" style="color:#5f5e5a;">58 / 130 passed</div>
+      <div class="metric-val" style="color:#3B6D11;">82.0%</div>
+      <div class="metric-sub" style="color:#5f5e5a;">41 / 50 passed</div>
     </div>
     <div class="metric-card">
       <div class="metric-lbl">Avg embedding score</div>
-      <div class="metric-val">0.64</div>
+      <div class="metric-val">0.67</div>
       <div class="metric-sub" style="color:#BA7517;">Below 0.85 threshold</div>
     </div>
     <div class="metric-card">
       <div class="metric-lbl">Avg judge score</div>
-      <div class="metric-val">5.8<span style="font-size:14px;color:#888780;">/10</span></div>
+      <div class="metric-val">7.8<span style="font-size:14px;color:#888780;">/10</span></div>
       <div class="metric-sub" style="color:#BA7517;">Below threshold (>=8)</div>
     </div>
+  </div>
+  
+  <!-- Section 1b: Category Reliability Assessment -->
+  <div class="card" style="margin-bottom:1.5rem;">
+    <h2>Category Reliability Assessment</h2>
+    <p style="font-size:12px;color:#5f5e5a;margin-bottom:12px;">
+      Verdict is based on pass rate: &ge; 90% = RELIABLE &nbsp;|&nbsp; 75&ndash;89% = BORDERLINE &nbsp;|&nbsp; &lt; 75% = UNRELIABLE.
+      This tells the customer which task types are safe to deploy in production.
+    </p>
+    <table class="reliability-table">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th style="text-align:center;">Tests</th>
+          <th style="text-align:center;">Passed</th>
+          <th style="text-align:center;">Pass Rate</th>
+          <th style="text-align:center;">Avg Embedding</th>
+          <th style="text-align:center;">Avg Judge</th>
+          <th>Verdict</th>
+          <th>Recommendation</th>
+        </tr>
+      </thead>
+      <tbody id="reliabilityBody"></tbody>
+    </table>
   </div>
 
   <!-- Section 2: Heatmap table -->
@@ -160,6 +214,70 @@
   </div>
   <div style="margin-bottom:1.5rem;"></div>
 
+  <!-- Section 3b: Key Insights & Failure Analysis -->
+  <div class="two-col">
+    <div class="card" style="margin-bottom:0;">
+      <h2>Key Insights</h2>
+      <div class="insight-box">
+  <strong>Why is the average embedding score low (0.67) yet the pass rate is 82.0%?</strong><br>
+  Short expected outputs produce low cosine similarity against full-sentence LLM responses because the vector spaces do not overlap well at different lengths. This is a known limitation of embedding-based evaluation. The LLM judge correctly scores these as high quality, and the OR logic ensures they still pass. 38 of 50 tests passed via the judge validator alone, confirming the dual-validator design is essential.
+</div><div class="insight-box" style="margin-bottom:0;">
+  <strong>Why run each test 3 times?</strong><br>
+  LLMs are non-deterministic — the same prompt can produce different wording across runs. Running 3 times and requiring 2/3 to pass (majority vote) eliminates single-run flukes without being too strict. Consistent results across all runs indicate a stable, reliable model for that task type.
+</div>
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <h2>Failure Analysis</h2>
+      <div class="failure-box" style="margin-bottom:0.8rem;">
+  <strong>Test: math_001</strong> &nbsp;<span style="font-size:11px;color:#888780;">(math)</span><br>
+  <strong>Prompt:</strong> &ldquo;What is 2 + 2?&rdquo;<br>
+  <strong>Expected:</strong> &ldquo;4&rdquo;<br>
+  <strong>Result:</strong> 0/3 runs passed &nbsp;|&nbsp; Avg Judge: 1/10<br>
+</div><div class="failure-box" style="margin-bottom:0.8rem;">
+  <strong>Test: reasoning_016</strong> &nbsp;<span style="font-size:11px;color:#888780;">(reasoning)</span><br>
+  <strong>Prompt:</strong> &ldquo;A man walks into a bar and asks for a glass of water. The bartender pulls out a gun and points it at him. The man says t...&rdquo;<br>
+  <strong>Expected:</strong> &ldquo;The man had hiccups and the scare from the gun cured them, so he no longer neede...&rdquo;<br>
+  <strong>Result:</strong> 0/3 runs passed &nbsp;|&nbsp; Avg Judge: 2/10<br>
+</div><div class="failure-box" style="margin-bottom:0.8rem;">
+  <strong>Test: reasoning_004</strong> &nbsp;<span style="font-size:11px;color:#888780;">(reasoning)</span><br>
+  <strong>Prompt:</strong> &ldquo;All roses are flowers. Some flowers fade quickly. Can we conclude that some roses fade quickly?&rdquo;<br>
+  <strong>Expected:</strong> &ldquo;No, we cannot conclude that&rdquo;<br>
+  <strong>Result:</strong> 0/3 runs passed &nbsp;|&nbsp; Avg Judge: 1/10<br>
+</div><div class="failure-box" style="margin-bottom:0.8rem;">
+  <strong>Test: history_002</strong> &nbsp;<span style="font-size:11px;color:#888780;">(history)</span><br>
+  <strong>Prompt:</strong> &ldquo;Who was the first President of the United States?&rdquo;<br>
+  <strong>Expected:</strong> &ldquo;George Washington&rdquo;<br>
+  <strong>Result:</strong> 0/3 runs passed &nbsp;|&nbsp; Avg Judge: 1/10<br>
+</div><div class="failure-box" style="margin-bottom:0.8rem;">
+  <strong>Test: history_012</strong> &nbsp;<span style="font-size:11px;color:#888780;">(history)</span><br>
+  <strong>Prompt:</strong> &ldquo;Which ancient wonder was located in Alexandria, Egypt?&rdquo;<br>
+  <strong>Expected:</strong> &ldquo;The Lighthouse of Alexandria&rdquo;<br>
+  <strong>Result:</strong> 0/3 runs passed &nbsp;|&nbsp; Avg Judge: 7/10<br>
+</div><div class="failure-box" style="margin-bottom:0.8rem;">
+  <strong>Test: definition_003</strong> &nbsp;<span style="font-size:11px;color:#888780;">(definitions)</span><br>
+  <strong>Prompt:</strong> &ldquo;What is an algorithm?&rdquo;<br>
+  <strong>Expected:</strong> &ldquo;A set of step-by-step instructions or rules designed to solve a problem or compl...&rdquo;<br>
+  <strong>Result:</strong> 0/3 runs passed &nbsp;|&nbsp; Avg Judge: 6/10<br>
+</div><div class="failure-box" style="margin-bottom:0.8rem;">
+  <strong>Test: definition_006</strong> &nbsp;<span style="font-size:11px;color:#888780;">(definitions)</span><br>
+  <strong>Prompt:</strong> &ldquo;What is a hypothesis?&rdquo;<br>
+  <strong>Expected:</strong> &ldquo;A proposed explanation for an observation that can be tested through further inv...&rdquo;<br>
+  <strong>Result:</strong> 0/3 runs passed &nbsp;|&nbsp; Avg Judge: 7/10<br>
+</div><div class="failure-box" style="margin-bottom:0.8rem;">
+  <strong>Test: definition_010</strong> &nbsp;<span style="font-size:11px;color:#888780;">(definitions)</span><br>
+  <strong>Prompt:</strong> &ldquo;Define metabolism&rdquo;<br>
+  <strong>Expected:</strong> &ldquo;The set of chemical processes that occur in living organisms to maintain life, i...&rdquo;<br>
+  <strong>Result:</strong> 0/3 runs passed &nbsp;|&nbsp; Avg Judge: 7/10<br>
+</div><div class="failure-box" style="margin-bottom:0.8rem;">
+  <strong>Test: science_014</strong> &nbsp;<span style="font-size:11px;color:#888780;">(science)</span><br>
+  <strong>Prompt:</strong> &ldquo;What organ pumps blood through the human body?&rdquo;<br>
+  <strong>Expected:</strong> &ldquo;The heart&rdquo;<br>
+  <strong>Result:</strong> 0/3 runs passed &nbsp;|&nbsp; Avg Judge: 1/10<br>
+</div>
+    </div>
+  </div>
+  <div style="margin-bottom:1.5rem;"></div>
+
   <!-- Section 4: Run-level scatter -->
   <div class="card">
     <h2>Judge score per individual run</h2>
@@ -185,7 +303,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 // ── Data injected by ReportGenerator.cs ─────────────────────────────────────
-const tests = [{"id":"factual_021","cat":"factual","passed":false,"runs":0,"total":3,"avgEmb":0.68,"avgJudge":6,"embRuns":[0.68,0.68,0.68],"judgeRuns":[6,6,6]},{"id":"factual_022","cat":"factual","passed":false,"runs":0,"total":3,"avgEmb":0.62,"avgJudge":1,"embRuns":[0.62,0.62,0.62],"judgeRuns":[1,1,1]},{"id":"factual_023","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.61,"avgJudge":10,"embRuns":[0.61,0.61,0.61],"judgeRuns":[10,10,10]},{"id":"math_021","cat":"math","passed":false,"runs":0,"total":3,"avgEmb":0.74,"avgJudge":6,"embRuns":[0.74,0.74,0.74],"judgeRuns":[6,6,6]},{"id":"math_022","cat":"math","passed":false,"runs":0,"total":3,"avgEmb":0.61,"avgJudge":7,"embRuns":[0.61,0.61,0.61],"judgeRuns":[7,7,7]},{"id":"math_023","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.6,"avgJudge":8,"embRuns":[0.6,0.6,0.6],"judgeRuns":[8,8,8]},{"id":"reasoning_021","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.68,"avgJudge":8,"embRuns":[0.68,0.68,0.68],"judgeRuns":[8,8,8]},{"id":"reasoning_022","cat":"reasoning","passed":false,"runs":0,"total":3,"avgEmb":0.51,"avgJudge":7,"embRuns":[0.51,0.51,0.51],"judgeRuns":[7,7,7]},{"id":"definition_001","cat":"definition","passed":true,"runs":3,"total":3,"avgEmb":0.86,"avgJudge":9,"embRuns":[0.86,0.86,0.86],"judgeRuns":[9,9,9]},{"id":"definition_002","cat":"definition","passed":false,"runs":0,"total":3,"avgEmb":0.84,"avgJudge":4,"embRuns":[0.84,0.84,0.84],"judgeRuns":[4,4,4]},{"id":"history_001","cat":"history","passed":false,"runs":0,"total":3,"avgEmb":0.66,"avgJudge":1,"embRuns":[0.66,0.66,0.66],"judgeRuns":[1,1,1]},{"id":"history_002","cat":"history","passed":false,"runs":0,"total":3,"avgEmb":0.59,"avgJudge":1,"embRuns":[0.59,0.59,0.59],"judgeRuns":[1,1,1]},{"id":"history_003","cat":"history","passed":false,"runs":0,"total":3,"avgEmb":0.73,"avgJudge":1,"embRuns":[0.73,0.73,0.73],"judgeRuns":[1,1,1]},{"id":"history_004","cat":"history","passed":false,"runs":0,"total":3,"avgEmb":0.54,"avgJudge":1,"embRuns":[0.54,0.54,0.54],"judgeRuns":[1,1,1]},{"id":"history_005","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.55,"avgJudge":10,"embRuns":[0.55,0.55,0.55],"judgeRuns":[10,10,10]},{"id":"history_006","cat":"history","passed":false,"runs":0,"total":3,"avgEmb":0.63,"avgJudge":7,"embRuns":[0.63,0.63,0.63],"judgeRuns":[7,7,7]},{"id":"history_007","cat":"history","passed":false,"runs":0,"total":3,"avgEmb":0.76,"avgJudge":7,"embRuns":[0.76,0.76,0.76],"judgeRuns":[7,7,7]},{"id":"history_008","cat":"history","passed":false,"runs":0,"total":3,"avgEmb":0.51,"avgJudge":1,"embRuns":[0.51,0.51,0.51],"judgeRuns":[1,1,1]},{"id":"history_009","cat":"history","passed":false,"runs":0,"total":3,"avgEmb":0.54,"avgJudge":1,"embRuns":[0.54,0.54,0.54],"judgeRuns":[1,1,1]},{"id":"history_010","cat":"history","passed":false,"runs":0,"total":3,"avgEmb":0.71,"avgJudge":4,"embRuns":[0.71,0.71,0.71],"judgeRuns":[4,4,4]},{"id":"history_011","cat":"history","passed":false,"runs":0,"total":3,"avgEmb":0.65,"avgJudge":1,"embRuns":[0.65,0.65,0.65],"judgeRuns":[1,1,1]},{"id":"history_012","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.66,"avgJudge":8,"embRuns":[0.66,0.66,0.66],"judgeRuns":[8,8,8]},{"id":"history_013","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.64,"avgJudge":10,"embRuns":[0.64,0.64,0.64],"judgeRuns":[10,10,10]},{"id":"history_014","cat":"history","passed":false,"runs":0,"total":3,"avgEmb":0.61,"avgJudge":4,"embRuns":[0.61,0.61,0.61],"judgeRuns":[4,4,4]},{"id":"history_015","cat":"history","passed":false,"runs":0,"total":3,"avgEmb":0.56,"avgJudge":1,"embRuns":[0.56,0.56,0.56],"judgeRuns":[1,1,1]},{"id":"history_016","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.57,"avgJudge":8,"embRuns":[0.57,0.57,0.57],"judgeRuns":[8,8,8]},{"id":"history_017","cat":"history","passed":false,"runs":0,"total":3,"avgEmb":0.57,"avgJudge":4,"embRuns":[0.57,0.57,0.57],"judgeRuns":[4,4,4]},{"id":"history_018","cat":"history","passed":false,"runs":0,"total":3,"avgEmb":0.61,"avgJudge":4,"embRuns":[0.61,0.61,0.61],"judgeRuns":[4,4,4]},{"id":"history_019","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.67,"avgJudge":10,"embRuns":[0.67,0.67,0.67],"judgeRuns":[10,10,10]},{"id":"history_020","cat":"history","passed":false,"runs":0,"total":3,"avgEmb":0.5,"avgJudge":4,"embRuns":[0.5,0.5,0.5],"judgeRuns":[4,4,4]},{"id":"definition_021","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.89,"avgJudge":1,"embRuns":[0.89,0.89,0.89],"judgeRuns":[1,1,1]},{"id":"definition_022","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0.82,"avgJudge":4,"embRuns":[0.82,0.82,0.82],"judgeRuns":[4,4,4]},{"id":"definition_003","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0.68,"avgJudge":4,"embRuns":[0.68,0.68,0.68],"judgeRuns":[4,4,4]},{"id":"definition_004","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0.81,"avgJudge":4,"embRuns":[0.81,0.81,0.81],"judgeRuns":[4,4,4]},{"id":"definition_005","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0.69,"avgJudge":4,"embRuns":[0.69,0.69,0.69],"judgeRuns":[4,4,4]},{"id":"definition_006","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.78,"avgJudge":8,"embRuns":[0.78,0.78,0.78],"judgeRuns":[8,8,8]},{"id":"definition_007","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.84,"avgJudge":10,"embRuns":[0.84,0.84,0.84],"judgeRuns":[10,10,10]},{"id":"definition_008","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0.82,"avgJudge":1,"embRuns":[0.82,0.82,0.82],"judgeRuns":[1,1,1]},{"id":"definition_009","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0.78,"avgJudge":4,"embRuns":[0.78,0.78,0.78],"judgeRuns":[4,4,4]},{"id":"definition_010","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0.81,"avgJudge":1,"embRuns":[0.81,0.81,0.81],"judgeRuns":[1,1,1]},{"id":"definition_011","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0.7,"avgJudge":6,"embRuns":[0.7,0.7,0.7],"judgeRuns":[6,6,6]},{"id":"definition_012","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0.84,"avgJudge":4,"embRuns":[0.84,0.84,0.84],"judgeRuns":[4,4,4]},{"id":"definition_013","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0.83,"avgJudge":1,"embRuns":[0.83,0.83,0.83],"judgeRuns":[1,1,1]},{"id":"definition_014","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0.55,"avgJudge":0.7,"embRuns":[0.82,0.82,0],"judgeRuns":[1,1,0]},{"id":"definition_015","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0.78,"avgJudge":6,"embRuns":[0.78,0.78,0.78],"judgeRuns":[6,6,6]},{"id":"definition_016","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0.82,"avgJudge":1,"embRuns":[0.82,0.82,0.82],"judgeRuns":[1,1,1]},{"id":"definition_017","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.77,"avgJudge":9,"embRuns":[0.77,0.77,0.77],"judgeRuns":[9,9,9]},{"id":"definition_018","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0.74,"avgJudge":4,"embRuns":[0.74,0.74,0.74],"judgeRuns":[4,4,4]},{"id":"definition_019","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.9,"avgJudge":1,"embRuns":[0.9,0.9,0.9],"judgeRuns":[1,1,1]},{"id":"definition_020","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0,"avgJudge":0,"embRuns":[0,0,0],"judgeRuns":[0,0,0]},{"id":"factual_001","cat":"factual","passed":false,"runs":0,"total":3,"avgEmb":0.68,"avgJudge":6,"embRuns":[0.68,0.68,0.68],"judgeRuns":[6,6,6]},{"id":"factual_002","cat":"factual","passed":false,"runs":0,"total":3,"avgEmb":0.68,"avgJudge":4,"embRuns":[0.68,0.68,0.68],"judgeRuns":[4,4,4]},{"id":"factual_003","cat":"factual","passed":false,"runs":0,"total":3,"avgEmb":0.68,"avgJudge":6,"embRuns":[0.68,0.68,0.68],"judgeRuns":[6,6,6]},{"id":"factual_004","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.54,"avgJudge":10,"embRuns":[0.54,0.54,0.54],"judgeRuns":[10,10,10]},{"id":"factual_005","cat":"factual","passed":false,"runs":0,"total":3,"avgEmb":0.69,"avgJudge":1,"embRuns":[0.69,0.69,0.69],"judgeRuns":[1,1,1]},{"id":"factual_006","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.58,"avgJudge":8,"embRuns":[0.58,0.58,0.58],"judgeRuns":[8,8,8]},{"id":"factual_007","cat":"factual","passed":false,"runs":0,"total":3,"avgEmb":0.62,"avgJudge":6,"embRuns":[0.62,0.62,0.62],"judgeRuns":[6,6,6]},{"id":"factual_008","cat":"factual","passed":false,"runs":0,"total":3,"avgEmb":0.72,"avgJudge":7,"embRuns":[0.72,0.72,0.72],"judgeRuns":[7,7,7]},{"id":"factual_009","cat":"factual","passed":false,"runs":0,"total":3,"avgEmb":0.57,"avgJudge":1,"embRuns":[0.57,0.57,0.57],"judgeRuns":[1,1,1]},{"id":"factual_010","cat":"factual","passed":false,"runs":0,"total":3,"avgEmb":0.48,"avgJudge":7,"embRuns":[0.48,0.48,0.48],"judgeRuns":[7,7,7]},{"id":"factual_011","cat":"factual","passed":false,"runs":0,"total":3,"avgEmb":0.56,"avgJudge":7,"embRuns":[0.56,0.56,0.56],"judgeRuns":[7,7,7]},{"id":"factual_012","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.55,"avgJudge":10,"embRuns":[0.55,0.55,0.55],"judgeRuns":[10,10,10]},{"id":"factual_013","cat":"factual","passed":false,"runs":0,"total":3,"avgEmb":0.57,"avgJudge":4,"embRuns":[0.57,0.57,0.57],"judgeRuns":[4,4,4]},{"id":"factual_014","cat":"factual","passed":false,"runs":0,"total":3,"avgEmb":0.56,"avgJudge":4,"embRuns":[0.56,0.56,0.56],"judgeRuns":[4,4,4]},{"id":"factual_015","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.61,"avgJudge":10,"embRuns":[0.61,0.61,0.61],"judgeRuns":[10,10,10]},{"id":"factual_016","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.61,"avgJudge":10,"embRuns":[0.61,0.61,0.61],"judgeRuns":[10,10,10]},{"id":"factual_017","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.64,"avgJudge":10,"embRuns":[0.64,0.64,0.64],"judgeRuns":[10,10,10]},{"id":"factual_018","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.68,"avgJudge":10,"embRuns":[0.68,0.68,0.68],"judgeRuns":[10,10,10]},{"id":"factual_019","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.54,"avgJudge":10,"embRuns":[0.54,0.54,0.54],"judgeRuns":[10,10,10]},{"id":"factual_020","cat":"factual","passed":false,"runs":0,"total":3,"avgEmb":0.73,"avgJudge":4,"embRuns":[0.73,0.73,0.73],"judgeRuns":[4,4,4]},{"id":"math_001","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.77,"avgJudge":8,"embRuns":[0.77,0.77,0.77],"judgeRuns":[8,8,8]},{"id":"math_002","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.59,"avgJudge":10,"embRuns":[0.59,0.59,0.59],"judgeRuns":[10,10,10]},{"id":"math_003","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.6,"avgJudge":8,"embRuns":[0.6,0.6,0.6],"judgeRuns":[8,8,8]},{"id":"math_004","cat":"math","passed":false,"runs":0,"total":3,"avgEmb":0.67,"avgJudge":4,"embRuns":[0.67,0.67,0.67],"judgeRuns":[4,4,4]},{"id":"math_005","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.66,"avgJudge":8,"embRuns":[0.66,0.66,0.66],"judgeRuns":[8,8,8]},{"id":"math_006","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.62,"avgJudge":8,"embRuns":[0.62,0.62,0.62],"judgeRuns":[8,8,8]},{"id":"math_007","cat":"math","passed":false,"runs":0,"total":3,"avgEmb":0.6,"avgJudge":4,"embRuns":[0.6,0.6,0.6],"judgeRuns":[4,4,4]},{"id":"math_008","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.66,"avgJudge":10,"embRuns":[0.66,0.66,0.66],"judgeRuns":[10,10,10]},{"id":"math_009","cat":"math","passed":false,"runs":0,"total":3,"avgEmb":0.59,"avgJudge":1,"embRuns":[0.59,0.59,0.59],"judgeRuns":[1,1,1]},{"id":"math_010","cat":"math","passed":false,"runs":0,"total":3,"avgEmb":0.64,"avgJudge":1,"embRuns":[0.64,0.64,0.64],"judgeRuns":[1,1,1]},{"id":"math_011","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.56,"avgJudge":10,"embRuns":[0.56,0.56,0.56],"judgeRuns":[10,10,10]},{"id":"math_012","cat":"math","passed":false,"runs":0,"total":3,"avgEmb":0.47,"avgJudge":1,"embRuns":[0.47,0.47,0.47],"judgeRuns":[1,1,1]},{"id":"math_013","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.49,"avgJudge":10,"embRuns":[0.49,0.49,0.49],"judgeRuns":[10,10,10]},{"id":"math_014","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.6,"avgJudge":10,"embRuns":[0.6,0.6,0.6],"judgeRuns":[10,10,10]},{"id":"math_015","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.5,"avgJudge":8,"embRuns":[0.5,0.5,0.5],"judgeRuns":[8,8,8]},{"id":"math_016","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.66,"avgJudge":8,"embRuns":[0.66,0.66,0.66],"judgeRuns":[8,8,8]},{"id":"math_017","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.65,"avgJudge":10,"embRuns":[0.65,0.65,0.65],"judgeRuns":[10,10,10]},{"id":"math_018","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.7,"avgJudge":10,"embRuns":[0.7,0.7,0.7],"judgeRuns":[10,10,10]},{"id":"math_019","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.57,"avgJudge":9,"embRuns":[0.57,0.57,0.57],"judgeRuns":[9,9,9]},{"id":"math_020","cat":"math","passed":false,"runs":0,"total":3,"avgEmb":0.61,"avgJudge":6,"embRuns":[0.61,0.61,0.61],"judgeRuns":[6,6,6]},{"id":"reasoning_001","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.68,"avgJudge":10,"embRuns":[0.68,0.68,0.68],"judgeRuns":[10,10,10]},{"id":"reasoning_002","cat":"reasoning","passed":false,"runs":0,"total":3,"avgEmb":0.44,"avgJudge":6,"embRuns":[0.44,0.44,0.44],"judgeRuns":[6,6,6]},{"id":"reasoning_003","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.53,"avgJudge":8,"embRuns":[0.53,0.53,0.53],"judgeRuns":[8,8,8]},{"id":"reasoning_004","cat":"reasoning","passed":false,"runs":0,"total":3,"avgEmb":0.57,"avgJudge":4,"embRuns":[0.57,0.57,0.57],"judgeRuns":[4,4,4]},{"id":"reasoning_005","cat":"reasoning","passed":false,"runs":0,"total":3,"avgEmb":0.55,"avgJudge":7,"embRuns":[0.55,0.55,0.55],"judgeRuns":[7,7,7]},{"id":"reasoning_006","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.94,"avgJudge":9,"embRuns":[0.94,0.94,0.94],"judgeRuns":[9,9,9]},{"id":"reasoning_007","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.61,"avgJudge":10,"embRuns":[0.61,0.61,0.61],"judgeRuns":[10,10,10]},{"id":"reasoning_008","cat":"reasoning","passed":false,"runs":0,"total":3,"avgEmb":0.52,"avgJudge":1,"embRuns":[0.52,0.52,0.52],"judgeRuns":[1,1,1]},{"id":"reasoning_009","cat":"reasoning","passed":false,"runs":0,"total":3,"avgEmb":0.67,"avgJudge":1,"embRuns":[0.67,0.67,0.67],"judgeRuns":[1,1,1]},{"id":"reasoning_010","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.7,"avgJudge":10,"embRuns":[0.7,0.7,0.7],"judgeRuns":[10,10,10]},{"id":"reasoning_011","cat":"reasoning","passed":false,"runs":0,"total":3,"avgEmb":0.58,"avgJudge":1,"embRuns":[0.58,0.58,0.58],"judgeRuns":[1,1,1]},{"id":"reasoning_012","cat":"reasoning","passed":false,"runs":0,"total":3,"avgEmb":0.7,"avgJudge":7,"embRuns":[0.7,0.7,0.7],"judgeRuns":[7,7,7]},{"id":"reasoning_013","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.48,"avgJudge":10,"embRuns":[0.48,0.48,0.48],"judgeRuns":[10,10,10]},{"id":"reasoning_014","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.88,"avgJudge":4,"embRuns":[0.88,0.88,0.88],"judgeRuns":[4,4,4]},{"id":"reasoning_015","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.69,"avgJudge":10,"embRuns":[0.69,0.69,0.69],"judgeRuns":[10,10,10]},{"id":"reasoning_016","cat":"reasoning","passed":false,"runs":0,"total":3,"avgEmb":0.69,"avgJudge":1,"embRuns":[0.69,0.69,0.69],"judgeRuns":[1,1,1]},{"id":"reasoning_017","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.58,"avgJudge":10,"embRuns":[0.58,0.58,0.58],"judgeRuns":[10,10,10]},{"id":"reasoning_018","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.56,"avgJudge":8,"embRuns":[0.56,0.56,0.56],"judgeRuns":[8,8,8]},{"id":"reasoning_019","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.88,"avgJudge":4,"embRuns":[0.88,0.88,0.88],"judgeRuns":[4,4,4]},{"id":"reasoning_020","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.57,"avgJudge":8,"embRuns":[0.57,0.57,0.57],"judgeRuns":[8,8,8]},{"id":"science_001","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.71,"avgJudge":10,"embRuns":[0.71,0.71,0.71],"judgeRuns":[10,10,10]},{"id":"science_002","cat":"science","passed":false,"runs":0,"total":3,"avgEmb":0.77,"avgJudge":1,"embRuns":[0.77,0.77,0.77],"judgeRuns":[1,1,1]},{"id":"science_003","cat":"science","passed":false,"runs":0,"total":3,"avgEmb":0.69,"avgJudge":4,"embRuns":[0.69,0.69,0.69],"judgeRuns":[4,4,4]},{"id":"science_004","cat":"science","passed":false,"runs":0,"total":3,"avgEmb":0.64,"avgJudge":1,"embRuns":[0.64,0.64,0.64],"judgeRuns":[1,1,1]},{"id":"science_005","cat":"science","passed":false,"runs":0,"total":3,"avgEmb":0.78,"avgJudge":1,"embRuns":[0.78,0.78,0.78],"judgeRuns":[1,1,1]},{"id":"science_006","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.5,"avgJudge":10,"embRuns":[0.5,0.5,0.5],"judgeRuns":[10,10,10]},{"id":"science_007","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.57,"avgJudge":8,"embRuns":[0.57,0.57,0.57],"judgeRuns":[8,8,8]},{"id":"science_008","cat":"science","passed":false,"runs":0,"total":3,"avgEmb":0.61,"avgJudge":7,"embRuns":[0.61,0.61,0.61],"judgeRuns":[7,7,7]},{"id":"science_009","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.52,"avgJudge":10,"embRuns":[0.52,0.52,0.52],"judgeRuns":[10,10,10]},{"id":"science_010","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.49,"avgJudge":8,"embRuns":[0.49,0.49,0.49],"judgeRuns":[8,8,8]},{"id":"science_011","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.5,"avgJudge":8,"embRuns":[0.5,0.5,0.5],"judgeRuns":[8,8,8]},{"id":"science_012","cat":"science","passed":false,"runs":0,"total":3,"avgEmb":0.73,"avgJudge":6,"embRuns":[0.73,0.73,0.73],"judgeRuns":[6,6,6]},{"id":"science_013","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.72,"avgJudge":10,"embRuns":[0.72,0.72,0.72],"judgeRuns":[10,10,10]},{"id":"science_014","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.66,"avgJudge":8,"embRuns":[0.66,0.66,0.66],"judgeRuns":[8,8,8]},{"id":"science_015","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.49,"avgJudge":9,"embRuns":[0.49,0.49,0.49],"judgeRuns":[9,9,9]},{"id":"science_016","cat":"science","passed":false,"runs":0,"total":3,"avgEmb":0.71,"avgJudge":1,"embRuns":[0.71,0.71,0.71],"judgeRuns":[1,1,1]},{"id":"science_017","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.79,"avgJudge":10,"embRuns":[0.79,0.79,0.79],"judgeRuns":[10,10,10]},{"id":"science_018","cat":"science","passed":false,"runs":0,"total":3,"avgEmb":0.5,"avgJudge":1,"embRuns":[0.5,0.5,0.5],"judgeRuns":[1,1,1]},{"id":"science_019","cat":"science","passed":false,"runs":0,"total":3,"avgEmb":0.5,"avgJudge":1,"embRuns":[0.5,0.5,0.5],"judgeRuns":[1,1,1]},{"id":"science_020","cat":"science","passed":false,"runs":0,"total":3,"avgEmb":0.49,"avgJudge":7,"embRuns":[0.49,0.49,0.49],"judgeRuns":[7,7,7]}];
+const tests = [{"id":"factual_022","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.59,"avgJudge":9,"embRuns":[0.59,0.59,0.59],"judgeRuns":[9,9,9]},{"id":"factual_004","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.54,"avgJudge":9,"embRuns":[0.54,0.54,0.54],"judgeRuns":[9,9,9]},{"id":"factual_006","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.58,"avgJudge":8,"embRuns":[0.58,0.58,0.58],"judgeRuns":[8,8,8]},{"id":"factual_007","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.62,"avgJudge":9,"embRuns":[0.62,0.62,0.62],"judgeRuns":[9,9,9]},{"id":"factual_009","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.55,"avgJudge":9,"embRuns":[0.55,0.55,0.55],"judgeRuns":[9,9,9]},{"id":"factual_021","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.68,"avgJudge":9,"embRuns":[0.68,0.68,0.68],"judgeRuns":[9,9,9]},{"id":"factual_023","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.61,"avgJudge":8,"embRuns":[0.61,0.61,0.61],"judgeRuns":[8,8,8]},{"id":"factual_002","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.68,"avgJudge":10,"embRuns":[0.68,0.68,0.68],"judgeRuns":[10,10,10]},{"id":"factual_003","cat":"factual","passed":true,"runs":3,"total":3,"avgEmb":0.68,"avgJudge":9,"embRuns":[0.68,0.68,0.68],"judgeRuns":[9,9,9]},{"id":"math_021","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.77,"avgJudge":10,"embRuns":[0.77,0.77,0.77],"judgeRuns":[10,10,10]},{"id":"math_022","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.6,"avgJudge":9,"embRuns":[0.6,0.6,0.6],"judgeRuns":[9,9,9]},{"id":"math_023","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.6,"avgJudge":10,"embRuns":[0.6,0.6,0.6],"judgeRuns":[10,10,10]},{"id":"math_001","cat":"math","passed":false,"runs":0,"total":3,"avgEmb":0.77,"avgJudge":1,"embRuns":[0.77,0.77,0.77],"judgeRuns":[1,1,1]},{"id":"math_002","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.61,"avgJudge":8,"embRuns":[0.61,0.61,0.61],"judgeRuns":[8,8,8]},{"id":"math_004","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.71,"avgJudge":9,"embRuns":[0.71,0.71,0.71],"judgeRuns":[9,9,9]},{"id":"math_005","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.66,"avgJudge":9,"embRuns":[0.66,0.66,0.66],"judgeRuns":[9,9,9]},{"id":"math_006","cat":"math","passed":true,"runs":3,"total":3,"avgEmb":0.64,"avgJudge":9,"embRuns":[0.64,0.64,0.64],"judgeRuns":[9,9,9]},{"id":"reasoning_016","cat":"reasoning","passed":false,"runs":0,"total":3,"avgEmb":0.64,"avgJudge":2,"embRuns":[0.64,0.64,0.64],"judgeRuns":[2,2,2]},{"id":"reasoning_024","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.93,"avgJudge":8,"embRuns":[0.93,0.93,0.93],"judgeRuns":[8,8,8]},{"id":"reasoning_021","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.75,"avgJudge":9,"embRuns":[0.75,0.75,0.75],"judgeRuns":[9,9,9]},{"id":"reasoning_002","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.53,"avgJudge":9,"embRuns":[0.53,0.53,0.53],"judgeRuns":[9,9,9]},{"id":"reasoning_003","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.55,"avgJudge":8,"embRuns":[0.55,0.55,0.55],"judgeRuns":[8,8,8]},{"id":"reasoning_004","cat":"reasoning","passed":false,"runs":0,"total":3,"avgEmb":0.56,"avgJudge":1,"embRuns":[0.56,0.56,0.56],"judgeRuns":[1,1,1]},{"id":"reasoning_010","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.68,"avgJudge":8,"embRuns":[0.68,0.68,0.68],"judgeRuns":[8,8,8]},{"id":"reasoning_011","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.57,"avgJudge":9,"embRuns":[0.57,0.57,0.57],"judgeRuns":[9,9,9]},{"id":"reasoning_012","cat":"reasoning","passed":true,"runs":3,"total":3,"avgEmb":0.75,"avgJudge":8,"embRuns":[0.75,0.75,0.75],"judgeRuns":[8,8,8]},{"id":"history_002","cat":"history","passed":false,"runs":0,"total":3,"avgEmb":0.59,"avgJudge":1,"embRuns":[0.59,0.59,0.59],"judgeRuns":[1,1,1]},{"id":"history_004","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.54,"avgJudge":9,"embRuns":[0.54,0.54,0.54],"judgeRuns":[9,9,9]},{"id":"history_008","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.52,"avgJudge":8,"embRuns":[0.52,0.52,0.52],"judgeRuns":[8,8,8]},{"id":"history_009","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.52,"avgJudge":9,"embRuns":[0.52,0.52,0.52],"judgeRuns":[9,9,9]},{"id":"history_011","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.61,"avgJudge":9,"embRuns":[0.61,0.61,0.61],"judgeRuns":[9,9,9]},{"id":"history_012","cat":"history","passed":false,"runs":0,"total":3,"avgEmb":0.68,"avgJudge":7,"embRuns":[0.68,0.68,0.68],"judgeRuns":[7,7,7]},{"id":"history_014","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.59,"avgJudge":9,"embRuns":[0.59,0.59,0.59],"judgeRuns":[9,9,9]},{"id":"history_017","cat":"history","passed":true,"runs":3,"total":3,"avgEmb":0.61,"avgJudge":8,"embRuns":[0.61,0.61,0.61],"judgeRuns":[8,8,8]},{"id":"definition_003","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0.67,"avgJudge":6,"embRuns":[0.67,0.67,0.67],"judgeRuns":[6,6,6]},{"id":"definition_004","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.81,"avgJudge":9,"embRuns":[0.81,0.81,0.81],"judgeRuns":[9,9,9]},{"id":"definition_005","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.7,"avgJudge":8,"embRuns":[0.7,0.7,0.7],"judgeRuns":[8,8,8]},{"id":"definition_006","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0.8,"avgJudge":7,"embRuns":[0.8,0.8,0.8],"judgeRuns":[7,7,7]},{"id":"definition_007","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.86,"avgJudge":8,"embRuns":[0.86,0.86,0.86],"judgeRuns":[8,8,8]},{"id":"definition_008","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.8,"avgJudge":8,"embRuns":[0.8,0.8,0.8],"judgeRuns":[8,8,8]},{"id":"definition_009","cat":"definitions","passed":true,"runs":3,"total":3,"avgEmb":0.76,"avgJudge":8,"embRuns":[0.76,0.76,0.76],"judgeRuns":[8,8,8]},{"id":"definition_010","cat":"definitions","passed":false,"runs":0,"total":3,"avgEmb":0.83,"avgJudge":7,"embRuns":[0.83,0.83,0.83],"judgeRuns":[7,7,7]},{"id":"science_002","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.86,"avgJudge":8,"embRuns":[0.86,0.86,0.86],"judgeRuns":[8,8,8]},{"id":"science_001","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.72,"avgJudge":8,"embRuns":[0.72,0.72,0.72],"judgeRuns":[8,8,8]},{"id":"science_004","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.66,"avgJudge":9,"embRuns":[0.66,0.66,0.66],"judgeRuns":[9,9,9]},{"id":"science_005","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.78,"avgJudge":8,"embRuns":[0.78,0.78,0.78],"judgeRuns":[8,8,8]},{"id":"science_012","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.76,"avgJudge":9,"embRuns":[0.76,0.76,0.76],"judgeRuns":[9,9,9]},{"id":"science_013","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.72,"avgJudge":9,"embRuns":[0.72,0.72,0.72],"judgeRuns":[9,9,9]},{"id":"science_014","cat":"science","passed":false,"runs":0,"total":3,"avgEmb":0.71,"avgJudge":1,"embRuns":[0.71,0.71,0.71],"judgeRuns":[1,1,1]},{"id":"science_016","cat":"science","passed":true,"runs":3,"total":3,"avgEmb":0.7,"avgJudge":9,"embRuns":[0.7,0.7,0.7],"judgeRuns":[9,9,9]}];
 
 // ── Category colour map ──────────────────────────────────────────────────────
 const CAT_COLORS = {
@@ -212,6 +330,44 @@ function judgeStyle(v) {
   if (v >= 6) return { bg: '#FAEEDA', color: '#854F0B' };
   return { bg: '#FCEBEB', color: '#A32D2D' };
 }
+
+// ── Build reliability assessment table ──────────────────────────────────────
+const allCatsRel = [...new Set(tests.map(t => t.cat))].sort();
+const relBody = document.getElementById('reliabilityBody');
+allCatsRel.forEach(cat => {
+  const group      = tests.filter(t => t.cat === cat);
+  const catTotal   = group.length;
+  const catPassed  = group.filter(t => t.passed).length;
+  const rate       = catTotal > 0 ? catPassed / catTotal * 100 : 0;
+  const avgEmb     = group.reduce((s, t) => s + t.avgEmb,   0) / catTotal;
+  const avgJudge   = group.reduce((s, t) => s + t.avgJudge, 0) / catTotal;
+  const color      = catColor(cat);
+
+  let verdictClass, verdictLabel, recommendation;
+  if (rate >= 90) {
+    verdictClass = 'verdict-reliable';   verdictLabel = 'RELIABLE';
+    recommendation = `Safe to deploy for ${cat} queries`;
+  } else if (rate >= 75) {
+    verdictClass = 'verdict-borderline'; verdictLabel = 'BORDERLINE';
+    recommendation = `Use with caution; review failing cases`;
+  } else {
+    verdictClass = 'verdict-unreliable'; verdictLabel = 'UNRELIABLE';
+    recommendation = `Not recommended for production use`;
+  }
+
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><span class="cat-chip" style="background:${color}22;color:${color};">${cat}</span></td>
+    <td style="text-align:center;">${catTotal}</td>
+    <td style="text-align:center;">${catPassed}</td>
+    <td style="text-align:center;font-weight:600;">${rate.toFixed(1)}%</td>
+    <td style="text-align:center;">${avgEmb.toFixed(2)}</td>
+    <td style="text-align:center;">${avgJudge.toFixed(1)}/10</td>
+    <td><span class="${verdictClass}">${verdictLabel}</span></td>
+    <td style="font-size:12px;color:#5f5e5a;">${recommendation}</td>
+  `;
+  relBody.appendChild(tr);
+});
 
 // ── Build heatmap table ──────────────────────────────────────────────────────
 const tbody = document.getElementById('heatBody');

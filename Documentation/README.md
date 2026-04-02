@@ -57,10 +57,13 @@ A run passes if **either** validator succeeds (logical OR). A test case passes o
 | Requirement | Minimum |
 |---|---|
 | Operating System | Windows 10+ or macOS 10.15+ |
-| .NET SDK | 8.0 |
+| .NET SDK | 10.0 |
 | Memory | 4 GB RAM (8 GB+ recommended for Ollama models) |
 | Internet | Required for OpenAI / Grok; not required for Ollama |
 | API Access | OpenAI or Grok API key **or** a local Ollama installation |
+
+
+Note: .NET 10 (the current LTS release) was chosen for its modern async runtime, and long-term Microsoft support, making it suitable for a production-grade evaluation framework.
 
 ---
 
@@ -123,12 +126,12 @@ ReportGenerator
 
 ### Prerequisites
 
-1. **Install .NET 8.0 SDK**
+1. **Install .NET 10.0 SDK**
 
-   Download from the [Microsoft .NET website](https://dotnet.microsoft.com/download/dotnet/8.0) and verify:
+   Download from the [Microsoft .NET website](https://dotnet.microsoft.com/download/dotnet/10.0) and verify:
    ```bash
    dotnet --version
-   # Expected: 8.0.x
+   # Expected: 10.0.x
    ```
 
 2. **Choose your LLM provider:**
