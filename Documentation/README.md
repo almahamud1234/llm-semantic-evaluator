@@ -2,7 +2,7 @@
 
 A **.NET 8 / C#** testing framework for evaluating LLM prompts using **semantic assertions** rather than exact string matching. It handles the inherent non-determinism of LLM outputs by applying two independent validation methods — embedding-based cosine similarity and a G-Eval style LLM-as-a-Judge — combined with a majority-vote strategy across repeated test runs.
 
-Supports **OpenAI GPT**, **xAI Grok**, and **locally hosted Ollama** models with no code changes needed to switch between them.
+Supports **OpenAI GPT**, and **locally hosted Ollama** models with no code changes needed to switch between them.
 
 ---
 
@@ -43,7 +43,7 @@ A run passes if **either** validator succeeds (logical OR). A test case passes o
 - **Two semantic validation methods** — cosine similarity on embeddings and G-Eval style LLM judge
 - **Hybrid OR logic** — a run passes if either validator succeeds, compensating for short-expected-output cases where embedding similarity is structurally low
 - **Majority-vote aggregation** — configurable runs per test (default 3) with a configurable pass threshold (default 2/3)
-- **Multi-provider support** — OpenAI, xAI Grok (OpenAI-compatible REST API), and local Ollama (no API key or internet required)
+- **Multi-provider support** — OpenAI, and local Ollama (no API key or internet required)
 - **JSON test case loader** — accepts bare arrays or `{ "tests": [...] }` wrapped format, with full validation
 - **Four report formats** — plain text, JSON (with per-run judge reasoning), CSV, and an interactive HTML dashboard
 - **HTML dashboard** — auto-opens in browser with metric cards, score distribution charts, category breakdown, and a per-test heatmap table
@@ -59,8 +59,8 @@ A run passes if **either** validator succeeds (logical OR). A test case passes o
 | Operating System | Windows 10+ or macOS 10.15+ |
 | .NET SDK | 10.0 |
 | Memory | 4 GB RAM (8 GB+ recommended for Ollama models) |
-| Internet | Required for OpenAI / Grok; not required for Ollama |
-| API Access | OpenAI or Grok API key **or** a local Ollama installation |
+| Internet | Required for OpenAI; not required for Ollama |
+| API Access | OpenAI API key **or** a local Ollama installation |
 
 
 Note: .NET 10 (the current LTS release) was chosen for its modern async runtime, and long-term Microsoft support, making it suitable for a production-grade evaluation framework.
@@ -69,7 +69,7 @@ Note: .NET 10 (the current LTS release) was chosen for its modern async runtime,
 
 ## Architecture
 
-The application follows a sequential architecture built on Microsoft.Extensions.Hosting. The system is designed so that each stage of evaluation is handled by a dedicated service, which keeps the code modular, testable, and easier to maintain. Instead of coupling the application to one model provider, the framework creates clients through configuration, allowing it to work with OpenAI, Grok-compatible endpoints, and local Ollama without changing the main evaluation logic.
+The application follows a sequential architecture built on Microsoft.Extensions.Hosting. The system is designed so that each stage of evaluation is handled by a dedicated service, which keeps the code modular, testable, and easier to maintain. Instead of coupling the application to one model provider, the framework creates clients through configuration, allowing it to work with OpenAI, and local Ollama without changing the main evaluation logic.
  
 At runtime, the application loads settings from appsettings.json, validates the configuration, loads test cases from JSON, executes each test multiple times, and then generates reports from the collected results. The repeated execution is important because LLM outputs are non-deterministic, so the framework uses multiple runs and a majority-vote decision to make the final test result more stable.
  
@@ -231,22 +231,6 @@ All settings live in `appsettings.json`. Copy `appsettings_example.json` as a st
 </details>
 
 <details>
-<summary><strong>Grok (xAI)</strong></summary>
-
-```json
-{
-  "Provider": "grok",
-  "EmbeddingProvider": "openai",
-  "GrokApiKey": "xai-...",
-  "OpenAIApiKey": "sk-...",
-  "ChatModel": "grok-3-mini",
-  "EmbeddingModel": "text-embedding-3-small"
-}
-```
-> Grok shares the OpenAI REST API shape. Because xAI does not provide an embeddings endpoint, supply an OpenAI key for embeddings alongside your Grok key.
-</details>
-
-<details>
 <summary><strong>Ollama (fully local)</strong></summary>
 
 ```json
@@ -366,7 +350,7 @@ LLMSemanticEvaluator/
 ├── Program.cs                   ← Entry point — wires all components
 ├── TestConfiguration.cs         ← Deserialises appsettings.json + Validate()
 ├── LLMClientFactory.cs          ← Factory: creates OpenAIClient or OllamaClient
-├── OpenAIClient.cs              ← ILLMClient + IEmbeddingProvider for OpenAI/Grok
+├── OpenAIClient.cs              ← ILLMClient + IEmbeddingProvider for OpenAI
 ├── OllamaClient.cs              ← ILLMClient + IEmbeddingProvider for local Ollama
 ├── JsonTestLoader.cs            ← Loads and validates test cases from JSON
 ├── TestRunner.cs                ← Orchestrates runs, majority vote, aggregation
