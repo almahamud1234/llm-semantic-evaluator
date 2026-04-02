@@ -69,9 +69,15 @@ Note: .NET 10 (the current LTS release) was chosen for its modern async runtime,
 
 ## Architecture
 
-The application follows a linear pipeline architecture. Each stage is a dedicated C# class communicating through a well-defined interface, keeping components independently testable and replaceable.
+The application follows a sequential architecture built on Microsoft.Extensions.Hosting. The system is designed so that each stage of evaluation is handled by a dedicated service, which keeps the code modular, testable, and easier to maintain. Instead of coupling the application to one model provider, the framework creates clients through configuration, allowing it to work with OpenAI, Grok-compatible endpoints, and local Ollama without changing the main evaluation logic.
+ 
+At runtime, the application loads settings from appsettings.json, validates the configuration, loads test cases from JSON, executes each test multiple times, and then generates reports from the collected results. The repeated execution is important because LLM outputs are non-deterministic, so the framework uses multiple runs and a majority-vote decision to make the final test result more stable.
+ 
+Each run is evaluated using two semantic validation methods. The first compares the expected and actual outputs with embedding cosine similarity. The second uses an LLM-as-a-Judge approach, where a secondary model scores the response using structured evaluation criteria. A run passes if either method succeeds, and the overall test passes if enough runs meet the required threshold. This combination helps the framework handle both wording variation and judge-model inconsistency more reliably than a single validation method alone.
+ 
+After evaluation, the framework produces results in multiple formats, including text, JSON, CSV, and an interactive HTML dashboard. This makes the system useful both for automated testing and for manual inspection of scores, pass rates, and judge reasoning.
 
-<img width="952" height="778" alt="system-architecture-design" src="https://github.com/user-attachments/assets/055a1145-2c98-4293-bca2-f9e6bcd2e4a6" />
+<img width="952" height="778" alt="system-architecture-design" src="https://github.com/user-attachments/assets/ffa6e6f5-b57d-4487-a4fe-bd5678f6afcd" />
 
 *Fig 1: System Architecture Diagram*
 
@@ -100,7 +106,6 @@ The application follows a linear pipeline architecture. Each stage is a dedicate
 
 2. **Choose your LLM provider:**
    - **OpenAI** — create an API key at [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
-   - **Grok (xAI)** — create an API key at [console.x.ai](https://console.x.ai)
    - **Ollama** — free, fully local — see [Ollama Setup](#ollama-setup) below
 
 ---
@@ -267,9 +272,9 @@ Test cases are stored in `data/sample_test_cases.json`. The loader accepts both 
 
 | Field | Required | Description |
 |---|---|---|
-| `id` | Yes | Unique identifier. Recommended format: `category_NNN` (e.g. `factual_001`). |
-| `prompt` | Yes | The query sent verbatim to the LLM under test. |
-| `expected_output` | Yes | The reference answer used by both validators. |
+| `id` | ✅ | Unique identifier. Recommended format: `category_NNN` (e.g. `factual_001`). |
+| `prompt` | ✅ | The query sent verbatim to the LLM under test. |
+| `expected_output` | ✅ | The reference answer used by both validators. |
 | `category` | — | Label for report grouping. Defaults to `general` if omitted. |
 | `evaluation_criteria` | — | Custom scoring guidance injected into the judge prompt. |
 
@@ -321,9 +326,9 @@ dotnet run
 
 During the run the console logs real-time progress. Each line shows the test index, ID, result, and how many of the three runs passed:
 
-<img width="882" height="668" alt="OpenAI Console Output" src="https://github.com/user-attachments/assets/996a5042-d24e-4d75-9c92-898deff5601b" />
+<img width="882" height="668" alt="OpenAI Console Output" src="https://github.com/user-attachments/assets/2223a45e-4050-4765-9cbd-6229885da4ec" />
 
-Fig 2: Console output for OpenAI run*
+*Fig 2: Console output OpenAI run*
 
 ### How the pass / fail logic works
 
@@ -382,8 +387,8 @@ LLMSemanticEvaluatorTests/
 
 ---
 
-**[View Full Results & Visualisation →](results.md)**
+**[View Full Results & Visualisation](results.md)**
 
-**[View Unit Testing Documentation →](unit-testing.md)**
+**[Output Folder](LLMSemanticEvaluator/reports)**
 
 ---

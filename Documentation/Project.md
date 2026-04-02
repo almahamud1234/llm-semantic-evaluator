@@ -69,47 +69,17 @@ Note: .NET 10 (the current LTS release) was chosen for its modern async runtime,
 
 ## Architecture
 
-The application follows a linear pipeline architecture. Each stage is a dedicated C# class communicating through a well-defined interface, keeping components independently testable and replaceable.
+The application follows a sequential architecture built on Microsoft.Extensions.Hosting. The system is designed so that each stage of evaluation is handled by a dedicated service, which keeps the code modular, testable, and easier to maintain. Instead of coupling the application to one model provider, the framework creates clients through configuration, allowing it to work with OpenAI, Grok-compatible endpoints, and local Ollama without changing the main evaluation logic.
+ 
+At runtime, the application loads settings from appsettings.json, validates the configuration, loads test cases from JSON, executes each test multiple times, and then generates reports from the collected results. The repeated execution is important because LLM outputs are non-deterministic, so the framework uses multiple runs and a majority-vote decision to make the final test result more stable.
+ 
+Each run is evaluated using two semantic validation methods. The first compares the expected and actual outputs with embedding cosine similarity. The second uses an LLM-as-a-Judge approach, where a secondary model scores the response using structured evaluation criteria. A run passes if either method succeeds, and the overall test passes if enough runs meet the required threshold. This combination helps the framework handle both wording variation and judge-model inconsistency more reliably than a single validation method alone.
+ 
+After evaluation, the framework produces results in multiple formats, including text, JSON, CSV, and an interactive HTML dashboard. This makes the system useful both for automated testing and for manual inspection of scores, pass rates, and judge reasoning.
 
-```
-appsettings.json
-      │
-      ▼
-TestConfiguration ──► Validate()
-      │                (fails fast with a clear error if misconfigured)
-      ▼
-LLMClientFactory
-  ├── OpenAIClient    (OpenAI API  │  Grok — same class, different base URL)
-  └── OllamaClient    (local Ollama — no API key required)
-      │
-      ▼
-JsonTestLoader ──► List<TestCase>
-      │             (from data/sample_test_cases.json)
-      ▼
-TestRunner  ─── repeats each test NumberOfRuns times (default: 3)
-  │
-  ├── ILLMClient.SendPromptAsync()  ──►  LLM response
-  │
-  ├── EmbeddingValidator
-  │     └── embed(expected) + embed(actual)
-  │           → CosineSimilarityCalculator
-  │             → score ≥ EmbeddingThreshold?  ✔ EmbeddingPassed
-  │
-  └── LLMJudgeValidator  (G-Eval style)
-        └── BuildJudgePrompt() → LLM
-              → ParseScore() + ExtractReasoning()
-                → score ≥ JudgeThreshold?  ✔ JudgePassed
-      │
-      ▼  RunPassed = EmbeddingPassed OR JudgePassed
-      ▼  TestPassed = PassedRunsCount >= MinimumPassingRuns
-      │
-      ▼
-ReportGenerator
-  ├── reports/report.txt   — human-readable summary
-  ├── reports/report.json  — full structured data (per-run scores + reasoning)
-  ├── reports/report.csv   — flat data for Excel / charting tools
-  └── reports/report.html  — interactive dashboard (auto-opens in browser)
-```
+<img width="952" height="778" alt="system-architecture-design" src="https://github.com/user-attachments/assets/ffa6e6f5-b57d-4487-a4fe-bd5678f6afcd" />
+
+*Fig 1: System Architecture Diagram*
 
 **Interface contracts — each can be replaced without modifying other components:**
 
@@ -136,7 +106,6 @@ ReportGenerator
 
 2. **Choose your LLM provider:**
    - **OpenAI** — create an API key at [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
-   - **Grok (xAI)** — create an API key at [console.x.ai](https://console.x.ai)
    - **Ollama** — free, fully local — see [Ollama Setup](#ollama-setup) below
 
 ---
@@ -357,37 +326,9 @@ dotnet run
 
 During the run the console logs real-time progress. Each line shows the test index, ID, result, and how many of the three runs passed:
 
-```
-Chat provider      : openai
-Embedding provider : openai
-Chat model         : gpt-5-mini
-Embedding model    : text-embedding-3-small
-Runs               : 3  |  Emb threshold: 0.85  |  Judge threshold: 8/10
+<img width="882" height="668" alt="OpenAI Console Output" src="https://github.com/user-attachments/assets/2223a45e-4050-4765-9cbd-6229885da4ec" />
 
-Loading test cases...
-Loaded 130 test cases.
-
-Starting test run: 130 tests, 3 runs each
-
-[1/130] factual_021 ...  ✅ PASS  (3/3 runs passed)
-[2/130] factual_022 ...  ✅ PASS  (3/3 runs passed)
-...
-[14/130] history_020 ... ❌ FAIL  (0/3 runs passed)
-...
-Done. Passed: 127/130
-
-=== Report Summary ===
-Total  : 130
-Passed : 127
-Failed : 3
-Rate   : 97.7%
-
-Reports saved to: /path/to/project/reports/
-  report.txt  — human-readable summary
-  report.json — full data (per-run scores and judge reasoning)
-  report.csv  — flat data for Excel/charts
-  report.html — interactive visual dashboard
-```
+*Fig 2: Console output OpenAI run*
 
 ### How the pass / fail logic works
 
@@ -446,8 +387,8 @@ LLMSemanticEvaluatorTests/
 
 ---
 
-**[View Full Results & Visualisation →](results.md)**
+**[View Full Results & Visualisation](results.md)**
 
-**[View Unit Testing Documentation →](unit-testing.md)**
+**[Output Folder](LLMSemanticEvaluator/reports)**
 
 ---
