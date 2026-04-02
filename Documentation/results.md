@@ -94,7 +94,7 @@ The header row of metric cards shows pass rate, average embedding score, average
 
 The per-category bar chart below the header breaks pass rates down by knowledge domain. For the OpenAI run, all bars reach 100% except history, which shows the single failure.
 
-<img width="766" height="424" alt="image" src="https://github.com/user-attachments/assets/45c7edb6-b72e-46dd-aa36-b9be6a68110f" />
+<img width="896" height="424" alt="Per category pass rate OpenAI" src="https://github.com/user-attachments/assets/a3cf3132-a528-4e00-9574-acc3e5898bea" />
 
 *Fig. 5: Per category pass rate — OpenAI run (report.html)*
 
