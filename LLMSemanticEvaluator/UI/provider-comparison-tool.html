@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM Provider Comparison</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f5f4ef;
+    color: #1a1a18;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .page { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  h1 { font-size: 20px; font-weight: 500; margin-bottom: 0.25rem; }
+  h2 { font-size: 15px; font-weight: 500; margin-bottom: 1rem; color: #444441; }
+  .subtitle { font-size: 13px; color: #888780; margin-bottom: 2rem; }
+
+  /* ── Drop zone ── */
+  #drop-area {
+    border: 1.5px dashed #b4b2a9;
+    border-radius: 12px;
+    padding: 3rem 2rem;
+    text-align: center;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    margin-bottom: 2rem;
+  }
+  #drop-area.drag-over { border-color: #378ADD; background: #f0f7ff; }
+  #drop-area p { color: #888780; font-size: 14px; margin-bottom: 1rem; }
+  #drop-area strong { color: #1a1a18; font-weight: 500; display: block; font-size: 16px; margin-bottom: 0.5rem; }
+  #file-input { display: none; }
+  .btn {
+    display: inline-block; padding: 8px 18px; border-radius: 8px;
+    border: 1px solid #b4b2a9; background: #fff; color: #1a1a18;
+    font-size: 13px; cursor: pointer; font-family: inherit;
+    transition: background 0.1s;
+  }
+  .btn:hover { background: #f1efe8; }
+
+  /* ── Loaded files list ── */
+  #loaded-list { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1.5rem; }
+  .file-chip {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    border: 1px solid;
+  }
+  .chip-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .remove-btn {
+    background: none; border: none; cursor: pointer; font-size: 14px;
+    color: #888780; padding: 0 0 0 4px; line-height: 1;
+  }
+  .remove-btn:hover { color: #E24B4A; }
+
+  /* ── Section ── */
+  .section { background: #fff; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; border: 0.5px solid #d3d1c7; }
+
+  /* ── Metric grid ── */
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 0; }
+  .metric { background: #f5f4ef; border-radius: 8px; padding: 14px 16px; }
+  .metric .m-label { font-size: 11px; color: #888780; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+  .metric .m-vals { display: flex; flex-direction: column; gap: 4px; }
+  .metric .m-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .metric .m-name { font-size: 11px; color: #5f5e5a; min-width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .metric .m-val { font-size: 18px; font-weight: 500; }
+  .winner-chip { font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 500; white-space: nowrap; }
+
+  /* ── Category table ── */
+  .cat-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .cat-table th { text-align: left; font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #888780; padding: 0 8px 10px 0; border-bottom: 1px solid #e8e7e2; }
+  .cat-table td { padding: 10px 8px 10px 0; border-bottom: 0.5px solid #f1efe8; vertical-align: middle; }
+  .cat-table tr:last-child td { border-bottom: none; }
+  .bar-cell { width: 40%; }
+  .bar-wrap { background: #f1efe8; border-radius: 3px; height: 18px; overflow: hidden; position: relative; }
+  .bar-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; justify-content: flex-end; padding-right: 5px; font-size: 10px; font-weight: 500; min-width: 2px; transition: width 0.5s ease; }
+
+  /* ── Chart containers ── */
+  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .chart-box h2 { font-size: 13px; margin-bottom: 0.75rem; }
+
+  /* ── Recommendation box ── */
+  .rec-box { border-left: 3px solid #378ADD; border-radius: 0; background: #f0f7ff; padding: 14px 16px; font-size: 13px; color: #1a1a18; margin-top: 1rem; }
+  .rec-box strong { display: block; margin-bottom: 4px; font-weight: 500; }
+
+  /* ── Failures table ── */
+  .fail-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .fail-table th { text-align: left; font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: #888780; padding: 0 8px 8px 0; border-bottom: 1px solid #e8e7e2; }
+  .fail-table td { padding: 8px 8px 8px 0; border-bottom: 0.5px solid #f1efe8; vertical-align: top; color: #444441; }
+  .fail-table tr:last-child td { border-bottom: none; }
+  .fail-tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 500; white-space: nowrap; }
+  .pass-tag { background: #eaf3de; color: #3b6d11; }
+  .fail-tag-red { background: #fcebeb; color: #a32d2d; }
+  .trunc { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .chip-label { cursor: text; border-radius: 3px; padding: 1px 3px; transition: background 0.1s; }
+  .chip-label:hover { background: rgba(0,0,0,0.07); }
+  .chip-input {
+    border: none; background: rgba(0,0,0,0.08); border-radius: 4px;
+    font-size: 12px; font-weight: 500; font-family: inherit;
+    padding: 1px 5px; outline: none; width: 90px; color: inherit;
+  }
+
+  #results { display: none; }
+  #empty-state { text-align: center; padding: 2rem; color: #888780; font-size: 13px; display: none; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: #5f5e5a; margin-bottom: 1rem; align-items: center; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+  @media (max-width: 640px) {
+    .charts-grid { grid-template-columns: 1fr; }
+    .metric-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1>Provider comparison</h1>
+  <p class="subtitle">Drop two or three <code>report.json</code> files generated by LLM Semantic Evaluator. Each file becomes one provider column.</p>
+
+  <div id="drop-area">
+    <strong>Drop report.json files here</strong>
+    <p>Supports 2–3 files. Each file = one provider run.</p>
+    <button class="btn" onclick="document.getElementById('file-input').click()">Browse files</button>
+    <input type="file" id="file-input" accept=".json" multiple>
+  </div>
+
+  <div id="loaded-list"></div>
+  <div id="empty-state">Load at least 2 report.json files to see the comparison.</div>
+  <div id="results"></div>
+
+</div>
+
+<script>
+const COLORS = ['#378ADD','#1D9E75','#BA7517'];
+const COLORS_LIGHT = ['#E6F1FB','#E1F5EE','#FAEEDA'];
+const COLORS_TEXT  = ['#0C447C','#0F6E56','#633806'];
+
+let providers = [];
+let charts = [];
+
+function shortName(filename) {
+  // Strip extension
+  let name = filename.replace(/\.json$/i, '');
+  // Remove common suffixes/prefixes: report, results, eval, benchmark, output, test
+  name = name.replace(/[-_]?(report|results|eval|benchmark|output|test|run)[-_]?/gi, ' ');
+  // Remove common prefixes too
+  name = name.replace(/^(report|results|eval|benchmark|output|test|run)[-_]?/gi, '');
+  // Replace separators with spaces
+  name = name.replace(/[-_]+/g, ' ').trim();
+  // Title-case each word
+  name = name.replace(/\b\w/g, c => c.toUpperCase()).trim();
+  return name || filename;
+}
+
+function labelFromData(data, filename) {
+  if (filename && filename.toLowerCase() !== 'report.json') return shortName(filename);
+  return 'Provider ' + (providers.length + 1);
+}
+
+function destroyCharts() {
+  charts.forEach(c => c.destroy());
+  charts = [];
+}
+
+function render() {
+  destroyCharts();
+  const el = document.getElementById('results');
+  const empty = document.getElementById('empty-state');
+  if (providers.length < 2) { el.style.display='none'; empty.style.display='block'; return; }
+  empty.style.display='none';
+  el.style.display='block';
+  el.innerHTML = buildHTML();
+  buildCharts();
+}
+
+function buildHTML() {
+  const allCats = [...new Set(providers.flatMap(p => p.data.categoryBreakdown.map(c => c.category)))].sort();
+  return `
+    ${buildOverall()}
+    ${buildCategorySection(allCats)}
+    ${buildChartSection()}
+    ${buildFailuresSection()}
+    ${buildRecommendation(allCats)}
+  `;
+}
+
+function buildOverall() {
+  const metrics = [
+    { label: 'Pass rate', key: p => p.data.summary.passRatePercent.toFixed(1) + '%', num: p => p.data.summary.passRatePercent },
+    { label: 'Avg embedding score', key: p => p.data.summary.avgEmbeddingScore.toFixed(2), num: p => p.data.summary.avgEmbeddingScore },
+    { label: 'Avg judge score', key: p => p.data.summary.avgJudgeScore.toFixed(1) + '/10', num: p => p.data.summary.avgJudgeScore },
+    { label: 'Total tests', key: p => p.data.summary.totalTests, num: p => p.data.summary.totalTests },
+  ];
+  const legendHTML = providers.map((p,i) => `
+    <span style="display:flex;align-items:center;gap:5px;">
+      <span class="legend-dot" style="background:${COLORS[i]}"></span>${p.label}
+    </span>`).join('');
+
+  const cards = metrics.map(m => {
+    const vals = providers.map(p => m.num(p));
+    const maxVal = Math.max(...vals);
+    const rows = providers.map((p,i) => {
+      const isWinner = vals[i] === maxVal;
+      const winnerHTML = isWinner && providers.length > 1
+        ? `<span class="winner-chip" style="background:${COLORS_LIGHT[i]};color:${COLORS_TEXT[i]};">best</span>` : '';
+      return `<div class="m-row">
+        <span class="m-name" style="color:${COLORS[i]}">${p.label}</span>
+        <span class="m-val" style="color:${COLORS[i]}">${m.key(p)}</span>
+        ${winnerHTML}
+      </div>`;
+    }).join('');
+    return `<div class="metric"><div class="m-label">${m.label}</div><div class="m-vals">${rows}</div></div>`;
+  }).join('');
+
+  return `<div class="section">
+    <h2>Overall summary</h2>
+    <div class="legend">${legendHTML}</div>
+    <div class="metric-grid">${cards}</div>
+  </div>`;
+}
+
+function buildCategorySection(allCats) {
+  const headers = ['Category', ...providers.map((p,i) =>
+    `<span style="color:${COLORS[i]}">${p.label}</span>`), 'Winner'].map(h => `<th>${h}</th>`).join('');
+
+  const rows = allCats.map(cat => {
+    const catData = providers.map(p => {
+      const found = p.data.categoryBreakdown.find(c => c.category === cat);
+      return found ? found.passRatePercent : null;
+    });
+    const validRates = catData.filter(v => v !== null);
+    const maxRate = validRates.length ? Math.max(...validRates) : 0;
+
+    const barCells = catData.map((rate, i) => {
+      if (rate === null) return `<td><span style="color:#b4b2a9">—</span></td>`;
+      const barColor = rate < 75 ? '#E24B4A' : rate < 90 ? '#EF9F27' : COLORS[i];
+      const pct = rate.toFixed(1);
+      return `<td class="bar-cell">
+        <div class="bar-wrap">
+          <div class="bar-fill" style="width:${rate}%;background:${barColor};color:#fff;">${pct}%</div>
+        </div>
+      </td>`;
+    }).join('');
+
+    const winnerIdx = catData.indexOf(maxRate);
+    const allTied = validRates.every(v => v === maxRate) && validRates.length > 1;
+    const winnerHTML = allTied
+      ? `<span class="winner-chip" style="background:#f1efe8;color:#5f5e5a;">tie</span>`
+      : winnerIdx >= 0
+        ? `<span class="winner-chip" style="background:${COLORS_LIGHT[winnerIdx]};color:${COLORS_TEXT[winnerIdx]};">${providers[winnerIdx].label}</span>`
+        : '';
+
+    return `<tr><td style="font-weight:500;color:#1a1a18;">${cat}</td>${barCells}<td>${winnerHTML}</td></tr>`;
+  }).join('');
+
+  return `<div class="section">
+    <h2>Pass rate by category</h2>
+    <p style="font-size:12px;color:#888780;margin-bottom:1rem;">Bar colour: green ≥ 90%, amber 75–89%, red &lt; 75%</p>
+    <table class="cat-table"><thead><tr>${headers}</tr></thead><tbody>${rows}</tbody></table>
+  </div>`;
+}
+
+function buildChartSection() {
+  return `<div class="section">
+    <h2>Score distributions</h2>
+    <div class="charts-grid">
+      <div class="chart-box">
+        <h2>Judge score distribution</h2>
+        <div style="position:relative;height:220px;"><canvas id="chartJudge"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <h2>Embedding score distribution</h2>
+        <div style="position:relative;height:220px;"><canvas id="chartEmb"></canvas></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildCharts() {
+  const judgeLabels = ['1-3','4-5','6-7','8-9','10'];
+  const embLabels   = ['0.5-0.6','0.6-0.7','0.7-0.8','0.8-0.9','0.9-1.0'];
+
+  function bucketJudge(tests) {
+    const b = [0,0,0,0,0];
+    tests.forEach(t => {
+      const s = t.avgJudgeScore;
+      if (s <= 3) b[0]++; else if (s <= 5) b[1]++; else if (s <= 7) b[2]++; else if (s < 10) b[3]++; else b[4]++;
+    });
+    return b;
+  }
+  function bucketEmb(tests) {
+    const b = [0,0,0,0,0];
+    tests.forEach(t => {
+      const s = t.avgEmbeddingScore;
+      if (s < 0.6) b[0]++; else if (s < 0.7) b[1]++; else if (s < 0.8) b[2]++; else if (s < 0.9) b[3]++; else b[4]++;
+    });
+    return b;
+  }
+
+  const judgeDatasets = providers.map((p,i) => ({
+    label: p.label,
+    data: bucketJudge(p.data.testResults),
+    backgroundColor: COLORS[i],
+    borderRadius: 3,
+  }));
+  const embDatasets = providers.map((p,i) => ({
+    label: p.label,
+    data: bucketEmb(p.data.testResults),
+    backgroundColor: COLORS[i],
+    borderRadius: 3,
+  }));
+
+  const baseOpts = {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { font: { size: 11 }, autoSkip: false }, grid: { display: false } },
+      y: { ticks: { font: { size: 11 }, maxTicksLimit: 5 }, grid: { color: 'rgba(0,0,0,0.05)' } }
+    }
+  };
+
+  charts.push(new Chart(document.getElementById('chartJudge'), {
+    type: 'bar', data: { labels: judgeLabels, datasets: judgeDatasets }, options: JSON.parse(JSON.stringify(baseOpts))
+  }));
+  charts.push(new Chart(document.getElementById('chartEmb'), {
+    type: 'bar', data: { labels: embLabels, datasets: embDatasets }, options: JSON.parse(JSON.stringify(baseOpts))
+  }));
+}
+
+function buildFailuresSection() {
+  const allTestIds = [...new Set(providers.flatMap(p => p.data.testResults.map(t => t.testId)))].sort();
+  const failedInAny = allTestIds.filter(id =>
+    providers.some(p => {
+      const t = p.data.testResults.find(r => r.testId === id);
+      return t && !t.passed;
+    })
+  );
+  if (failedInAny.length === 0) {
+    return `<div class="section">
+      <h2>Failures</h2>
+      <p style="font-size:13px;color:#3b6d11;background:#eaf3de;padding:10px 14px;border-radius:8px;">No failures across any provider.</p>
+    </div>`;
+  }
+
+  const headers = ['Test ID','Category','Prompt', ...providers.map((p,i) =>
+    `<span style="color:${COLORS[i]}">${p.label}</span>`)].map(h=>`<th>${h}</th>`).join('');
+
+  const rows = failedInAny.slice(0,50).map(id => {
+    const first = providers.flatMap(p => p.data.testResults).find(t => t.testId === id);
+    const cat = first ? first.category : '';
+    const prompt = first ? first.prompt : '';
+    const statusCells = providers.map(p => {
+      const t = p.data.testResults.find(r => r.testId === id);
+      if (!t) return `<td><span style="color:#b4b2a9">—</span></td>`;
+      return `<td>${t.passed
+        ? `<span class="fail-tag pass-tag">pass</span>`
+        : `<span class="fail-tag fail-tag-red">fail ${t.passedRuns}/${t.totalRuns}</span>`
+      }</td>`;
+    }).join('');
+    return `<tr>
+      <td style="font-weight:500;font-size:11px;color:#444441;">${id}</td>
+      <td><span style="font-size:11px;color:#888780;">${cat}</span></td>
+      <td class="trunc" title="${prompt.replace(/"/g,'&quot;')}" style="font-size:12px;color:#5f5e5a;">${prompt}</td>
+      ${statusCells}
+    </tr>`;
+  }).join('');
+
+  const note = failedInAny.length > 50 ? `<p style="font-size:12px;color:#888780;margin-top:10px;">Showing 50 of ${failedInAny.length} failures.</p>` : '';
+
+  return `<div class="section">
+    <h2>Failures across providers</h2>
+    <div style="overflow-x:auto;">
+      <table class="fail-table"><thead><tr>${headers}</tr></thead><tbody>${rows}</tbody></table>
+    </div>
+    ${note}
+  </div>`;
+}
+
+function buildRecommendation(allCats) {
+  const scores = providers.map(p => p.data.summary.passRatePercent);
+  const maxScore = Math.max(...scores);
+  const winners = providers.filter((p,i) => scores[i] === maxScore);
+  const allTied = winners.length === providers.length;
+
+  let recText = '';
+  if (allTied) {
+    recText = `All providers achieved the same overall pass rate (${maxScore.toFixed(1)}%). Consider judge score and embedding score to differentiate.`;
+  } else {
+    const best = winners[0];
+    const bestIdx = providers.indexOf(best);
+    const catWins = allCats.filter(cat => {
+      const catRates = providers.map(p => {
+        const c = p.data.categoryBreakdown.find(x => x.category === cat);
+        return c ? c.passRatePercent : -1;
+      });
+      return catRates[bestIdx] === Math.max(...catRates);
+    });
+    recText = `<strong>${best.label}</strong> leads with a ${maxScore.toFixed(1)}% overall pass rate and wins in ${catWins.length} of ${allCats.length} categories (${catWins.join(', ')}).`;
+
+    const weakCats = allCats.filter(cat => {
+      const c = best.data.categoryBreakdown.find(x => x.category === cat);
+      return c && c.passRatePercent < 75;
+    });
+    if (weakCats.length) recText += ` Note: ${best.label} scores below 75% in: ${weakCats.join(', ')}.`;
+  }
+
+  return `<div class="section">
+    <div class="rec-box">
+      <strong>Recommendation</strong>
+      <span>${recText}</span>
+    </div>
+  </div>`;
+}
+
+function updateChips() {
+  const list = document.getElementById('loaded-list');
+  list.innerHTML = providers.map((p,i) => `
+    <div class="file-chip" style="background:${COLORS_LIGHT[i]};color:${COLORS_TEXT[i]};border-color:${COLORS[i]}40;">
+      <span class="chip-dot" style="background:${COLORS[i]}"></span>
+      <span class="chip-label" title="Click to rename" onclick="startRename(${i}, this)">${p.label}</span>
+      <button class="remove-btn" onclick="removeProvider(${i})">×</button>
+    </div>`).join('');
+}
+
+function startRename(idx, el) {
+  const current = providers[idx].label;
+  const input = document.createElement('input');
+  input.className = 'chip-input';
+  input.value = current;
+  input.style.color = COLORS_TEXT[idx];
+  el.replaceWith(input);
+  input.focus();
+  input.select();
+
+  function commit() {
+    const newName = input.value.trim() || current;
+    providers[idx].label = newName;
+    updateChips();
+    render();
+  }
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { input.blur(); }
+    if (e.key === 'Escape') { input.value = current; input.blur(); }
+  });
+}
+
+function removeProvider(idx) {
+  providers.splice(idx, 1);
+  updateChips();
+  render();
+}
+
+function loadFile(file) {
+  if (providers.length >= 3) { alert('Maximum 3 providers supported.'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.summary || !data.categoryBreakdown || !data.testResults) {
+        alert(`${file.name}: not a valid report.json from LLM Semantic Evaluator.`); return;
+      }
+      const label = labelFromData(data, file.name) || ('Provider ' + (providers.length + 1));
+      providers.push({ label, filename: file.name, data });
+      updateChips();
+      render();
+    } catch {
+      alert(`Could not parse ${file.name} as JSON.`);
+    }
+  };
+  reader.readAsText(file);
+}
+
+const dropArea = document.getElementById('drop-area');
+dropArea.addEventListener('dragover', e => { e.preventDefault(); dropArea.classList.add('drag-over'); });
+dropArea.addEventListener('dragleave', () => dropArea.classList.remove('drag-over'));
+dropArea.addEventListener('drop', e => {
+  e.preventDefault(); dropArea.classList.remove('drag-over');
+  [...e.dataTransfer.files].forEach(loadFile);
+});
+dropArea.addEventListener('click', e => {
+  if (e.target.tagName !== 'BUTTON') document.getElementById('file-input').click();
+});
+document.getElementById('file-input').addEventListener('change', e => {
+  [...e.target.files].forEach(loadFile);
+  e.target.value = '';
+});
+</script>
+</body>
+</html>

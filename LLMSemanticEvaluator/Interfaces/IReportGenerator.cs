@@ -1,24 +1,20 @@
-// File: Core/Interfaces/IReportGenerator.cs
-namespace LLMSemanticEvaluator.Interfaces;
-
 using LLMSemanticEvaluator.Models;
 
+namespace LLMSemanticEvaluator.Interfaces;
+
 /// <summary>
-/// Interface for generating test reports
+/// Defines the contract for generating evaluation reports
+/// from a completed set of test results.
 /// </summary>
 public interface IReportGenerator
 {
     /// <summary>
-    /// Generates a report from test results
+    /// Generates all four report formats (TXT, JSON, CSV, HTML) from the
+    /// provided test results and saves them to the configured reports folder.
+    /// Also logs a summary and auto-opens the HTML dashboard in the browser.
     /// </summary>
-    /// <param name="report">The test report data</param>
-    /// <param name="outputPath">Path where to save the report</param>
-    Task GenerateReportAsync(TestReport report, string outputPath);
-
-    /// <summary>
-    /// Generates a console-friendly summary
-    /// </summary>
-    /// <param name="report">The test report data</param>
-    /// <returns>Formatted report string</returns>
-    string GenerateConsoleSummary(TestReport report);
+    /// <param name="results">
+    /// The list of <see cref="TestResult"/> objects produced by <see cref="ITestRunner"/>.
+    /// </param>
+    Task GenerateAsync(List<TestResult> results);
 }

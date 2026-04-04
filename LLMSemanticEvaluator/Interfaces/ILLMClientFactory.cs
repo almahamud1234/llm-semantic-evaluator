@@ -1,6 +1,6 @@
 using Microsoft.Extensions.AI;
 
-namespace LLMSemanticEvaluator;
+namespace LLMSemanticEvaluator.Interfaces;
 
 /// <summary>
 /// Creates the IChatClient and IEmbeddingGenerator for the configured provider.

@@ -1,6 +1,8 @@
 using LLMSemanticEvaluator.Configuration;
+using LLMSemanticEvaluator.Infrastructure;
 using LLMSemanticEvaluator.Interfaces;
 using LLMSemanticEvaluator.Services;
+using LLMSemanticEvaluator.Validators;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -70,11 +72,11 @@ public class Program
 
                 // ── Core services ───────────────────────────────────────────────
                 services.AddSingleton<ISimilarityCalculator, CosineSimilarityCalculator>();
-                services.AddSingleton<EmbeddingValidator>();
-                services.AddSingleton<LLMJudgeValidator>();
-                services.AddSingleton<ITestLoader, JsonTestLoader>();
-                services.AddSingleton<TestRunner>();
-                services.AddSingleton<ReportGenerator>();
+                services.AddSingleton<IValidator, EmbeddingValidator>();
+                services.AddSingleton<IValidator, LLMJudgeValidator>();
+                services.AddSingleton<IJsonTestLoader, JsonTestLoader>();
+                services.AddSingleton<ITestRunner, TestRunner>();
+                services.AddSingleton<IReportGenerator, ReportGenerator>();
 
                 // ── Hosted service ──────────────────────────────────────────────
                 // EvaluatorService is the application's single hosted service.

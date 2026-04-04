@@ -1,4 +1,3 @@
-// File: Core/Interfaces/ISimilarityCalculator.cs
 namespace LLMSemanticEvaluator.Interfaces;
 
 /// <summary>

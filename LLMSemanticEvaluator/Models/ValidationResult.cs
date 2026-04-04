@@ -1,4 +1,3 @@
-// File: Core/Models/ValidationResult.cs
 namespace LLMSemanticEvaluator.Models;
 
 /// <summary>

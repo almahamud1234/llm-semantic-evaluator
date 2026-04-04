@@ -1,4 +1,3 @@
-// File: Core/Models/CategoryStats.cs
 namespace LLMSemanticEvaluator.Models;
 
 /// <summary>
